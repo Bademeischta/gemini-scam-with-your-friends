@@ -11,7 +11,7 @@ Recherche: [`RESEARCH.md`](RESEARCH.md) · Checkliste: [`FEATURES.md`](FEATURES.
 
 - **Eigener Titel:** *Masche & Co.* („Masche“ heißt Trick oder Betrugsmasche). Untertitel: *Das Callcenter-Chaos mit Freunden*.
 - **Eigene Welt:** der fiktive Gewerbehof Schwindelheim, MogelOS, eigene Figuren, Apps, Marken, Texte, Musik. Funktion und Zweck jedes Elements entsprechen dem Original (Zuordnung in FEATURES.md §0).
-- **Sprache:** Deutsch (Oberfläche, Anrufer, Sprachein- und -ausgabe). Alle Texte liegen in Datendateien, eine spätere Übersetzung ist ohne Codeänderung möglich.
+- **Sprache:** Deutsch ist Standard (Oberfläche, Anrufer, Sprachein- und -ausgabe). **Alle Texte laufen von Anfang an über das i18n-System** (`src/i18n/`, Sprachdateien in `src/data/i18n/`). Im Code stehen keine sichtbaren Strings, nur Schlüssel. Englisch kommt später als zusätzliche Sprachdatei dazu; fehlende Schlüssel fallen auf Deutsch zurück. Ein Test stellt sicher, dass jeder verwendete Schlüssel existiert.
 
 ## 2. Core Loop
 
@@ -89,6 +89,8 @@ Die Eingabe läuft über eine Aktions-Schicht (`systems/input`): Alle Geräte er
 | Casino, Shop, Paint, Kamera | Maus | Fokus, Stick als Cursor in Kritzel | Tippen / Zeichnen mit dem Finger |
 | Vollbild | F11 bzw. Button | – | automatisch beim ersten Tippen, Button |
 
+**Gespräche auf dem Handy:** Die **Schnellantwort-Karten sind die Hauptsteuerung** (immer sichtbar, groß, mit Daumen erreichbar, 3–4 Karten plus „Andere Karten“). Freitext (Tastatur-Button) und Sprache (Mic-Button) sind optional zuschaltbar. Am Desktop ist es umgekehrt: Freitext ist Standard, Karten liegen auf 1–4.
+
 **Touch-Layout:** Daumen-Buttons ≥ 56 dp, Transparenz 55 %. Querformat: Joystick links unten, Aktionen rechts unten. Hochformat: Joystick unten links, Aktionen unten rechts, der Desktop läuft als Handy-Oberfläche (Apps im Vollbild, App-Umschalter). Alle Buttons lassen sich im Layout-Editor verschieben und skalieren (CTL-14). Safe Areas werden respektiert.
 
 ## 5. Design-Entscheidungen für Lücken im Original (D)
@@ -114,20 +116,35 @@ Das Original ist im Playtest und vieles ist unveröffentlicht (RESEARCH.md §7).
 | Lokale Spracherkennung (Spielerstimme) | `SpeechRecognition` gibt es nicht überall; Chrome nutzt dafür einen Server | Push-to-talk mit `SpeechRecognition` (de-DE), wo verfügbar; immer zusätzlich **Tippen** und **Schnellantwort-Karten**; robuste Unscharf-Erkennung gegen Hörfehler | Sprechen geht dort, wo der Browser es kann. Wer nicht sprechen kann oder will, verliert nichts (am Original kritisiert: Mikrofonzwang) |
 | Voice-Cloning per WAV (Mods) | Echtes Klonen braucht ML-Modelle und Server | WAV-Probe → Tonhöhe und Klang analysieren → **Sample-basierte Brabbel-Stimme** plus Anpassung der TTS-Parameter | Eigene Persönlichkeit mit eigener, erkennbarer Stimme bleibt möglich |
 | First-Person-3D-Büro | 3D mit Maus-Blick ist auf Touch umständlich, schwer bei 60 FPS auf Mittelklasse-Handys | **Draufsicht in Pixel-Art** (passt zum offiziellen Top-down-Screenshot), Desktop als Vollbild-Ansicht am Platz | Alle Interaktionen (laufen, Plätze, Gegenstände, Gefahren, Streiche) bleiben; besser lesbar auf kleinen Bildschirmen |
-| Online-Koop mit Freunden | Braucht Server bzw. Signalisierung (Backend nur nach Rücksprache) | **Lokaler Splitscreen 2–4** (Tastatur und Gamepads) plus **Bot-Kollegen** | Gemeinsames Chaos an einem Bildschirm; Bots füllen Plätze wie fremde Online-Spieler |
+| Online-Koop mit Freunden | Braucht Signalisierung über einen Server | Bis M12: **lokaler Splitscreen 2–4 auf Desktop und Tablet** (Tastatur, Gamepads), auf dem **Handy Solo mit Bot-Kollegen**. **M14: echter Online-Koop** per WebRTC (§7) | Gemeinsames Chaos an einem Bildschirm; Bots füllen Plätze wie fremde Online-Spieler. Der Online-Koop als Kern des Originals folgt als eigener Meilenstein |
 | Öffentliche Lobbys | Server nötig | **Lobby-Browser mit Bot-Crews** (Namen, Stil, Schwierigkeit) | Der Zweck „schnell mit anderen loslegen“ bleibt erhalten |
 | Raum-Code | Server nötig | **Schicht-Code (Seed)**: gleicher Run auf mehreren Geräten | Freunde teilen einen Code und vergleichen sich, ganz ohne Server |
 | Sprachchat unter Spielern | Lokal überflüssig, online Server | **Emote-Rad und Sprechblasen**, Bots „hören mit“ und kommentieren | Kommunikation mit Bots und sichtbare Reaktionen im Büro bleiben |
 | Steam-Ranglisten (falls vorhanden) | Server | **Lokale Bestenliste** plus Schicht-Code-Vergleich | – |
 | Bildschirmrekorder | Desktop-Capture ist nicht möglich | `canvas.captureStream()` plus Web-Audio-Stream → `MediaRecorder` (WebM bzw. MP4) | Nimmt genau das Spiel auf, wie im Original |
 
-## 7. Online-Features: lokal, ein Backend nur nach Rücksprache
+## 7. Online-Features
 
-Umgesetzt wird **nur lokal**: Bots, lokaler Splitscreen, Schicht-Codes, lokale Bestenliste. **Es wird kein Server gebaut.**
-Diese optionalen Online-Erweiterungen brauchen dein OK, bevor ich sie angehe:
+Bis M12 läuft alles **lokal**: Bots, lokaler Splitscreen (Desktop und Tablet), Schicht-Codes, lokale Bestenliste. **Es wird kein eigener Server gebaut.** Entschieden am 10.10.2026, nach M12 folgen zwei Online-Meilensteine:
 
-1. **„Echte KI-Anrufer“ (optional):** Wer einen eigenen API-Schlüssel (z. B. OpenRouter oder Anthropic) in den Einstellungen einträgt, lässt die Anrufer-Antworten von einem LLM schreiben. Der Aufruf geht **direkt vom Browser** zum Anbieter, ohne eigenes Backend. Die lokale Engine bleibt Standard und Fallback. Kosten trägt der Schlüssel-Inhaber, der Schlüssel liegt nur lokal.
-2. **Online-Koop über WebRTC:** Peer-to-Peer ist möglich, braucht aber einen Signalisierungs-Server (oder umständlichen Austausch von Codes per Copy-and-paste) und in manchen Netzen einen TURN-Server.
+### M13 – „Echte KI-Anrufer“ mit eigenem API-Schlüssel (optional)
+- Die lokale Gesprächs-Engine bleibt **Standard und Fallback**.
+- Der Spieler trägt seinen Schlüssel (z. B. OpenRouter oder Anthropic) **ausschließlich selbst in den Einstellungen** ein. Er steht nie im Repo, im Build oder in Logs und wird nur lokal gespeichert (mit Option „nur für diese Sitzung“).
+- Der Aufruf geht direkt vom Browser zum Anbieter. Das LLM bekommt die Figuren-Persönlichkeit, das Gedächtnis und die Masche-Phase als Kontext und liefert strukturiert Antworttext plus ΔVertrauen und Stimmung. Die Spielregeln (Schwellen, Auflegen, Beute-Diktat) bleiben bei der lokalen Engine, damit das Balancing stimmt.
+- Fehler, Zeitüberschreitung oder Offline schalten sofort auf die lokale Engine um.
+
+### M14 – Online-Koop per WebRTC
+**Prüfung PeerJS mit öffentlichem PeerServer (Stand Recherche 10.10.2026):**
+- **Signalisierung:** Der kostenlose PeerJS-Cloud-Server (`0.peerjs.com`) übernimmt nur den Verbindungsaufbau. Danach laufen alle Daten direkt zwischen den Geräten. Es gibt **kein SLA und keine dokumentierten Limits**, PeerJS selbst empfiehlt für Produktion einen eigenen Server ([peerjs.com/peerserver](https://peerjs.com/peerserver.html)).
+- **NAT:** Ohne TURN-Relay scheitert ein Teil der Verbindungen, vor allem im **Mobilfunk** (Carrier-NAT, symmetrische NAT). Branchenschätzungen sagen, dass 10–25 % der Sitzungen ein Relay brauchen. Ob der Cloud-Dienst ein TURN anbietet, ist in den Docs widersprüchlich, darauf verlasse ich mich nicht.
+- **Fazit:** Für Freundesrunden im Heim-WLAN bzw. Festnetz **reicht PeerJS mit dem öffentlichen Server voraussichtlich aus**, ganz ohne eigenen Server. Für Handy-Hotspot bzw. Mobilfunk ist das unsicher.
+- **Geplante Absicherung ohne eigenen Server:**
+  1. Host-autoritative Stern-Topologie: Jeder Gast braucht nur eine Verbindung zum Host, und nur der Host simuliert.
+  2. Klarer Verbindungstest mit verständlicher Fehlermeldung und Tipps („gleiches WLAN“).
+  3. Optionales Feld für einen eigenen TURN-Server in den Einstellungen.
+  4. Signalisierungs-Server konfigurierbar, damit später ein eigener `peer`-Server möglich ist.
+- **Vor dem Start von M14** teste ich das echte Verhalten (Erreichbarkeit von `0.peerjs.com`, Verbindungsaufbau Desktop ↔ Handy) und berichte dir, bevor ich weiterbaue.
+- **Umfang M14:** Raum-Code hosten bzw. beitreten, bis zu 8 Spieler, Synchronisation von Büro, Anrufen, Geld und Gefahren, Sprachchat per WebRTC-Audio (Proximity: Lautstärke nach Abstand im Büro), Reconnect, Bots füllen freie Plätze auf. Öffentliche Lobbys brauchen eine Raumliste; ob das über den öffentlichen PeerServer geht (Peer-Liste ist dort gesperrt), wird geprüft. Falls nicht, gibt es Raum-Codes und lokale Bot-Lobbys.
 
 ## 8. Gesprächs-Engine (Herzstück)
 
@@ -167,6 +184,7 @@ Diese optionalen Online-Erweiterungen brauchen dein OK, bevor ich sie angehe:
 - **Simulation:** feste Logik-Schritte (60 Hz) mit Akkumulator, Rendering interpoliert, Delta-Time-sicher.
 - **UI:** eigenes Fenster- und Widget-Toolkit in Phaser für MogelOS (damit Rekorder, Effekte und Splitscreen alles erfassen). Nur für die Texteingabe dient ein unsichtbares DOM-`<input>` (native Bildschirmtastatur, Autokorrektur aus).
 - **Daten:** Anrufer, Maschen, Apps, Gegenstände, Gefahren, Zeilen und Texte als JSON bzw. TS-Datenmodule in `src/data/`, validiert per Schema (dieses Format nutzen auch die Mods).
+- **i18n:** `t('schluessel', { platzhalter })` mit Plural (`Intl.PluralRules`) und Zahlen- bzw. Geldformat (`Intl.NumberFormat`). Sprachdateien liegen als JSON in `src/data/i18n/`, Deutsch ist die Referenz, weitere Sprachen ergänzen nur Dateien.
 - **Speicherung:** localStorage (Einstellungen), IndexedDB (Run, Statistiken, Bilder, Videos, Mods).
 - **PWA:** `vite-plugin-pwa` (Workbox, Precache aller Dateien → offline), Manifest, per Code erzeugte Pixel-Art-Icons (eigener PNG-Encoder im Build-Skript).
 - **Tests:** Vitest (Logik), Playwright mit vorinstalliertem Chromium (Desktop 1280×720 und 1920×1080, Handy quer und hoch, Touch-Emulation), Test-Hook `window.__MASCHE__` nur im Test-Build für Input-Simulation und Zustandsabfrage; Headless-Simulation ganzer Tage in Vitest fürs Balancing.
@@ -208,6 +226,8 @@ Nach jedem Meilenstein: Build, Typecheck, Vitest, Playwright-Screenshots (Deskto
 | **M10** | Mods & Tutorial | Mod-Werkstatt (JSON, WAV-Stimme, Editor, Testanruf), Einarbeitungstag, Kontext-Tipps, Einarbeitungsmappe (MOD-M1–M5, TUT-01, 02, 04, APP-55) |
 | **M11** | Juice, Audio, Optionen | Musik und alle SFX, Game Juice komplett, Vibration, Einstellungen komplett, Tastatur- und Gamepad-Belegung, Touch-Layout-Editor, QoL-Optionen, Achievements, Easter Eggs, Extra-Modi, Radio-App (AUD-01–09, JCE-01–08, MEN-02, 04, 06–12, CTL-05–07, 14, PLT-07, QOL-01–10, PRG-08, FUN-05/06, EXT-01/02, OFF-15, TUT-03, APP-51, HUD-05) |
 | **M12** | Politur & Release | Offline-Service-Worker, Performance (60 FPS, Pools, Heap-Tests), Balancing per Playtest-Simulation, Touch-Abgleich aller Aktionen, README, GitHub-Pages-Workflow, Paritäts-Bericht, Endabgleich FEATURES.md (TEC-11, 13, 14, CTL-15, QA-04–07, FIN-01–05) |
+| **M13** | KI-Anrufer (optional) | Eigener API-Schlüssel nur in den Einstellungen, LLM-Antworten mit lokaler Regel-Engine, Fallback (NET-01–06) |
+| **M14** | Online-Koop | PeerJS/WebRTC nach Vorab-Test, Host/Beitreten per Raum-Code, Sync, Sprachchat mit Proximity, Reconnect (NET-07–16) |
 
 ## 13. Inhaltliche Leitplanken
 
@@ -216,9 +236,12 @@ Nach jedem Meilenstein: Build, Typecheck, Vitest, Playwright-Screenshots (Deskto
 - Gewalt bleibt Cartoon-Slapstick (Ruß-Gesichter, Schaumpfeile, Purzeln).
 - Im Titel steht „Alles fiktiv. Alles erfunden.“ In den Credits gibt es kurze Echte-Welt-Tipps gegen echte Maschen (+).
 
-## 14. Offene Punkte (deine Entscheidung)
+## 14. Entscheidungen des Auftraggebers (10.10.2026)
 
-1. Titel **„Masche & Co.“** und Sprache **Deutsch** – passt das?
-2. Optionale Online-Erweiterungen aus §7 (eigener KI-Schlüssel, WebRTC-Koop): jetzt weglassen (Standard) oder einplanen?
-3. Den alten Prototyp `masche.html` im Repo ersetze ich durch das neue Projekt. Einverstanden?
-4. GitHub Pages: Unter *Settings → Pages* muss als Quelle „GitHub Actions“ gewählt sein. Den Workflow liefere ich.
+1. Titel **„Masche & Co.“**. Deutsch ist Standard, alle Texte laufen über das i18n-System (Englisch später).
+2. Lokale Gesprächs-Engine bleibt Standard. KI-Anrufer mit eigenem API-Schlüssel kommen als **M13**; der Schlüssel wird nur vom Spieler in den Einstellungen eingegeben.
+3. Online-Koop ist Kern des Originals und kommt als **M14** (PeerJS mit öffentlichem PeerServer, siehe §7).
+4. Splitscreen nur auf Desktop und Tablet; auf dem Handy Solo mit Bot-Kollegen.
+5. Auf dem Handy sind die Schnellantwort-Karten die Hauptsteuerung; Freitext und Sprache sind optional.
+6. `masche.html` wird ersetzt (bleibt in der Git-History).
+7. GitHub Pages läuft über GitHub Actions; `main` ist der Standard-Branch.

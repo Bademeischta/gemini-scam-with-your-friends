@@ -59,8 +59,8 @@ Mechanik, Zweck und Funktion bleiben gleich. Namen, Figuren, Grafik, Texte und M
 ## 2. Spielstruktur & Modi
 
 - [ ] **MOD-01** Einzelspieler: allein im Büro wie im Original, Bot-Kollegen optional zuschaltbar. *O [ST]* · M5/M8
-- [ ] **MOD-02** Koop mit Freunden → lokaler Multiplayer (Splitscreen, 2–4 Menschen an einem Gerät) plus Bots. *O [ST], E* · M8
-- [ ] **MOD-03** Öffentliche Lobbys → Lobby-Browser mit Bot-Crews (Namen, Stil, Schwierigkeit) zum „Beitreten“. *O [ST], E* · M8
+- [ ] **MOD-02** Koop mit Freunden → bis M12 lokaler Multiplayer: Splitscreen mit 2–4 Menschen an einem Gerät **nur auf Desktop und Tablet**, auf dem Handy Solo mit Bot-Kollegen. Online-Koop folgt in M14 (§29). *O [ST], E* · M8
+- [ ] **MOD-03** Öffentliche Lobbys → Lobby-Browser mit Bot-Crews (Namen, Stil, Schwierigkeit) zum „Beitreten“; echte Online-Lobbys werden in M14 geprüft. *O [ST], E* · M8
 - [ ] **MOD-04** Run-basierte Progression: Ein Run besteht aus aufeinanderfolgenden Arbeitstagen und endet beim Rauswurf. *O [IG][ST]* · M5
 - [ ] **MOD-05** Perma-Death: Rauswurf = Run vorbei, kein Weiterspielen des Runs. *O [ST-Tag]* · M5
 - [ ] **MOD-06** Raum-Code → Schicht-Code (Seed) zum Teilen: Freunde spielen denselben Run auf ihren Geräten und vergleichen in der lokalen Bestenliste. *E* · M8
@@ -115,7 +115,7 @@ Mechanik, Zweck und Funktion bleiben gleich. Namen, Figuren, Grafik, Texte und M
 - [ ] **CAL-03** Telefon-App mit Mikrofon-Taste, Lautsprecher-Taste, Auflegen, Halten (Warteschleife) und Texteingabe. *O [FN]* · M3
 - [ ] **CAL-04** Freies Gespräch: Der Spieler formuliert frei (tippen oder sprechen), der Anrufer reagiert auf den Inhalt und nicht auf eine Dialogauswahl. *O [CG], E (lokale Sprach-KI statt Cloud-LLM)* · M3
 - [ ] **CAL-05** Lokales Sprachverständnis: erkennt Absichten (Begrüßen, Vorstellen als Rolle, Smalltalk, Kompliment, Mitgefühl, Dringlichkeit, Drohung, Beruhigen, Erklären, Fordern, Bestätigen, Beleidigen, Unsinn, Entschuldigen, Lachen, Themen und Schlüsselwörter des Anrufers). *E* · M3
-- [ ] **CAL-06** Schnellantwort-Karten (vorgeschlagene Sätze passend zur Lage) für Touch, Gamepad und ohne Tastatur. Sie werden genauso verarbeitet wie freie Eingaben. *E* · M3
+- [ ] **CAL-06** Schnellantwort-Karten (vorgeschlagene Sätze passend zur Lage), verarbeitet wie freie Eingaben. **Auf dem Handy die Hauptsteuerung** (immer sichtbar, Freitext und Sprache optional zuschaltbar); auch für Gamepad und ohne Tastatur. *E* · M3
 - [ ] **CAL-07** Vertrauens-Anzeige als Prozentwert plus Stimmungs-Label. *O [FN]* · M3
 - [ ] **CAL-08** Stimmung ist ein eigener Zustand und kein reiner Prozent-Schwellwert, z. B. „Vertrauensvoll“ bei 65 %, „Wütend“ bei 50 %. *O [FN]* · M3
 - [ ] **CAL-09** Stimmungen: Vertrauensvoll, Neutral, Misstrauisch, Verwirrt, Amüsiert, Genervt, Wütend, Ängstlich, Gelangweilt. *O (2 belegt), D (Rest)* · M3
@@ -358,7 +358,7 @@ Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die bel
 - [ ] **COP-01** Bot-Kollegen an freien Plätzen: nehmen Anrufe an, verdienen je nach Können, stempeln aus, reagieren auf Gefahren. *E (Online-Mitspieler)* · M8
 - [ ] **COP-02** Bot-Persönlichkeiten (fleißig, faul, Chaot, Streber, Pechvogel) mit Namen, Look und Sprüchen. *D* · M8
 - [ ] **COP-03** Bots machen Bürochaos (Streiche, Kaffee holen, zocken heimlich) und helfen (löschen Brände, übernehmen klingelnde Telefone). *D* · M8
-- [ ] **COP-04** Lokaler Splitscreen für 2–4 Spieler (Tastatur plus Gamepads bzw. mehrere Gamepads), jeder mit eigenem Desktop. *E (Online-Koop)* · M8
+- [ ] **COP-04** Lokaler Splitscreen für 2–4 Spieler (Tastatur plus Gamepads bzw. mehrere Gamepads), jeder mit eigenem Desktop. **Nur Desktop und Tablet**; auf dem Handy ist die Option ausgeblendet (Solo mit Bots). *E (Online-Koop)* · M8
 - [ ] **COP-05** Lobby: Team zusammenstellen (Plätze mit Menschen oder Bots), Schicht-Code eingeben oder würfeln, Figur anpassen. *E (Lobbys/Raum-Code)* · M8
 - [ ] **COP-06** Figur anpassen: Name, Haut, Haare, Kleidung, Farbe, Hut. *D* · M8
 - [ ] **COP-07** Emote-Rad und Sprechblasen (sichtbar in der Nähe, Bots reagieren). *E (Proximity-Sprachchat)* · M8
@@ -448,8 +448,8 @@ Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die bel
 ## 23. Steuerung
 
 **Erkennung**
-- [ ] **CTL-01** Automatische Erkennung Touch vs. Desktop (`pointer: coarse`, Touch-Events, Bildschirmgröße), passende Steuerung ohne Einstellen. *A* · M0
-- [ ] **CTL-02** Wechsel zur Laufzeit (Maus bewegt → Desktop-UI; Touch → Touch-UI; Gamepad-Taste → Gamepad-Hinweise). *A* · M0/M11
+- [x] **CTL-01** Automatische Erkennung Touch vs. Desktop (`pointer: coarse`, Touch-Events, Bildschirmgröße), passende Steuerung ohne Einstellen. *A* · M0
+- [x] **CTL-02** Wechsel zur Laufzeit (Maus bewegt → Desktop-UI; Touch → Touch-UI; Gamepad-Taste → Gamepad-Hinweise). *A* · M0/M11
 
 **Desktop (frei belegbar)**
 - [ ] **CTL-03** Laufen WASD/Pfeile, Interagieren E, Benutzen/Werfen F/Q, Emote-Rad G, Boss-Taste B, Push-to-talk V, Pause Esc, Aufstehen Tab. *A* · M1
@@ -472,21 +472,22 @@ Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die bel
 
 ## 24. Geräte, PWA, Technik
 
-- [ ] **TEC-01** Vite + TypeScript (strict) + Phaser 3, saubere Ordnerstruktur, alle Inhalte datengetrieben, alle Tuning-Werte zentral in `src/config/`. *A* · M0
-- [ ] **TEC-02** Kein Zoomen, Scrollen, Text-Markieren, Kontextmenü, Pull-to-Refresh. *A* · M0
-- [ ] **TEC-03** Safe Areas (Notch, Home-Indicator). *A* · M0
-- [ ] **TEC-04** Vollbild-Umschalter; auf dem Handy automatisch beim ersten Tippen (wo erlaubt). *A* · M0
-- [ ] **TEC-05** Hinweis bei falscher Ausrichtung (Querformat empfohlen) mit „Trotzdem spielen“. Hochformat wird vollständig unterstützt. *A* · M0
-- [ ] **TEC-06** Delta-Time-basierte Simulation (feste Logik-Schritte, framerate-unabhängig). *A* · M0
-- [ ] **TEC-07** Scharf auf Retina (Pixel-Art per Nearest-Neighbor ganzzahlig skaliert, Text in Geräteauflösung). *A* · M0
-- [ ] **TEC-08** Auto-Pause bzw. Stummschalten im Hintergrund (visibilitychange, blur). *A* · M0
+- [x] **TEC-01** Vite + TypeScript (strict) + Phaser 3, saubere Ordnerstruktur, alle Inhalte datengetrieben, alle Tuning-Werte zentral in `src/config/`. *A* · M0
+- [x] **TEC-02** Kein Zoomen, Scrollen, Text-Markieren, Kontextmenü, Pull-to-Refresh. *A* · M0
+- [x] **TEC-03** Safe Areas (Notch, Home-Indicator). *A* · M0
+- [x] **TEC-04** Vollbild-Umschalter; auf dem Handy automatisch beim ersten Tippen (wo erlaubt). *A* · M0
+- [x] **TEC-05** Hinweis bei falscher Ausrichtung (Querformat empfohlen) mit „Trotzdem spielen“. Hochformat wird vollständig unterstützt. *A* · M0
+- [x] **TEC-06** Delta-Time-basierte Simulation (feste Logik-Schritte, framerate-unabhängig). *A* · M0
+- [x] **TEC-07** Scharf auf Retina (Pixel-Art per Nearest-Neighbor ganzzahlig skaliert, Text in Geräteauflösung). *A* · M0
+- [x] **TEC-08** Auto-Pause bzw. Stummschalten im Hintergrund (visibilitychange, blur). *A* · M0
 - [ ] **TEC-09** PWA-Manifest (Name, Farben, Ausrichtung, Shortcuts). *A* · M0/M12
-- [ ] **TEC-10** App-Icons in allen Größen inkl. maskable, per Code erzeugt (Pixel-Art). *A* · M0/M12
+- [x] **TEC-10** App-Icons in allen Größen inkl. maskable, per Code erzeugt (Pixel-Art). *A* · M0/M12
 - [ ] **TEC-11** Service Worker: komplett offline spielbar, Update-Hinweis bei neuer Version. *A* · M12
 - [ ] **TEC-12** Speicherung lokal (localStorage für Einstellungen, IndexedDB für Run, Bilder, Videos, Mods), Fehler werden abgefangen. *A* · M5
 - [ ] **TEC-13** Stabile 60 FPS auf Mittelklasse-Handy und Desktop; Objekt-Pools; keine Speicherlecks bei langen Sessions. *A* · M12
 - [ ] **TEC-14** GitHub-Pages-Deployment per GitHub-Actions-Workflow (Build, Test, Deploy). *A* · M12
-- [ ] **TEC-15** Keine externen Laufzeit-Abhängigkeiten (kein CDN, keine Server), alles im Bundle. *A* · M0
+- [x] **TEC-15** Keine externen Laufzeit-Abhängigkeiten (kein CDN, keine Server), alles im Bundle. Ausnahme ab M13/M14: nur die vom Spieler aktivierten Online-Funktionen. *A* · M0
+- [x] **TEC-16** i18n-System von Anfang an: alle sichtbaren Texte über Schlüssel, Deutsch als Standard und Referenz, Fallback auf Deutsch, Plural, Zahlen- und Geldformat; ein Test prüft, dass alle verwendeten Schlüssel existieren; Englisch ist ohne Codeänderung ergänzbar. *A* · M0
 
 ## 25. Komfort-Optionen (QoL – alle aus, Original-Verhalten ist Standard)
 
@@ -523,3 +524,25 @@ Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die bel
 - [ ] **FIN-03** GitHub-Pages-Link spielbar auf dem Handy. *A* · M12
 - [ ] **FIN-04** Paritäts-Bericht (`docs/PARITY.md`): was 1:1 umgesetzt ist, was per gleichwertigem Ersatz, bekannte Einschränkungen. *A* · M12
 - [ ] **FIN-05** CLAUDE.md aktuell (Überblick, Befehle, Konventionen, Stand, nächster Meilenstein). *A* · laufend
+
+## 29. Online (nach M12, entschieden am 10.10.2026)
+
+**M13 – KI-Anrufer mit eigenem API-Schlüssel (optional)**
+- [ ] **NET-01** Einstellung „Echte KI-Anrufer“: Anbieter wählen, Schlüssel eingeben (maskiert), Verbindungstest. Der Schlüssel liegt nur lokal (optional nur für die Sitzung), nie im Repo, Build oder Log. *O (Cloud-LLM) [SD]* · M13
+- [ ] **NET-02** LLM schreibt die Anrufer-Antworten aus Persönlichkeit, Gedächtnis, Masche-Phase und Gesprächsverlauf. *O [SD]* · M13
+- [ ] **NET-03** Strukturierte Antwort (Text, ΔVertrauen-Vorschlag, Stimmung, Beute-Bereitschaft), begrenzt durch die lokalen Spielregeln (Schwellen, Auflegen, Diktat). *E/D* · M13
+- [ ] **NET-04** Fallback auf die lokale Engine bei Fehler, Zeitüberschreitung, Offline oder Kostenlimit, ohne dass das Gespräch abbricht. *D* · M13
+- [ ] **NET-05** Antwortzeit-Kaschierung (Tipp- bzw. „Hmm…“-Laute, Brabbeln), damit Latenz wie im Original nicht stört. *D* · M13
+- [ ] **NET-06** Datenschutz-Hinweis (welche Daten an den Anbieter gehen), Opt-in, Abschalten jederzeit. *A* · M13
+
+**M14 – Online-Koop per WebRTC (PeerJS)**
+- [ ] **NET-07** Vorab-Test und Bericht: Erreichbarkeit des öffentlichen PeerServers, Verbindungsaufbau Desktop ↔ Handy (WLAN und Mobilfunk). *A* · M14
+- [ ] **NET-08** Raum hosten bzw. per Raum-Code beitreten (PeerJS mit öffentlichem PeerServer, Signalisierungs-Server konfigurierbar). *O (Raum mit Freunden) [ST]* · M14
+- [ ] **NET-09** Bis zu 8 Spieler, freie Plätze mit Bots auffüllbar. *O [FN-faq]* · M14
+- [ ] **NET-10** Host-autoritative Simulation, Synchronisation von Büro, Figuren, Anrufen, Geld, Quota, Gefahren und Shop. *D* · M14
+- [ ] **NET-11** Sprachchat per WebRTC-Audio mit Proximity (Lautstärke nach Abstand im Büro), Mute bzw. Push-to-talk. *O? (Sprache im Original zentral), D* · M14
+- [ ] **NET-12** Reconnect und Host-Abbruch-Behandlung (Bot übernimmt den Platz). *D* · M14
+- [ ] **NET-13** Verbindungstest mit verständlichen Fehlermeldungen und Tipps; optionales Feld für eigenen TURN-Server. *D* · M14
+- [ ] **NET-14** Öffentliche Lobbys (Raumliste), sofern ohne eigenen Server machbar, sonst Raum-Code plus Bot-Lobbys. *O [ST], E* · M14
+- [ ] **NET-15** Gemeinsamer Kündigungsbericht und gemeinsame Bewertung mit allen Online-Spielern. *O [FN]* · M14
+- [ ] **NET-16** Online-Koop auch auf dem Handy (ein Spieler pro Gerät). *A* · M14

@@ -1,0 +1,52 @@
+{
+  "app": {
+    "title": "Masche & Co.",
+    "logoMain": "MASCHE",
+    "logoSub": "& Co.",
+    "subtitle": "Das Callcenter-Chaos mit Freunden",
+    "disclaimer": "Alles fiktiv. Alles erfunden.",
+    "version": "Version {version}",
+    "noscript": "Masche & Co. braucht JavaScript."
+  },
+  "format": {
+    "money": "{amount} ₮"
+  },
+  "title": {
+    "pressStart": {
+      "touch": "Tippen zum Einstempeln",
+      "desktop": "Taste drücken zum Einstempeln",
+      "gamepad": "A-Taste drücken zum Einstempeln"
+    }
+  },
+  "menu": {
+    "about": "Über das Spiel",
+    "fullscreenOn": "Vollbild: an",
+    "fullscreenOff": "Vollbild: aus",
+    "back": "Zurück"
+  },
+  "device": {
+    "label": "Steuerung: {device}",
+    "touch": "Touch",
+    "desktop": "Maus & Tastatur",
+    "gamepad": "Gamepad"
+  },
+  "navHint": {
+    "touch": "Antippen zum Auswählen",
+    "desktop": "Pfeiltasten + Enter · Esc zurück",
+    "gamepad": "Steuerkreuz + A · B zurück"
+  },
+  "about": {
+    "heading": "Über das Spiel",
+    "homage": "Masche & Co. ist eine Hommage an das Koop-Spiel „Scam With Your Friends“ von JakeHub & Metater. Alle Figuren, Namen, Grafiken, Texte und Klänge sind eigene Versionen.",
+    "fiction": "Alle Anrufer, Firmen, Orte und Maschen sind frei erfunden. Niemand wird wirklich angerufen.",
+    "realWorld": "Echte-Welt-Tipp: Echte Banken und Ämter fragen am Telefon nie nach Passwörtern, Codes oder Gutscheinen. Im Zweifel auflegen und selbst zurückrufen.",
+    "madeWith": "Grafik, Musik und Klänge sind per Code erzeugt."
+  },
+  "orientation": {
+    "hint": "Dreh dein Handy quer – dann passt das ganze Büro auf den Bildschirm.",
+    "continue": "Trotzdem hochkant spielen"
+  },
+  "fullscreen": {
+    "toggle": "Vollbild umschalten"
+  }
+}
