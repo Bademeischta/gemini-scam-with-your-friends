@@ -9,6 +9,9 @@ import { installTestHook } from './debug/testHook';
 import { applyDomTranslations, i18n } from './i18n';
 import { AboutScene } from './scenes/AboutScene';
 import { BootScene } from './scenes/BootScene';
+import { OfficeHudScene } from './scenes/OfficeHudScene';
+import { OfficeScene } from './scenes/OfficeScene';
+import { PauseScene } from './scenes/PauseScene';
 import { TitleScene } from './scenes/TitleScene';
 import { DeviceTracker, detectFormFactor, detectInitialKind, readDeviceEnv } from './systems/input/device';
 import { InputManager } from './systems/input/InputManager';
@@ -121,7 +124,7 @@ function boot(): void {
     update();
   }
 
-  const game = createGame(s, [BootScene, TitleScene, AboutScene]);
+  const game = createGame(s, [BootScene, TitleScene, AboutScene, OfficeScene, OfficeHudScene, PauseScene]);
   if (import.meta.env.VITE_E2E === '1') installTestHook(game, s);
 
   registerSW({ immediate: true });

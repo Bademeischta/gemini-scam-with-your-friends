@@ -89,7 +89,10 @@ export class TitleScene extends BaseScene {
     this.fsButton.setVisible(showFs);
     if (!showFs) this.fsZone.disableInteractive();
 
-    const items: MenuItem[] = [{ id: 'about', label: () => t('menu.about'), onSelect: () => void this.scene.start('About') }];
+    const items: MenuItem[] = [
+      { id: 'start', label: () => t('menu.start'), onSelect: () => void this.scene.start('Office') },
+      { id: 'about', label: () => t('menu.about'), onSelect: () => void this.scene.start('About') },
+    ];
     if (showFs) {
       items.push({
         id: 'fullscreen',

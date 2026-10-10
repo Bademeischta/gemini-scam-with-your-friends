@@ -1,46 +1,5 @@
-import { expect, test, type Page } from '@playwright/test';
-import { collectErrors, expectHook, hook, isTouchProject, menuCenter, openGame, shot, tapCanvas } from './helpers';
-
-/** Ersetzt navigator.getGamepads durch ein steuerbares Fake-Gamepad (Standard-Mapping). */
-async function installFakePad(page: Page): Promise<void> {
-  await page.addInitScript(() => {
-    const state = {
-      buttons: Array.from({ length: 17 }, () => ({ pressed: false, touched: false, value: 0 })),
-      axes: [0, 0, 0, 0],
-    };
-    (window as unknown as { __pad: typeof state }).__pad = state;
-    const pad = {
-      id: 'Fake Pad (STANDARD GAMEPAD)',
-      index: 0,
-      connected: true,
-      mapping: 'standard',
-      timestamp: 0,
-      get buttons() {
-        return state.buttons;
-      },
-      get axes() {
-        return state.axes;
-      },
-    };
-    Object.defineProperty(navigator, 'getGamepads', { value: () => [pad, null, null, null], configurable: true });
-  });
-}
-
-async function padButton(page: Page, index: number): Promise<void> {
-  const set = (down: boolean): Promise<void> =>
-    page.evaluate(
-      ([i, d]) => {
-        const b = (window as unknown as { __pad: { buttons: { pressed: boolean; value: number }[] } }).__pad.buttons[i as number]!;
-        b.pressed = d as boolean;
-        b.value = d ? 1 : 0;
-      },
-      [index, down] as const,
-    );
-  await set(true);
-  await page.waitForTimeout(80);
-  await set(false);
-  await page.waitForTimeout(80);
-}
+import { expect, test } from '@playwright/test';
+import { collectErrors, expectHook, hook, installFakePad, isTouchProject, menuCenter, openGame, padButton, shot, tapCanvas } from './helpers';
 
 test.describe('Eingabe & Menüs', () => {
   test('Tastatur: Einstempeln, Menü navigieren, Info-Seite und zurück', async ({ page }, info) => {
@@ -49,10 +8,15 @@ test.describe('Eingabe & Menüs', () => {
     await openGame(page);
     await page.keyboard.press('Enter');
     await expectHook(page, 'titleState', 'menu');
+    await expectHook(page, 'menuFocus', 'start');
+    await page.keyboard.press('ArrowDown');
     await expectHook(page, 'menuFocus', 'about');
     await page.keyboard.press('ArrowDown');
     await expectHook(page, 'menuFocus', 'fullscreen');
     await page.keyboard.press('ArrowDown');
+    await expectHook(page, 'menuFocus', 'start');
+    await page.keyboard.press('ArrowUp');
+    await page.keyboard.press('ArrowUp');
     await expectHook(page, 'menuFocus', 'about');
     await shot(page, info, 'menu');
     await page.keyboard.press('Enter');
@@ -106,12 +70,8 @@ test.describe('Eingabe & Menüs', () => {
     await padButton(page, 0); // A
     await expectHook(page, 'titleState', 'menu');
     await expectHook(page, 'hintMode', 'gamepad');
-    const items = await page.evaluate(() => (document.fullscreenEnabled ? 2 : 1));
-    if (items > 1) {
-      await padButton(page, 13); // Steuerkreuz runter
-      await expectHook(page, 'menuFocus', 'fullscreen');
-      await padButton(page, 12); // hoch
-    }
+    await expectHook(page, 'menuFocus', 'start');
+    await padButton(page, 13); // Steuerkreuz runter
     await expectHook(page, 'menuFocus', 'about');
     await padButton(page, 0);
     await expectHook(page, 'scene', 'About');

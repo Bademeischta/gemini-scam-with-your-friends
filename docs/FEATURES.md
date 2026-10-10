@@ -49,7 +49,7 @@ Mechanik, Zweck und Funktion bleiben gleich. Namen, Figuren, Grafik, Texte und M
 ## 1. Plattformen & Steuerung des Originals (Referenz)
 
 - [ ] **PLT-01** Windows-PC-Spiel mit Maus und Tastatur → bei uns Desktop-Browser mit frei belegbarer Tastatur und Maus. *O [ST][FN]* · M0/M11
-- [ ] **PLT-02** First-Person-Bewegung durchs Büro → bei uns Draufsicht-Büro mit Laufen per WASD, Joystick oder Stick. *O [ST-Tags], E* · M1
+- [x] **PLT-02** First-Person-Bewegung durchs Büro → bei uns Draufsicht-Büro mit Laufen per WASD, Joystick oder Stick. *O [ST-Tags], E* · M1
 - [ ] **PLT-03** Ingame-Desktop per Maus bedienen → bei uns per Maus, Touch oder Gamepad-Fokusnavigation. *O [FN]* · M2
 - [ ] **PLT-04** Mit Anrufern sprechen per Mikrofon (Tag „Voice Control“) → bei uns Spracheingabe, wo der Browser sie kann. *O [ST][FN], E* · M3
 - [ ] **PLT-05** Text-Eingabe als Alternative zur Stimme. *O? [XB-ähnlich, FN-faq unklar], E* · M3
@@ -68,9 +68,9 @@ Mechanik, Zweck und Funktion bleiben gleich. Namen, Figuren, Grafik, Texte und M
 
 ## 3. Büro (Spielwelt)
 
-- [ ] **OFF-01** Begehbares Callcenter-Büro (Draufsicht, Pixel-Art), passend zum offiziellen Top-down-Screenshot. *O [FN], E* · M1
-- [ ] **OFF-02** Bis zu 8 Arbeitsplätze mit Monitor, Telefon und Headset (der offizielle Screenshot zeigt 8 Spieler). *O [FN-faq]* · M1
-- [ ] **OFF-03** Chefbüro mit Glaswand, Schreibtisch des Chefs und Bewertungs-Bereich. *D* · M1/M5
+- [x] **OFF-01** Begehbares Callcenter-Büro (Draufsicht, Pixel-Art), passend zum offiziellen Top-down-Screenshot. *O [FN], E* · M1
+- [x] **OFF-02** Bis zu 8 Arbeitsplätze mit Monitor, Telefon und Headset (der offizielle Screenshot zeigt 8 Spieler). *O [FN-faq]* · M1
+- [x] **OFF-03** Chefbüro mit Glaswand, Schreibtisch des Chefs und Bewertungs-Bereich. *D* · M1/M5
 - [ ] **OFF-04** Beamer-Wand für die Gesprächsanalyse. *O [FN]* · M9
 - [ ] **OFF-05** Lieferklappe bzw. Paketablage für Ramschazon-Lieferungen. *D* · M6
 - [ ] **OFF-06** Kaffeemaschine (Kaffee-Boost, kann explodieren). *D* · M6/M7
@@ -83,11 +83,11 @@ Mechanik, Zweck und Funktion bleiben gleich. Namen, Figuren, Grafik, Texte und M
 - [ ] **OFF-13** Aktenvernichter und Aktenschrank (Beweise bei einer Razzia). *D* · M7
 - [ ] **OFF-14** Arrestzelle bzw. „Stille Treppe“ für Festgenommene bis zum Tagesende oder zur Kaution. *D* · M7
 - [ ] **OFF-15** Topfpflanze „Ferdinand“ (Running Gag, Easter Egg). *+* · M11
-- [ ] **OFF-16** Spielerfigur läuft (Delta-Time, Beschleunigung, Kollision mit Möbeln). *O, E* · M1
+- [x] **OFF-16** Spielerfigur läuft (Delta-Time, Beschleunigung, Kollision mit Möbeln). *O, E* · M1
 - [ ] **OFF-17** Hinsetzen bzw. Aufstehen am Schreibtisch, dabei wechselt die Ansicht zum MogelOS-Desktop. *O [FN]* · M1/M2
 - [ ] **OFF-18** Fremde Schreibtische übernehmen, z. B. wenn ein Kollege k. o. oder abwesend ist. *O? [XB], D* · M8
 - [ ] **OFF-19** Gegenstände aufheben, tragen, benutzen, werfen und ablegen. *D* · M6
-- [ ] **OFF-20** Interaktions-Hinweise an Objekten (Taste oder Touch-Button kontextabhängig). *A* · M1
+- [x] **OFF-20** Interaktions-Hinweise an Objekten (Taste oder Touch-Button kontextabhängig). *A* · M1
 - [ ] **OFF-21** Büro-Streiche (Furzkissen, Bananenschale, Konfetti, Kollegen-Monitor verdrehen). *O [SM „cause chaos around the office“], D* · M6
 - [ ] **OFF-22** Physik-Gag: Umgeworfene Spieler purzeln und stehen nach einem Moment wieder auf (Cartoon-k.o., keine Gewalt-Darstellung). *D* · M7
 
@@ -393,7 +393,7 @@ Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die bel
 
 - [ ] **MEN-01** Titelbildschirm mit eigenem Logo, Animation und Musik. *A* · M0/M11
 - [ ] **MEN-02** Hauptmenü: Schicht beginnen (solo), Lobby (Koop lokal), Fortsetzen, Mod-Werkstatt, Galerie, Statistiken und Bestenliste, Einstellungen, Credits. *A/D* · M5–M11
-- [ ] **MEN-03** Pausenmenü (im Solo pausiert die Zeit; im Koop nur das Menü, die Zeit läuft wie im Original weiter). *D* · M2
+- [x] **MEN-03** Pausenmenü (Weiter, Hauptmenü). Solo und lokaler Koop pausieren die Zeit (alle sitzen an einem Gerät); im Online-Koop öffnet es nur das Menü (NET-10). *D* · M1
 - [ ] **MEN-04** Einstellungen Audio: Gesamt, Musik, Effekte, Anruferstimmen, Ingame-Radio. *A* · M11
 - [ ] **MEN-05** Einstellungen Sprache: Sprachsynthese an/aus und Stimmauswahl, Spracheingabe an/aus, Push-to-talk vs. Sprachaktivierung, Mikrofon-Test. *A/E* · M3/M11
 - [ ] **MEN-06** Einstellungen Grafik: Pixel-Skalierung, Partikelmenge, Screenshake, Bewegungen reduzieren, FPS-Anzeige. *A* · M11
@@ -461,12 +461,12 @@ Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die bel
 - [ ] **CTL-07** Gamepad-Belegung frei änderbar. *A* · M11
 
 **Touch (direkt eingebaut)**
-- [ ] **CTL-08** Virtueller Joystick (schwebend, erscheint am Daumen) zum Laufen. *A* · M1
+- [x] **CTL-08** Virtueller Joystick (schwebend, erscheint am Daumen) zum Laufen. *A* · M1
 - [ ] **CTL-09** Kontext-Aktionsbutton (Hinsetzen, Abnehmen, Aufheben, Benutzen) plus Benutzen- bzw. Werfen-Button plus Emote-Button. *A* · M1/M6
 - [ ] **CTL-10** Desktop per Tippen; Wischen zwischen Apps; langes Drücken ersetzt Rechtsklick. *A* · M2
 - [ ] **CTL-11** Anruf: Halten-zum-Sprechen-Mic-Button, Schnellantwort-Karten, Texteingabe mit Bildschirmtastatur, nach oben wischen zum Abnehmen. *A* · M3
 - [ ] **CTL-12** Zielen (Scharfschütze, Spray, Werfen) per Ziehen mit Vorschau-Linie. *A* · M6
-- [ ] **CTL-13** Buttons daumengroß (mind. 56 dp), halbtransparent, an Hoch- und Querformat angepasst. *A* · M1
+- [x] **CTL-13** Buttons daumengroß (mind. 56 dp), halbtransparent, an Hoch- und Querformat angepasst. *A* · M1
 - [ ] **CTL-14** Touch-Layout-Editor: Buttons verschieben, skalieren, Transparenz, zurücksetzen. *A* · M11
 - [ ] **CTL-15** Jede Aktion des Originals ist auf dem Handy ausführbar (Abgleich-Tabelle in GAME_DESIGN.md §4). *A* · M12
 
@@ -539,7 +539,7 @@ Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die bel
 - [ ] **NET-07** Vorab-Test und Bericht: Erreichbarkeit des öffentlichen PeerServers, Verbindungsaufbau Desktop ↔ Handy (WLAN und Mobilfunk). *A* · M14
 - [ ] **NET-08** Raum hosten bzw. per Raum-Code beitreten (PeerJS mit öffentlichem PeerServer, Signalisierungs-Server konfigurierbar). *O (Raum mit Freunden) [ST]* · M14
 - [ ] **NET-09** Bis zu 8 Spieler, freie Plätze mit Bots auffüllbar. *O [FN-faq]* · M14
-- [ ] **NET-10** Host-autoritative Simulation, Synchronisation von Büro, Figuren, Anrufen, Geld, Quota, Gefahren und Shop. *D* · M14
+- [ ] **NET-10** Host-autoritative Simulation, Synchronisation von Büro, Figuren, Anrufen, Geld, Quota, Gefahren und Shop; Pausenmenü hält im Online-Koop die Zeit nicht an. *D* · M14
 - [ ] **NET-11** Sprachchat per WebRTC-Audio mit Proximity (Lautstärke nach Abstand im Büro), Mute bzw. Push-to-talk. *O? (Sprache im Original zentral), D* · M14
 - [ ] **NET-12** Reconnect und Host-Abbruch-Behandlung (Bot übernimmt den Platz). *D* · M14
 - [ ] **NET-13** Verbindungstest mit verständlichen Fehlermeldungen und Tipps; optionales Feld für eigenen TURN-Server. *D* · M14

@@ -22,7 +22,10 @@
     "about": "Über das Spiel",
     "fullscreenOn": "Vollbild: an",
     "fullscreenOff": "Vollbild: aus",
-    "back": "Zurück"
+    "back": "Zurück",
+    "start": "Schicht beginnen",
+    "resume": "Weiter",
+    "mainMenu": "Hauptmenü"
   },
   "device": {
     "label": "Steuerung: {device}",
@@ -48,5 +51,51 @@
   },
   "fullscreen": {
     "toggle": "Vollbild umschalten"
+  },
+  "pause": {
+    "heading": "Pause",
+    "hint": "Die Schicht ruht. Der Chef merkt nichts. Hoffentlich."
+  },
+  "office": {
+    "prompt": {
+      "sit": "Hinsetzen",
+      "stand": "Aufstehen"
+    },
+    "keyHint": "{key}: {action}",
+    "touch": {
+      "pause": "Pause"
+    }
+  },
+  "keys": {
+    "Tab": "Tab",
+    "Escape": "Esc",
+    "Space": "Leertaste",
+    "Enter": "Enter",
+    "Backspace": "Rücktaste",
+    "Delete": "Entf",
+    "ArrowUp": "Pfeil hoch",
+    "ArrowDown": "Pfeil runter",
+    "ArrowLeft": "Pfeil links",
+    "ArrowRight": "Pfeil rechts",
+    "PageUp": "Bild hoch",
+    "PageDown": "Bild runter",
+    "BracketLeft": "Ü",
+    "BracketRight": "+"
+  },
+  "padButtons": {
+    "0": "A",
+    "1": "B",
+    "2": "X",
+    "3": "Y",
+    "4": "LB",
+    "5": "RB",
+    "6": "LT",
+    "7": "RT",
+    "8": "Select",
+    "9": "Start",
+    "12": "Hoch",
+    "13": "Runter",
+    "14": "Links",
+    "15": "Rechts"
   }
 }

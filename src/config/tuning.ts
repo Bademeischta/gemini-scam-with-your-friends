@@ -47,6 +47,38 @@ export const TUNING = {
     logoWaveSpeed: 3.2,
   },
 
+  office: {
+    /** Laufgeschwindigkeit in Kacheln pro Sekunde. */
+    walkSpeedTiles: 4.5,
+    /** Zeit bis zur vollen Geschwindigkeit bzw. bis zum Stillstand (s). */
+    accelTime: 0.08,
+    decelTime: 0.06,
+    /** Kollisionsbox an den Füßen (Art-Pixel). */
+    hitbox: { w: 10, h: 6 },
+    /** Maximaler Abstand Füße ↔ Interaktionspunkt (Art-Pixel). */
+    interactRadius: 18,
+    /** Prüfpunkt so weit vor den Füßen in Blickrichtung (Art-Pixel). */
+    probeAhead: 6,
+    /** So viele Kacheln sollen entlang der kürzeren Bildschirmseite sichtbar sein. */
+    viewTilesShortSide: 14,
+    /** Kamera-Nachführung (1/s, höher = straffer). */
+    cameraLerp: 9,
+    /** Lauf-Animation: Bilder pro Sekunde bei voller Geschwindigkeit. */
+    walkAnimFps: 9,
+  },
+
+  touch: {
+    /** Joystick-Radius in CSS-px. */
+    joystickRadius: 52,
+    joystickDeadzone: 0.18,
+    /** Kontext-Button (Hinsetzen, Abnehmen …) in CSS-px. */
+    actionButton: 76,
+    /** Kleine Buttons (Pause, Aufstehen) in CSS-px, mindestens Daumengröße. */
+    smallButton: 56,
+    /** Deckkraft der Touch-Steuerelemente. */
+    opacity: 0.55,
+  },
+
   audio: {
     masterVolume: 0.8,
     uiVolume: 0.5,

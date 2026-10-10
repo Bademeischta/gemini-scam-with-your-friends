@@ -89,8 +89,9 @@ describe('Sprachdateien', () => {
     for (const m of html.matchAll(/data-i18n(?:-aria)?="([^"]+)"/g)) used.push(m[1]!);
     expect(used.length).toBeGreaterThan(10);
     for (const k of used) expect(deKeys.has(k), `fehlender Schlüssel: ${k}`).toBe(true);
-    // Dynamische Schlüssel (z. B. title.pressStart.${mode}) müssen für alle Hinweis-Modi existieren.
-    for (const pattern of dynamic) {
+    // Dynamische Schlüssel mit ${mode} (z. B. title.pressStart.${mode}) müssen für alle Hinweis-Modi existieren.
+    // Andere dynamische Schlüssel (z. B. keys.${code}) werden im Code per i18n.has() abgesichert.
+    for (const pattern of dynamic.filter((p) => p.includes('${mode}'))) {
       for (const mode of ['touch', 'desktop', 'gamepad']) {
         const key = pattern.replace(/\$\{[^}]+\}/g, mode);
         expect(deKeys.has(key), `fehlender dynamischer Schlüssel: ${key}`).toBe(true);

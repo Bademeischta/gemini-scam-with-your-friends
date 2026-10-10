@@ -7,6 +7,13 @@ import { isFullscreen } from '../systems/platform/fullscreen';
  * Nur im E2E-Build (VITE_E2E=1): liest Spielzustand für Playwright aus.
  * Kein Schreibzugriff – Tests steuern das Spiel ausschließlich über echte Eingaben.
  */
+interface Rect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
 export interface TestHook {
   ready: boolean;
   scene(): string | undefined;
@@ -15,6 +22,12 @@ export interface TestHook {
   /** Menü-Buttons in CSS-Pixeln (für gezieltes Antippen in Tests). */
   menuRects(): { id: string; x: number; y: number; w: number; h: number }[];
   hintMode(): string;
+  /** Zustand der Spielerfigur im Büro. */
+  office(): { x: number; y: number; facing: string; seated: number | null; focus: string | null; prompt: string | null; zoom: number } | undefined;
+  /** Touch-Steuerelemente in CSS-Pixeln. */
+  touchRects(): { stickZone: Rect; stickRest: { x: number; y: number }; action: Rect; pause: Rect } | undefined;
+  /** Alle aktiven Szenen (oberste zuletzt). */
+  scenes(): string[];
   inputKind(): string;
   formFactor(): string;
   viewport(): Services['viewport']['state'];
@@ -42,6 +55,9 @@ export function installTestHook(game: Phaser.Game, s: Services): void {
     menuFocus: () => game.registry.get('menuFocus') as string | undefined,
     menuRects: () => (game.registry.get('menuRects') as { id: string; x: number; y: number; w: number; h: number }[] | undefined) ?? [],
     hintMode: () => s.device.hintMode,
+    office: () => game.registry.get('office') as ReturnType<TestHook['office']>,
+    touchRects: () => game.registry.get('touchRects') as ReturnType<TestHook['touchRects']>,
+    scenes: () => game.scene.getScenes(true).map((sc) => sc.scene.key),
     inputKind: () => s.device.kind,
     formFactor: () => s.device.formFactor,
     viewport: () => s.viewport.state,

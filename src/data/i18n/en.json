@@ -22,7 +22,10 @@
     "about": "About the game",
     "fullscreenOn": "Fullscreen: on",
     "fullscreenOff": "Fullscreen: off",
-    "back": "Back"
+    "back": "Back",
+    "start": "Start shift",
+    "resume": "Resume",
+    "mainMenu": "Main menu"
   },
   "device": {
     "label": "Controls: {device}",
@@ -48,5 +51,32 @@
   },
   "fullscreen": {
     "toggle": "Toggle fullscreen"
+  },
+  "pause": {
+    "heading": "Pause",
+    "hint": "The shift is on hold. The boss won’t notice. Hopefully."
+  },
+  "office": {
+    "prompt": {
+      "sit": "Sit down",
+      "stand": "Stand up"
+    },
+    "keyHint": "{key}: {action}",
+    "touch": {
+      "pause": "Pause"
+    }
+  },
+  "keys": {
+    "Space": "Space",
+    "Backspace": "Backspace",
+    "Delete": "Del",
+    "ArrowUp": "Up",
+    "ArrowDown": "Down",
+    "ArrowLeft": "Left",
+    "ArrowRight": "Right",
+    "PageUp": "Page up",
+    "PageDown": "Page down",
+    "BracketLeft": "[",
+    "BracketRight": "]"
   }
 }
