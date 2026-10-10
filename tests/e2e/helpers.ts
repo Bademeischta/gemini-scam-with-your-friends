@@ -162,10 +162,28 @@ export async function padButton(page: Page, index: number): Promise<void> {
       },
       [index, down] as const,
     );
+  // Mindestens zwei echte Frames halten bzw. loslassen: Das Gamepad wird nur einmal pro Frame
+  // abgefragt, und bei niedriger Bildrate (Software-Rendering) ginge ein reiner 80-ms-Druck verloren.
   await set(true);
-  await page.waitForTimeout(80);
+  await Promise.all([nextFrames(page, 2), page.waitForTimeout(80)]);
   await set(false);
-  await page.waitForTimeout(80);
+  await Promise.all([nextFrames(page, 2), page.waitForTimeout(80)]);
+}
+
+/** Wartet, bis die Seite `n` Animation-Frames gezeichnet hat (Phaser läuft im selben Takt). */
+export function nextFrames(page: Page, n: number): Promise<void> {
+  return page.evaluate(
+    (count) =>
+      new Promise<void>((resolve) => {
+        let i = 0;
+        const tick = (): void => {
+          if (++i >= count) resolve();
+          else requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }),
+    n,
+  );
 }
 
 
@@ -219,7 +237,7 @@ export const keyPulse =
   async (dir: Dir, ms: number): Promise<void> => {
     const key = { up: 'KeyW', down: 'KeyS', left: 'KeyA', right: 'KeyD' }[dir];
     await page.keyboard.down(key);
-    await page.waitForTimeout(ms);
+    await holdFor(page, ms);
     await page.keyboard.up(key);
   };
 
@@ -228,14 +246,54 @@ export const padPulse =
   async (dir: Dir, ms: number): Promise<void> => {
     const [axis, v] = { up: [1, -1], down: [1, 1], left: [0, -1], right: [0, 1] }[dir] as [number, number];
     await padAxis(page, axis, v);
-    await page.waitForTimeout(ms);
+    await holdFor(page, ms);
     await padAxis(page, axis, 0);
   };
 
-export const touchPulse =
-  (page: Page, rest: { x: number; y: number }) =>
-  async (dir: Dir, ms: number): Promise<void> => {
-    const off = { up: [0, -60], down: [0, 60], left: [-60, 0], right: [60, 0] }[dir] as [number, number];
-    const end = Date.now() + ms;
-    await touchDrag(page, rest, { x: rest.x + off[0], y: rest.y + off[1] }, async () => Date.now() >= end);
-  };
+/**
+ * Touch-Joystick geregelt zu Wegpunkten führen: Der Finger bleibt unten, die Auslenkung wird
+ * nach jeder Messung proportional zur Restdistanz gesetzt (analoger Stick = langsamer am Ziel).
+ * Jeder CDP-Touch-Event wartet auf einen Frame; bei sehr niedriger Bildrate würden feste
+ * Impulse deshalb weit überschwingen.
+ */
+export async function touchWalkPath(page: Page, points: { x: number; y: number }[], rest: { x: number; y: number }, tol = 9): Promise<OfficeState> {
+  const cdp = await cdpFor(page);
+  const touch = (type: 'touchStart' | 'touchMove', x: number, y: number) =>
+    cdp.send('Input.dispatchTouchEvent', { type, touchPoints: [{ x: Math.round(x), y: Math.round(y), id: 1, radiusX: 4, radiusY: 4, force: 1 }] });
+  // Joystick-Radius in CSS-px (TUNING.touch.joystickRadius × 0.8) und Totzone.
+  const radius = 41;
+  const deadzone = 0.18;
+  await touch('touchStart', rest.x, rest.y);
+  try {
+    for (const target of points) {
+      const t0 = Date.now();
+      while (Date.now() - t0 < 30_000) {
+        const s = await office(page);
+        const dx = target.x - s.x;
+        const dy = target.y - s.y;
+        if (Math.abs(dx) <= tol && Math.abs(dy) <= tol) break;
+        const vertical = Math.abs(dy) > tol && (Math.abs(dy) >= Math.abs(dx) || Math.abs(dx) <= tol);
+        const d = vertical ? dy : dx;
+        const speed = Math.min(1, Math.max(0.12, Math.abs(d) / 60));
+        const len = radius * (deadzone + (1 - deadzone) * speed) * Math.sign(d);
+        await touch('touchMove', rest.x + (vertical ? 0 : len), rest.y + (vertical ? len : 0));
+        await nextFrames(page, 1);
+      }
+      // Am Wegpunkt anhalten (Stick in die Mitte), bevor die Achse wechselt.
+      await touch('touchMove', rest.x, rest.y);
+      await nextFrames(page, 2);
+    }
+  } finally {
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  }
+  await nextFrames(page, 2);
+  return office(page);
+}
+
+/**
+ * Hält eine Eingabe mindestens `ms` lang und mindestens zwei echte Frames: Bei sehr niedriger
+ * Bildrate (große Canvas im Software-Rendering) ginge ein kurzer Impuls sonst zwischen zwei Frames verloren.
+ */
+async function holdFor(page: Page, ms: number): Promise<void> {
+  await Promise.all([page.waitForTimeout(ms), nextFrames(page, 2)]);
+}

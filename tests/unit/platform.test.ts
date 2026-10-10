@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { isTextField, preventIfCancelable } from '../../src/systems/platform/guards';
 import { shouldShowRotateHint } from '../../src/systems/platform/orientation';
 import { DEFAULT_SETTINGS, SettingsStore } from '../../src/systems/save/settings';
 import { SafeStorage, type KeyValueStore } from '../../src/systems/save/storage';
@@ -116,5 +117,20 @@ describe('Speicher', () => {
     store.update({ portraitAccepted: true, uiVolume: 0.3 });
     expect(seen).toBe(true);
     expect(JSON.parse(backend.getItem('masche.settings.v1')!)).toMatchObject({ portraitAccepted: true, uiVolume: 0.3 });
+  });
+});
+
+describe('Browser-Schutz', () => {
+  it('ruft preventDefault nur bei abbrechbaren Events auf (keine Chrome-Intervention)', () => {
+    let calls = 0;
+    const ev = (cancelable: boolean) => ({ cancelable, preventDefault: () => void calls++ });
+    preventIfCancelable(ev(false));
+    expect(calls).toBe(0);
+    preventIfCancelable(ev(true));
+    expect(calls).toBe(1);
+  });
+
+  it('erkennt ohne DOM kein Textfeld', () => {
+    expect(isTextField(null)).toBe(false);
   });
 });

@@ -4,14 +4,22 @@
  * Text-Markieren, Kontextmenü und Drag-Ghosts. Texteingabefelder bleiben benutzbar.
  */
 export function isTextField(target: EventTarget | null): boolean {
-  if (!(target instanceof HTMLElement)) return false;
+  if (typeof HTMLElement === 'undefined' || !(target instanceof HTMLElement)) return false;
   return target.isContentEditable || target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT';
+}
+
+/**
+ * preventDefault nur, wenn der Browser es zulässt. Nicht abbrechbare Events (z. B. touchmove
+ * während einer laufenden Scroll-Geste) würden sonst eine Chrome-Intervention in der Konsole auslösen.
+ */
+export function preventIfCancelable(e: Pick<Event, 'cancelable' | 'preventDefault'>): void {
+  if (e.cancelable) e.preventDefault();
 }
 
 export function installBrowserGuards(win: Window): void {
   const doc = win.document;
   const block = (e: Event): void => {
-    if (!isTextField(e.target)) e.preventDefault();
+    if (!isTextField(e.target)) preventIfCancelable(e);
   };
 
   // Scrollen und Pull-to-Refresh (zusätzlich zu CSS overscroll-behavior/touch-action).
@@ -20,7 +28,7 @@ export function installBrowserGuards(win: Window): void {
   doc.addEventListener(
     'touchstart',
     (e) => {
-      if (e.touches.length > 1) e.preventDefault();
+      if (e.touches.length > 1) preventIfCancelable(e);
     },
     { passive: false },
   );
@@ -33,7 +41,7 @@ export function installBrowserGuards(win: Window): void {
   win.addEventListener(
     'wheel',
     (e) => {
-      if (e.ctrlKey) e.preventDefault();
+      if (e.ctrlKey) preventIfCancelable(e);
     },
     { passive: false },
   );

@@ -45,7 +45,8 @@ Vite 8 + TypeScript 7 (strict) + Phaser 3.90 · Vitest 5 · Playwright 1.64 (lok
 - Headless-Chromium rendert ohne GPU (SwiftShader): sichtbare FPS liegen dort bei 20–27, mit verstecktem Canvas bei 60. Die Spiellogik ist also nicht der Engpass. Performance-Messungen (M12) deshalb über CPU-Zeit pro Frame, nicht über den rAF-Takt im Headless-Browser.
 - Playwright-Timeout ist 90 s, weil HiDPI-Projekte im Software-Rendering langsam sind.
 - Tests tippen Menü-Buttons über `__MASCHE__.menuRects()` bzw. Touch-Elemente über `touchRects()` an (CSS-Pixel), nicht über feste Koordinaten.
-- Bewegung in E2E-Tests immer über `walkPath(page, wegpunkte, keyPulse|padPulse|touchPulse)`: geregelte Impulse mit Messung dazwischen (robust bei 5–25 FPS). Bewegungstests mit `test.slow()`.
+- Bewegung in E2E-Tests immer über `walkPath(page, wegpunkte, keyPulse|padPulse)` (geregelte Impulse, je mindestens zwei echte Frames) bzw. `touchWalkPath(page, wegpunkte, stickRest)` (Finger bleibt unten, Auslenkung proportional zur Restdistanz). Robust bis hinunter zu ~2 FPS; jeder CDP-Touch-Event wartet einen Frame ab. Bewegungstests mit `test.slow()`.
+- Gamepad-Knöpfe in Tests über `padButton` (hält mindestens zwei Frames). `preventDefault()` nur über `preventIfCancelable` (sonst Chrome-Intervention als Konsolenfehler).
 - Szenen-Shutdown-Handler dürfen keine Spielobjekte mehr anfassen (Phaser zerstört sie vorher) – sonst bricht der Szenenwechsel ab.
 - Grafiken lassen sich ohne Browser prüfen: PixelGrid → PNG über `scripts/png.ts` (z. B. kleines tsx-Skript im Scratchpad).
 

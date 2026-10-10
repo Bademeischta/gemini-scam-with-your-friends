@@ -13,7 +13,7 @@ import {
   keyPulse,
   padPulse,
   shot,
-  touchPulse,
+  touchWalkPath,
   walkPath,
   walkUntil,
 } from './helpers';
@@ -105,7 +105,7 @@ test.describe('Büro', () => {
     await shot(page, info, 'office');
 
     const start = await office(page);
-    await walkPath(page, PATH_TO_DESK7, touchPulse(page, rects.stickRest));
+    await touchWalkPath(page, PATH_TO_DESK7, rects.stickRest);
     expect((await office(page)).y).toBeLessThan(start.y - 25);
     await expect.poll(async () => (await office(page)).focus).toBe('desk7');
     // Auf Touch steht die Aktion ohne Tastenname im Hinweis.
