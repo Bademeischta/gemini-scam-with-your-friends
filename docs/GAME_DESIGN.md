@@ -41,7 +41,7 @@ Alle Werte stehen zentral in `src/config/tuning.ts` und werden nach den automati
 | Wert | Festlegung | Herkunft |
 |---|---|---|
 | Quota Tag 1 (solo) | **600 ₮** | Original-Screenshot 600 $ |
-| Quota-Kurve | `600 × (1 + 0,55 × (Tag−1)) × Teamfaktor`, gerundet auf 50 → solo: 600 · 930 · 1.260 · 1.590 · 1.920 · 2.250 · 2.580 … | trifft die Original-Referenzen 1.400, 1.750, 2.600 je nach Teamgröße |
+| Quota-Kurve | `600 × (1 + 0,55 × (Tag−1)) × Teamfaktor`, gerundet auf 50 → solo: 600 · 950 · 1.250 · 1.600 · 1.900 · 2.250 · 2.600 … | trifft die Original-Referenzen 1.400, 1.750, 2.600 je nach Teamgröße |
 | Teamfaktor | `1 + 0,75 × (Teamgröße−1)` (Menschen plus Bots) | D – Koop darf nicht trivial werden |
 | Rentennummer-Masche | **250 ₮** Basis | Original 250 $ |
 | Weitere Maschen | 150–900 ₮ (Turbo 300, FernGucker 450–900, Gutschein = vorgelesener Betrag, absurde Maschen 300–800) | D, relativ zur 250-Referenz |
@@ -74,8 +74,8 @@ Die Eingabe läuft über eine Aktions-Schicht (`systems/input`): Alle Geräte er
 | Gegenstand benutzen / zielen / werfen | Linksklick bzw. F, Maus zielt | X, rechter Stick zielt | Benutzen-Button, Ziehen = Zielen mit Vorschau |
 | Gegenstand ablegen | Q | B (im Laufmodus) | Wischen auf dem Gegenstand-Slot |
 | Emote-Rad | G | Y halten + Stick | Emote-Button (Rad, wischen) |
-| Aufstehen vom Platz | Tab / Esc | B | „Aufstehen“-Button oben links |
-| Desktop-Bedienung | Maus | Steuerkreuz-Fokus, A = Klick, LB/RB = App wechseln | Tippen; Wischen = App wechseln; langes Drücken = Kontext |
+| Aufstehen vom Platz | Tab bzw. Taskleisten-Button (Esc = Pause) | B | „Aufstehen“-Button oben links |
+| Desktop-Bedienung | Maus (Doppelklick öffnet, Rechtsklick = Kontext); Pfeile + Enter, G = Kontext; Bild↑/↓ wechseln Apps (Strg+Tab ist im Browser reserviert) | Steuerkreuz-Fokus, A = Klick, Y = Kontext, LB/RB = App wechseln | Tippen; Wischen = App wechseln; langes Drücken = Kontext |
 | Anruf annehmen | Klick auf Popup / E | A | Popup tippen oder nach oben wischen |
 | Sprechen | V halten (Push-to-talk) | RT halten | Mic-Button halten |
 | Tippen | Tastatur, Enter sendet | Bildschirmtastatur (A tippt) | System-Bildschirmtastatur |
@@ -215,7 +215,7 @@ Nach jedem Meilenstein: Build, Typecheck, Vitest, Playwright-Screenshots (Deskto
 |---|---|---|
 | **M0** | Fundament | Projekt-Setup, Ordnerstruktur, Config, Input-Schicht mit Geräte-Erkennung, Viewport, Safe Areas, Vollbild, Ausrichtungs-Hinweis, Auto-Pause, Fixed-Step-Loop, Pixel-Font, Palette, Titelbild, PWA-Grundgerüst, Icons, Vitest und Playwright, CI-Workflow, CLAUDE.md (TEC-01–10, TEC-15, CTL-01/02, MEN-01, PLT-01/06, QA-01–03) |
 | **M1** | Büro | Kachel-Büro mit 8 Plätzen, Chefbüro, Möbeln und Objekten, Spielerfigur, Kollision, Interaktion, Hinsetzen/Aufstehen, Touch-Joystick und Kontext-Button, Pausenmenü mit Auto-Pause (OFF-01–03, 16, 17, 20, PLT-02, CTL-03, 08, 09, 13, MEN-03). Das Büro-HUD (HUD-01) kommt mit echten Tagesdaten in M5 |
-| **M2** | MogelOS | Fenstermanager, Taskleiste (Geld, Team, Quota, Countdown), Startmenü, Toasts, System-Apps, Ansichtswechsel beim Hinsetzen (OS-01–06, 09, 11, 13, 14, APP-47–49, 52, 54, PLT-03, CTL-04, 10, OFF-17) |
+| **M2** ✔ | MogelOS | Fenstermanager, Taskleiste (Geld, Team, Quota, Countdown), Startmenü, Toasts, System-Apps, Ansichtswechsel beim Hinsetzen (OS-01–06, 09, 11, 13, 14, APP-47–49, 52, 54, PLT-03, CTL-04, 10, OFF-17). Offen gebliebene Teile wandern mit ihren Auslösern: OS-11 (Lieferung/Freischaltung/Virus) M5–M7, OS-14 (laufende Anrufe) M3/M8, APP-54 (weitere Spiel-Einstellungen) M11, CTL-04 (Enter/Karten) M3 |
 | **M3** | Anrufe & Gespräche | Klingeln, Popup, Telefon-App, Sprachverständnis, 24 Persönlichkeiten, Vertrauen und Stimmung, Gedächtnis, Abnutzung, TTS, STT, Brabbeln, Untertitel, Karten, Warteschleife, Notizblock, Porträts (CAL-01–25, NPC-01–26, APP-01, 08, HUD-02, 04, AUD-07, CTL-11, PLT-04/05, MEN-05, FUN-02) |
 | **M4** | Maschen | 16 Maschen und ihre Apps, Ident-o-Mat, Kundenkartei, FernGucker mit Opfer-PC, Plauderbude, Gutschein-Kasse, Auszahlungen (SCH-01–22, APP-02–05, 11–26) |
 | **M5** | Tag & Run | Büro-HUD (HUD-01), Countdown, Quota-Formel, Ausstempeln, Chef (KI, Wut, Kontrollgänge), Bewertung mit 3 Momenten, Freischaltungen, Tacker, Rauswurf, Kündigungsbericht, Bestenliste, Statistiken, Speichern und Fortsetzen (DAY-01–15, PRG-01–07, MOD-04/05/07, OS-07/10, APP-07, 10, 53, TEC-12, FUN-01, COP-09) |

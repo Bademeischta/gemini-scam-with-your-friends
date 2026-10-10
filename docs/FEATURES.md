@@ -50,7 +50,7 @@ Mechanik, Zweck und Funktion bleiben gleich. Namen, Figuren, Grafik, Texte und M
 
 - [ ] **PLT-01** Windows-PC-Spiel mit Maus und Tastatur → bei uns Desktop-Browser mit frei belegbarer Tastatur und Maus. *O [ST][FN]* · M0/M11
 - [x] **PLT-02** First-Person-Bewegung durchs Büro → bei uns Draufsicht-Büro mit Laufen per WASD, Joystick oder Stick. *O [ST-Tags], E* · M1
-- [ ] **PLT-03** Ingame-Desktop per Maus bedienen → bei uns per Maus, Touch oder Gamepad-Fokusnavigation. *O [FN]* · M2
+- [x] **PLT-03** Ingame-Desktop per Maus bedienen → bei uns per Maus, Touch oder Gamepad-Fokusnavigation. *O [FN]* · M2
 - [ ] **PLT-04** Mit Anrufern sprechen per Mikrofon (Tag „Voice Control“) → bei uns Spracheingabe, wo der Browser sie kann. *O [ST][FN], E* · M3
 - [ ] **PLT-05** Text-Eingabe als Alternative zur Stimme. *O? [XB-ähnlich, FN-faq unklar], E* · M3
 - [ ] **PLT-06** Läuft zusätzlich auf Handy und Tablet (Touch) und ist als App installierbar. *A* · M0/M12
@@ -84,7 +84,7 @@ Mechanik, Zweck und Funktion bleiben gleich. Namen, Figuren, Grafik, Texte und M
 - [ ] **OFF-14** Arrestzelle bzw. „Stille Treppe“ für Festgenommene bis zum Tagesende oder zur Kaution. *D* · M7
 - [ ] **OFF-15** Topfpflanze „Ferdinand“ (Running Gag, Easter Egg). *+* · M11
 - [x] **OFF-16** Spielerfigur läuft (Delta-Time, Beschleunigung, Kollision mit Möbeln). *O, E* · M1
-- [ ] **OFF-17** Hinsetzen bzw. Aufstehen am Schreibtisch, dabei wechselt die Ansicht zum MogelOS-Desktop. *O [FN]* · M1/M2
+- [x] **OFF-17** Hinsetzen bzw. Aufstehen am Schreibtisch, dabei wechselt die Ansicht zum MogelOS-Desktop. *O [FN]* · M1/M2
 - [ ] **OFF-18** Fremde Schreibtische übernehmen, z. B. wenn ein Kollege k. o. oder abwesend ist. *O? [XB], D* · M8
 - [ ] **OFF-19** Gegenstände aufheben, tragen, benutzen, werfen und ablegen. *D* · M6
 - [x] **OFF-20** Interaktions-Hinweise an Objekten (Taste oder Touch-Button kontextabhängig). *A* · M1
@@ -93,20 +93,20 @@ Mechanik, Zweck und Funktion bleiben gleich. Namen, Figuren, Grafik, Texte und M
 
 ## 4. MogelOS (Ingame-Desktop) & Taskleiste
 
-- [ ] **OS-01** Eigener Ingame-Desktop „MogelOS“ mit Icons, Fenstern, Startmenü und Hintergrund. *O [FN „Kolkata OS“]* · M2
+- [x] **OS-01** Eigener Ingame-Desktop „MogelOS“ mit Icons, Fenstern, Startmenü und Hintergrund. *O [FN „Kolkata OS“]* · M2
 - [ ] **OS-02** Mehr als 45 Apps (wir: 55, siehe §8). *O [FN]* · M2–M9
-- [ ] **OS-03** Taskleiste zeigt persönliches Guthaben. *O [FN]* · M2
-- [ ] **OS-04** Taskleiste zeigt die Team-Summe. *O [FN]* · M2
-- [ ] **OS-05** Taskleiste zeigt die Quota. *O [FN]* · M2
-- [ ] **OS-06** Taskleiste zeigt den Countdown bis zur Leistungsbewertung. *O [FN]* · M2
+- [x] **OS-03** Taskleiste zeigt persönliches Guthaben. *O [FN]* · M2
+- [x] **OS-04** Taskleiste zeigt die Team-Summe. *O [FN]* · M2
+- [x] **OS-05** Taskleiste zeigt die Quota. *O [FN]* · M2
+- [x] **OS-06** Taskleiste zeigt den Countdown bis zur Leistungsbewertung. *O [FN]* · M2
 - [ ] **OS-07** Ausstempeln-Taste in der Taskleiste, aktiv sobald die Quota erreicht ist. *O [FN]* · M5
 - [ ] **OS-08** Popup bei eingehendem Anruf mit Name und Bild des Anrufers. *O [FN]* · M3
-- [ ] **OS-09** Fenstermanager: öffnen, schließen, fokussieren, verschieben (Desktop), minimieren. Auf dem Handy laufen Apps im Vollbild mit App-Umschalter. *A/E* · M2
+- [x] **OS-09** Fenstermanager: öffnen, schließen, fokussieren, verschieben (Desktop), minimieren. Auf dem Handy laufen Apps im Vollbild mit App-Umschalter. *A/E* · M2
 - [ ] **OS-10** Gesperrte Apps sind sichtbar (Schloss plus „ab Tag X“ bzw. „im Ramschazon“). *D* · M5
-- [ ] **OS-11** Benachrichtigungen (Toasts): Lieferung da, App freigeschaltet, Chef-Mail, Virus. *D* · M2
+- [ ] **OS-11** Benachrichtigungen (Toasts): Lieferung da, App freigeschaltet, Chef-Mail, Virus. *D* · M2 (System und Chef-Mail seit M2; Lieferung, Freischaltung und Virus mit M5–M7)
 - [ ] **OS-12** Boss-Taste: wechselt den Bildschirm sofort zu einer harmlosen Tabellenkalkulation (hilft bei Razzia und Chef-Kontrolle). *D* · M7
-- [ ] **OS-13** Desktop-Hintergrund und Theme änderbar (Systemsteuerung). *D* · M2
-- [ ] **OS-14** Aufstehen bzw. Desktop verlassen jederzeit möglich, laufende Anrufe gehen weiter (Kollege kann übernehmen). *D* · M2/M8
+- [x] **OS-13** Desktop-Hintergrund und Theme änderbar (Systemsteuerung). *D* · M2
+- [ ] **OS-14** Aufstehen bzw. Desktop verlassen jederzeit möglich, laufende Anrufe gehen weiter (Kollege kann übernehmen). *D* · M2/M8 (Aufstehen jederzeit seit M2; Anrufe ab M3, Übernahme durch Kollegen M8)
 
 ## 5. Anrufe & Gesprächssystem
 
@@ -255,14 +255,14 @@ Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die bel
 - [ ] **APP-46** Galerie (Fotos, Bilder, Aufnahmen; teilen in Team-Funk, an die Pinnwand hängen). *D* · M9
 
 **System & Werkzeuge**
-- [ ] **APP-47** Dateien (Explorer mit eigenen Dateien und Gag-Dateien). *D* · M2
-- [ ] **APP-48** Papierkorb (wiederherstellen, leeren, Gag-Inhalte). *D* · M2
-- [ ] **APP-49** Rechner. *D* · M2
+- [x] **APP-47** Dateien (Explorer mit eigenen Dateien und Gag-Dateien). *D* · M2
+- [x] **APP-48** Papierkorb (wiederherstellen, leeren, Gag-Inhalte). *D* · M2
+- [x] **APP-49** Rechner. *D* · M2
 - [ ] **APP-50** Netzlupe (Browser mit Fake-Seiten: Schwindelheimer Nachrichten mit Berichten über eure Taten, Fahndungsliste, Konkurrenz-Website, Ramschazon-Bewertungen). *D* · M6
 - [ ] **APP-51** Warteschleifen-FM (Musik- und Radio-App: Sender wechseln, die Musik läuft im Büro). *D* · M11
-- [ ] **APP-52** Wetter (Gag-Vorhersagen, z. B. „Heute 80 % Raketenwahrscheinlichkeit“). *D* · M2
+- [x] **APP-52** Wetter (Gag-Vorhersagen, z. B. „Heute 80 % Raketenwahrscheinlichkeit“). *D* · M2
 - [ ] **APP-53** Kalender & Uhr (Arbeitstag, Countdown, Freischalt-Vorschau). *D* · M5
-- [ ] **APP-54** Systemsteuerung (Hintergrund, Lautstärke, Theme, Spiel-Einstellungen). *D* · M2
+- [ ] **APP-54** Systemsteuerung (Hintergrund, Lautstärke, Theme, Spiel-Einstellungen). *D* · M2 (Hintergrund, Theme, Lautstärken, Vibration seit M2; weitere Spiel-Einstellungen mit M11)
 - [ ] **APP-55** Einarbeitungsmappe (Hilfe und Handbuch: Steuerung, Maschen, Apps, Gefahren). *A* · M10
 
 ## 9. Ramschazon (Shop) & Gegenstände
@@ -453,7 +453,7 @@ Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die bel
 
 **Desktop (frei belegbar)**
 - [ ] **CTL-03** Laufen WASD/Pfeile, Interagieren E, Benutzen/Werfen F/Q, Emote-Rad G, Boss-Taste B, Push-to-talk V, Pause Esc, Aufstehen Tab. *A* · M1
-- [ ] **CTL-04** Desktop-Bedienung per Maus, Enter sendet, Zifferntasten 1–4 wählen Schnellantwort-Karten, Strg+Tab wechselt Apps. *A* · M2/M3
+- [ ] **CTL-04** Desktop-Bedienung per Maus, Enter sendet, Zifferntasten 1–4 wählen Schnellantwort-Karten, Strg+Tab wechselt Apps (im Browser reserviert → Bild↑/Bild↓, Gamepad LB/RB; Maus-Bedienung seit M2). *A* · M2/M3
 - [ ] **CTL-05** Tastenbelegung frei änderbar, Konflikterkennung, Zurücksetzen. *A* · M11
 
 **Gamepad**
@@ -463,7 +463,7 @@ Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die bel
 **Touch (direkt eingebaut)**
 - [x] **CTL-08** Virtueller Joystick (schwebend, erscheint am Daumen) zum Laufen. *A* · M1
 - [ ] **CTL-09** Kontext-Aktionsbutton (Hinsetzen, Abnehmen, Aufheben, Benutzen) plus Benutzen- bzw. Werfen-Button plus Emote-Button. *A* · M1/M6
-- [ ] **CTL-10** Desktop per Tippen; Wischen zwischen Apps; langes Drücken ersetzt Rechtsklick. *A* · M2
+- [x] **CTL-10** Desktop per Tippen; Wischen zwischen Apps; langes Drücken ersetzt Rechtsklick. *A* · M2
 - [ ] **CTL-11** Anruf: Halten-zum-Sprechen-Mic-Button, Schnellantwort-Karten, Texteingabe mit Bildschirmtastatur, nach oben wischen zum Abnehmen. *A* · M3
 - [ ] **CTL-12** Zielen (Scharfschütze, Spray, Werfen) per Ziehen mit Vorschau-Linie. *A* · M6
 - [x] **CTL-13** Buttons daumengroß (mind. 56 dp), halbtransparent, an Hoch- und Querformat angepasst. *A* · M1

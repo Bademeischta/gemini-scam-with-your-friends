@@ -1,3 +1,4 @@
+import { OS_THEME_IDS, WALLPAPERS, type OsThemeId, type Wallpaper } from '../../data/os/appearance';
 import type { SafeStorage } from './storage';
 
 /**
@@ -11,6 +12,9 @@ export interface Settings {
   vibration: boolean;
   /** Ausrichtungs-Hinweis wurde mit „Trotzdem hochkant spielen“ weggeklickt. */
   portraitAccepted: boolean;
+  /** MogelOS: Hintergrundbild und Farbschema (Systemsteuerung). */
+  osWallpaper: Wallpaper;
+  osTheme: OsThemeId;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -19,6 +23,8 @@ export const DEFAULT_SETTINGS: Settings = {
   uiVolume: 0.5,
   vibration: true,
   portraitAccepted: false,
+  osWallpaper: 'mogel',
+  osTheme: 'klassik',
 };
 
 const KEY = 'settings.v1';
@@ -54,6 +60,8 @@ export class SettingsStore {
     if (typeof raw.uiVolume === 'number' && raw.uiVolume >= 0 && raw.uiVolume <= 1) s.uiVolume = raw.uiVolume;
     if (typeof raw.vibration === 'boolean') s.vibration = raw.vibration;
     if (typeof raw.portraitAccepted === 'boolean') s.portraitAccepted = raw.portraitAccepted;
+    if ((WALLPAPERS as readonly unknown[]).includes(raw.osWallpaper)) s.osWallpaper = raw.osWallpaper as Wallpaper;
+    if ((OS_THEME_IDS as readonly unknown[]).includes(raw.osTheme)) s.osTheme = raw.osTheme as OsThemeId;
     return s;
   }
 }

@@ -190,4 +190,12 @@ describe('NavRepeat', () => {
     expect(fires).toBeLessThanOrEqual(8);
     expect(nav.update(dt, false, false)).toBe(false);
   });
+
+  it('kurzer Druck wiederholt auch bei sehr niedriger Bildrate nicht', () => {
+    const nav = new NavRepeat(0.38, 0.11);
+    // 4 FPS, Frame-Abstand auf 0,25 s gedeckelt: Druck-Frame plus ein weiterer Frame gehalten.
+    expect(nav.update(0.25, true, true)).toBe(true);
+    expect(nav.update(0.25, true, false)).toBe(false);
+    expect(nav.update(0.25, true, false)).toBe(true);
+  });
 });

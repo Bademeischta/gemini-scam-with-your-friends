@@ -12,6 +12,8 @@ export interface PixelLabelOptions {
   originY?: number;
   align?: 'left' | 'center' | 'right';
   depth?: number;
+  /** Optional: in diesen Container einhängen (Positionen sind dann lokal). */
+  container?: Phaser.GameObjects.Container;
 }
 
 /**
@@ -40,6 +42,10 @@ export class PixelLabel {
     if (opts.depth !== undefined) {
       this.shadow?.setDepth(opts.depth);
       this.main.setDepth(opts.depth);
+    }
+    if (opts.container) {
+      if (this.shadow) opts.container.add(this.shadow);
+      opts.container.add(this.main);
     }
     this.applyScale();
   }
@@ -93,6 +99,15 @@ export class PixelLabel {
   setAlpha(a: number): this {
     this.main.setAlpha(a);
     this.shadow?.setAlpha(a);
+    return this;
+  }
+
+  /** Maximale Breite (physische Pixel, Phaser rechnet skaliert) für Zeilenumbruch; 0 = kein Umbruch. */
+  setMaxWidth(px: number): this {
+    const w = px > 0 ? Math.floor(px) : 0;
+    this.main.setMaxWidth(w);
+    this.shadow?.setMaxWidth(w);
+    this.place();
     return this;
   }
 

@@ -9,6 +9,7 @@ import { installTestHook } from './debug/testHook';
 import { applyDomTranslations, i18n } from './i18n';
 import { AboutScene } from './scenes/AboutScene';
 import { BootScene } from './scenes/BootScene';
+import { DesktopScene } from './scenes/DesktopScene';
 import { OfficeHudScene } from './scenes/OfficeHudScene';
 import { OfficeScene } from './scenes/OfficeScene';
 import { PauseScene } from './scenes/PauseScene';
@@ -25,9 +26,10 @@ import { Viewport } from './systems/viewport/Viewport';
 
 function attachDomInput(win: Window, input: InputManager): void {
   win.addEventListener('keydown', (e) => {
-    const bound = input.handleKeyDown(e.code, e.repeat, isTextField(e.target));
+    const modifier = e.ctrlKey || e.metaKey || e.altKey;
+    const bound = input.handleKeyDown(e.code, e.repeat, isTextField(e.target), e.key, modifier);
     // Spieltasten sollen nicht scrollen, den Fokus wechseln o. Ä. – Browser-Kürzel bleiben erhalten.
-    if (bound && !e.ctrlKey && !e.metaKey && !e.altKey) e.preventDefault();
+    if (bound && !modifier) e.preventDefault();
   });
   win.addEventListener('keyup', (e) => input.handleKeyUp(e.code));
   win.addEventListener(
@@ -74,6 +76,7 @@ function boot(): void {
   const viewport = new Viewport(win, document.getElementById('safe-probe'), TUNING.display.maxDpr);
   const pause = new PauseController();
   const audio = new AudioEngine(settings.get().masterVolume, settings.get().uiVolume);
+  settings.onChange((v) => audio.setVolumes(v.masterVolume, v.uiVolume));
   const s: Services = { viewport, input, device, pause, storage, settings, audio, sfx: createUiSfx(audio) };
   setServices(s);
 
@@ -124,7 +127,8 @@ function boot(): void {
     update();
   }
 
-  const game = createGame(s, [BootScene, TitleScene, AboutScene, OfficeScene, OfficeHudScene, PauseScene]);
+  // Reihenfolge = Zeichenreihenfolge: Desktop über dem Büro, Pause über allem.
+  const game = createGame(s, [BootScene, TitleScene, AboutScene, OfficeScene, OfficeHudScene, DesktopScene, PauseScene]);
   if (import.meta.env.VITE_E2E === '1') installTestHook(game, s);
 
   registerSW({ immediate: true });

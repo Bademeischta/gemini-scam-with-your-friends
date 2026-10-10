@@ -97,5 +97,185 @@
     "13": "Runter",
     "14": "Links",
     "15": "Rechts"
+  },
+  "os": {
+    "apps": {
+      "files": {
+        "title": "Dateien",
+        "short": "Dateien"
+      },
+      "trash": {
+        "title": "Papierkorb",
+        "short": "Papierkorb"
+      },
+      "calc": {
+        "title": "Rechner",
+        "short": "Rechner"
+      },
+      "weather": {
+        "title": "Wetter",
+        "short": "Wetter"
+      },
+      "settings": {
+        "title": "Systemsteuerung",
+        "short": "System"
+      },
+      "viewer": {
+        "title": "Textansicht",
+        "short": "Text"
+      }
+    },
+    "start": {
+      "header": "MogelOS 3.11"
+    },
+    "taskbar": {
+      "start": "Start",
+      "leave": "Aufstehen",
+      "money": "Du: {amount}",
+      "team": "Team {team} / {quota}",
+      "teamShort": "{team} / {quota}"
+    },
+    "ctx": {
+      "open": "Öffnen",
+      "delete": "Löschen",
+      "nextWallpaper": "Nächster Hintergrund",
+      "nextTheme": "Nächstes Farbschema",
+      "settings": "Systemsteuerung"
+    },
+    "files": {
+      "folders": {
+        "docs": "Dokumente",
+        "downloads": "Downloads",
+        "pictures": "Bilder",
+        "recordings": "Aufnahmen"
+      },
+      "empty": "Hier ist nichts. Noch nicht.",
+      "open": "Öffnen",
+      "delete": "Löschen",
+      "count": {
+        "one": "{count} Datei",
+        "other": "{count} Dateien"
+      }
+    },
+    "doc": {
+      "leitfaden": {
+        "name": "Leitfaden_Telefon.txt",
+        "text": "LEITFADEN FÜR DAS TELEFON\n(streng vertraulich, bitte nicht im Bus liegen lassen)\n\n1. Immer freundlich bleiben. Auch wenn der Anrufer „Gurkensalat“ sagt.\n2. Niemals das Wort „Masche“ benutzen. Wir sagen „Kundenbindung“.\n3. Wer „Polizei“ hört, legt auf und gießt sofort die Büropflanze.\n4. Die Kaffeemaschine ist kein Zeuge.\n5. Lachen nur mit vorgehaltener Hand. Oder mit vorgehaltenem Hörer.\n6. Quota ist Quota. Ausreden sind Ausreden. Beides gehört nicht ins Telefon.\n\nGez. Direktor Brülling"
+      },
+      "handbuch": {
+        "name": "MogelOS_Handbuch.txt",
+        "text": "MOGELOS 3.11 – KURZHANDBUCH\n\nDoppelklick öffnet. Rechtsklick hilft. Langes Drücken auch.\nFenster lassen sich verschieben, minimieren und schließen.\nDer Papierkorb merkt sich alles, bis man ihn leert. Wie der Chef.\nDie Taskleiste zeigt dein Geld, das Geld des Teams, die Quota und wie lange es noch bis zur Bewertung dauert.\n\nBei Problemen: Rechner aus, Rechner an, Gesicht machen, als wäre nichts gewesen."
+      },
+      "kuendigung": {
+        "name": "Kündigung_Entwurf_17.txt",
+        "text": "Sehr geehrter Herr Direktor Brülling,\n\nhiermit kündige ich\n\n... nein.\n\nSehr geehrter Herr Direktor Brülling,\nhiermit möchte ich höflich anfragen, ob\n\n... auch nein.\n\n(Entwurf 17. Wird morgen fertig. Bestimmt.)"
+      },
+      "passwoerter": {
+        "name": "Passwörter.txt",
+        "text": "PASSWÖRTER (geheim!!)\n\nRechner: passwort\nPost: passwort123\nKaffeemaschine: bitte\nTresor: steht auf einem Zettel im Tresor\nFunknetz: schwindelheim-gast (frag nicht)"
+      },
+      "einkauf": {
+        "name": "Einkaufsliste.txt",
+        "text": "EINKAUFSLISTE\n\n– Kaffee (viel)\n– Kaffee (mehr)\n– Klebezettel\n– Neuer Tacker (der alte ist „unterwegs“)\n– Blumen für die Büropflanze, als Entschuldigung\n– Gewissen (falls im Angebot)"
+      },
+      "ram": {
+        "name": "mehr_RAM_herunterladen.txt",
+        "text": "MEHR RAM HERUNTERLADEN\n\nGlückwunsch! Sie haben 8 GB Arbeitsspeicher heruntergeladen.\nBitte legen Sie ihn jetzt vorsichtig in das Diskettenlaufwerk.\n\nHinweis: Dies ist eine Textdatei. Sie enthält keinen Arbeitsspeicher. Nur Hoffnung."
+      },
+      "rechnung": {
+        "name": "Rechnung_Ramschazon.txt",
+        "text": "RAMSCHAZON – RECHNUNG Nr. 0000000042\n\n1 × Bürostuhl „Ergo-Wackel“ ... 89 ₮\n1 × Ersatz-Tacker ... 12 ₮\n1 × Motivationsposter „Einfach machen“ ... 25 ₮\n\nSumme: 126 ₮\nBezahlt mit: Firmenkasse (ohne Wissen der Firma)"
+      },
+      "gewissen": {
+        "name": "Gewissen.txt",
+        "text": "Liebe Belegschaft,\n\nich bin dann mal weg.\nIhr wisst schon, warum.\n\nViele Grüße\nEuer Gewissen"
+      },
+      "urlaub": {
+        "name": "Urlaubsantrag.txt",
+        "text": "URLAUBSANTRAG\n\nZeitraum: irgendwann\nGrund: Erholung von der Arbeit\n\nEntscheidung des Vorgesetzten: ABGELEHNT\nBegründung: „Erholung ist auch Arbeit, nur ohne Geld.“"
+      },
+      "moral": {
+        "name": "Moralischer_Kompass.txt",
+        "text": "MORALISCHER KOMPASS – BEDIENUNGSANLEITUNG\n\nDie Nadel zeigt immer nach Norden.\nNorden ist da, wo das Geld ist.\n\nHinweis: Gerät defekt. Rückgabe ausgeschlossen."
+      },
+      "lebenslauf": {
+        "name": "Lebenslauf_ehrlich.txt",
+        "text": "LEBENSLAUF (ehrliche Fassung)\n\nBerufserfahrung: Telefon gehalten.\nStärken: Kann gut zuhören, wenn es um Geld geht.\nSchwächen: Kann nicht Nein sagen. Zu Kaffee.\nHobbys: Lesen (Zettel unter Tastaturen).\n\nNicht verschicken!!"
+      }
+    },
+    "trash": {
+      "restore": "Wiederherstellen",
+      "empty": "Der Papierkorb ist leer. Wie das Gewissen der Belegschaft.",
+      "emptyAction": "Papierkorb leeren",
+      "toastTitle": "Papierkorb geleert",
+      "toastBody": {
+        "one": "{count} Datei ist für immer weg. Hoffentlich nichts Wichtiges.",
+        "other": "{count} Dateien sind für immer weg. Hoffentlich nichts Wichtiges."
+      }
+    },
+    "calc": {
+      "error": "Nö.",
+      "decimal": ","
+    },
+    "weather": {
+      "heading": "Schwindelheim · Tag {day}",
+      "footer": "Angaben ohne Gewähr. Wie alles hier.",
+      "today": "Heute",
+      "tomorrow": "Morgen",
+      "dayAfter": "Übermorgen",
+      "temp": "{temp} °C",
+      "feels": {
+        "0": "gefühlt: Montag",
+        "1": "gefühlt: Überstunden",
+        "2": "gefühlt: drei Tassen Kaffee",
+        "3": "gefühlt: kurz vor Feierabend",
+        "4": "gefühlt: Quota verfehlt",
+        "5": "gefühlt: Freitag, 13 Uhr"
+      },
+      "forecast": {
+        "rockets": "{chance} % Raketenwahrscheinlichkeit. Ein Regenschirm hilft nicht.",
+        "rage": "Sonnig, mit vereinzelten Wutausbrüchen aus dem Chefbüro.",
+        "paper": "Papierschauer aus dem Drucker, Böen bis {chance} Seiten pro Minute.",
+        "coffee": "Dichter Kaffeedampf. Sichtweite unter einer Tasse.",
+        "quota": "Hoch „Quota“ zieht auf. Der Druck steigt um {chance} %.",
+        "police": "Örtlich Blaulicht. Bitte nicht aus dem Fenster winken.",
+        "pigeons": "Bewölkt. Vereinzelt Tauben mit Aktentaschen.",
+        "clear": "Klarer Himmel. Klares Gewissen nicht im Angebot.",
+        "staplers": "Tackerschauer zur Leistungsbewertung. Ducken empfohlen.",
+        "calm": "Ruhige Lage. Verdächtig ruhig."
+      }
+    },
+    "settings": {
+      "tabs": {
+        "look": "Darstellung",
+        "sound": "Ton",
+        "info": "Info"
+      },
+      "wallpaper": "Hintergrund",
+      "theme": "Farbschema",
+      "wallpapers": {
+        "mogel": "Hörer",
+        "karo": "Karo",
+        "nacht": "Nachtschicht",
+        "chef": "Chef"
+      },
+      "themes": {
+        "klassik": "Klassik",
+        "petrol": "Petrol",
+        "himbeere": "Himbeere"
+      },
+      "master": "Gesamtlautstärke",
+      "ui": "Effekte & Oberfläche",
+      "masterValue": "Gesamtlautstärke: {value} %",
+      "uiValue": "Effekte & Oberfläche: {value} %",
+      "vibration": "Vibration",
+      "infoText": "MogelOS 3.11 „Schummel-Edition“\nLizenz: gefunden\nArbeitsspeicher: 640 KB (reicht für jeden)\nFestplatte: 2 GB, davon 1,9 GB Ausreden\n\nSpielversion: {version}\n\nMogelOS wird Ihnen präsentiert von der Hausmeisterei der Masche & Co. Fragen bitte schriftlich, Antworten nie."
+    },
+    "toast": {
+      "bossMail": {
+        "title": "Chef-Mail: Direktor Brülling",
+        "body": "Heutige Quota: {quota}. Keine Ausreden, keine Pausen, kein Lächeln am Telefon ohne Grund."
+      }
+    }
   }
 }

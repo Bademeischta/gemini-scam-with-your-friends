@@ -9,6 +9,7 @@ import {
   menuCenter,
   office,
   openGame,
+  osTarget,
   padButton,
   keyPulse,
   padPulse,
@@ -48,15 +49,22 @@ test.describe('Büro', () => {
 
     await page.keyboard.press('KeyE');
     await expect.poll(async () => (await office(page)).seated).toBe(7);
-    expect((await office(page)).prompt).toBe('E: Aufstehen');
+    // Hinsetzen schaltet auf den MogelOS-Desktop um; aufgestanden wird dort (Tab, Taskleiste).
+    await expect.poll(async () => (await office(page)).desktop).toBe(true);
+    expect((await office(page)).prompt).toBeNull();
     // Im Sitzen bewegt man sich nicht.
     const seated = await office(page);
     await walkUntil(page, 'KeyA', () => false, 400);
     expect((await office(page)).x).toBe(seated.x);
-    await shot(page, info, 'office-seated');
-
+    // E steht nicht auf (bleibt ab M3 fürs Annehmen von Anrufen).
     await page.keyboard.press('KeyE');
+    await page.waitForTimeout(300);
+    expect((await office(page)).seated).toBe(7);
+
+    await page.keyboard.press('Tab');
     await expect.poll(async () => (await office(page)).seated).toBeNull();
+    expect((await office(page)).desktop).toBe(false);
+    expect(await hook<string[]>(page, 'scenes')).not.toContain('Desktop');
 
     // Kollision: Der Stuhl hält die Figur auf.
     s = await walkUntil(page, 'KeyW', () => false, 1200);
@@ -81,6 +89,7 @@ test.describe('Büro', () => {
     await expect.poll(async () => (await office(page)).prompt).toBe('A: Hinsetzen');
     await padButton(page, 0);
     await expect.poll(async () => (await office(page)).seated).toBe(7);
+    await expect.poll(async () => (await office(page)).desktop).toBe(true);
     await padButton(page, 1); // B = Aufstehen (leave)
     await expect.poll(async () => (await office(page)).seated).toBeNull();
   });
@@ -112,9 +121,11 @@ test.describe('Büro', () => {
     expect((await office(page)).prompt).toBe('Hinsetzen');
     await page.touchscreen.tap(rects.action.x + rects.action.w / 2, rects.action.y + rects.action.h / 2);
     await expect.poll(async () => (await office(page)).seated).toBe(7);
-    await shot(page, info, 'office-seated');
+    await expect.poll(async () => (await office(page)).desktop).toBe(true);
 
-    await page.touchscreen.tap(rects.pause.x + rects.pause.w / 2, rects.pause.y + rects.pause.h / 2);
+    // Am PC liegt der Pause-Button in der MogelOS-Leiste.
+    const pause = await osTarget(page, 'tb:pause');
+    await page.touchscreen.tap(pause.x, pause.y);
     await expect.poll(() => hook<string[]>(page, 'scenes')).toContain('Pause');
     await shot(page, info, 'pause');
     const resume = await menuCenter(page, 'resume');

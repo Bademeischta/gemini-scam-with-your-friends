@@ -67,6 +67,50 @@ export const TUNING = {
     walkAnimFps: 9,
   },
 
+  /** Arbeitstag und Quota (GAME_DESIGN.md §3). */
+  day: {
+    /** Tageslänge in Sekunden Echtzeit (Standard 10 min; Komfort-Option ab M11). */
+    lengthSeconds: 600,
+    /** Quota Tag 1 bei einer Person (Original-Referenz 600 $). */
+    quotaBase: 600,
+    /** Anstieg pro Tag (Anteil der Basis). */
+    quotaGrowth: 0.55,
+    /** Zusatz pro weiterem Teammitglied (Anteil). */
+    quotaPerMember: 0.75,
+    /** Rundung der Quota auf volle … Taler. */
+    quotaRounding: 50,
+  },
+
+  /** MogelOS (Ingame-Desktop). Längen in CSS-px. */
+  os: {
+    /** Unter dieser Breite oder Höhe läuft MogelOS im Handy-Modus (Apps im Vollbild, App-Umschalter). */
+    compactMaxWidth: 700,
+    compactMaxHeight: 420,
+    /** Taskleiste mit Maus bzw. auf Touch-Geräten (Daumengröße). */
+    taskbarHeight: 40,
+    taskbarHeightTouch: 56,
+    /** Statusleiste oben im Handy-Modus. */
+    statusBarHeight: 48,
+    /** Mindesthöhe der Titelleiste (Touch: groß genug für Schließen/Minimieren). */
+    titleBarHeight: 30,
+    titleBarHeightTouch: 44,
+    /** Langes Drücken = Rechtsklick (s). */
+    longPressSeconds: 0.5,
+    /** Zwei Klicks innerhalb dieser Zeit = Doppelklick (s). */
+    doubleClickSeconds: 0.45,
+    /** Wischen zwischen Apps: Mindestweg (CSS-px) und Höchstdauer (s). */
+    swipeMinDistance: 70,
+    swipeMaxSeconds: 0.8,
+    /** Benachrichtigungen: Anzeigedauer (s), Breite (CSS-px), höchstens gleichzeitig sichtbar. */
+    toastSeconds: 4.5,
+    toastWidth: 300,
+    toastMax: 3,
+    /** Röhrenmonitor-Effekt beim Hinsetzen/Aufstehen (s). */
+    crtSeconds: 0.35,
+    /** Ab so vielen Sekunden Restzeit blinkt der Countdown rot. */
+    countdownWarnSeconds: 60,
+  },
+
   touch: {
     /** Joystick-Radius in CSS-px. */
     joystickRadius: 52,

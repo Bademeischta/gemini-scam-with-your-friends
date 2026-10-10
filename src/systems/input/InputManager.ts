@@ -1,6 +1,9 @@
 import { ACTIONS, type Action, type Bindings, type PadBinding } from './actions';
 import type { DeviceTracker } from './device';
 
+/** Benannte Tasten, die zusätzlich zu druckbaren Zeichen als Texteingabe zählen. */
+const TYPED_KEYS = new Set(['Enter', 'Backspace', 'Delete']);
+
 /** Minimal benötigte Gamepad-Form (testbar ohne Browser). */
 export interface PadState {
   connected: boolean;
@@ -30,6 +33,8 @@ export class InputManager {
 
   private readonly keysDown = new Set<string>();
   private readonly keysPressedThisFrame = new Set<string>();
+  /** Getippte Zeichen und Bearbeitungstasten dieses Frames (Texteingabe, z. B. Rechner). */
+  private typedThisFrame: string[] = [];
   private readonly virtualDown = new Set<Action>();
   private readonly virtualPressed = new Set<Action>();
 
@@ -59,10 +64,16 @@ export class InputManager {
 
   // ---------- Ereignis-Eingang (von DOM-Listenern bzw. Tests) ----------
 
-  /** Rückgabe true = Taste gehört zu einer Aktion (Aufrufer kann preventDefault machen). */
-  handleKeyDown(code: string, repeat: boolean, fromTextField = false): boolean {
+  /**
+   * Rückgabe true = Taste gehört zu einer Aktion (Aufrufer kann preventDefault machen).
+   * `key` (KeyboardEvent.key) speist die Texteingabe; mit Strg/Alt/Meta (Browser-Kürzel)
+   * werden weder Aktionen noch Zeichen ausgelöst.
+   */
+  handleKeyDown(code: string, repeat: boolean, fromTextField = false, key?: string, modifier = false): boolean {
     if (fromTextField) return false;
     this.tracker?.report('keyboard');
+    if (modifier) return false;
+    if (key !== undefined && (key.length === 1 || TYPED_KEYS.has(key))) this.typedThisFrame.push(key);
     if (!repeat) {
       this.keysPressedThisFrame.add(code);
       this.anyPressed = true;
@@ -167,6 +178,7 @@ export class InputManager {
 
   endFrame(): void {
     this.keysPressedThisFrame.clear();
+    this.typedThisFrame = [];
     this.virtualPressed.clear();
     this.anyPressed = false;
   }
@@ -188,6 +200,14 @@ export class InputManager {
   /** Irgendeine Taste, ein Gamepad-Button oder ein Tippen in diesem Frame („Press Start“). */
   anyJustPressed(): boolean {
     return this.anyPressed;
+  }
+
+  /**
+   * Texteingabe dieses Frames: druckbare Zeichen (KeyboardEvent.key) sowie Enter, Backspace und Delete.
+   * Für Eingabefelder wie den Rechner; Spiel-Aktionen laufen weiter über `justPressed`.
+   */
+  typed(): readonly string[] {
+    return this.typedThisFrame;
   }
 
   /** Bewegungsrichtung, Länge 0–1. */

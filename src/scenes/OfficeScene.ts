@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { hex } from '../config/palette';
 import { TUNING } from '../config/tuning';
 import { DESKS, deskGeometry, OFFICE_OBJECTS, OFFICE_SIZE, SPAWN, SPRITE_SIZE, TILE, type OfficeObject } from '../data/office';
+import { currentShift, startNewRun } from '../core/run';
 import { BOSS_LOOK, CHAR_H, frameIndex, PLAYER_LOOK, type Pose } from '../gfx/characters';
 import { buildBossDoorHalf, buildFloor, buildSprite } from '../gfx/officeArt';
 import { characterTexture, gridTexture } from '../gfx/phaserTextures';
@@ -14,6 +15,7 @@ import { buildOfficeWorld } from '../systems/office/officeWorld';
 import type { ViewportState } from '../systems/viewport/viewportMath';
 import { PixelLabel } from '../ui/PixelLabel';
 import { BaseScene } from './BaseScene';
+import type { DesktopData } from './DesktopScene';
 import type { OfficeHudScene } from './OfficeHudScene';
 
 const DEPTH_FLOOR = -1_000_000;
@@ -40,6 +42,8 @@ export class OfficeScene extends BaseScene {
   private cam = { x: 0, y: 0 };
   private params!: MoverParams;
   private hud: OfficeHudScene | null = null;
+  /** MogelOS ist offen (Spieler sitzt am PC). */
+  private desktopOpen = false;
 
   constructor() {
     super('Office');
@@ -52,6 +56,9 @@ export class OfficeScene extends BaseScene {
       decelTime: TUNING.office.decelTime,
       hitbox: TUNING.office.hitbox,
     };
+    // Wer das Büro vom Titel aus betritt, beginnt einen neuen Run (Speichern folgt mit M5).
+    startNewRun();
+    this.desktopOpen = false;
     const built = buildOfficeWorld();
     this.world = built.world;
     this.interactables = built.interactables;
@@ -89,6 +96,7 @@ export class OfficeScene extends BaseScene {
       offPause();
       this.hud?.events.off('pause-request', this.openPause, this);
       this.scene.stop('OfficeHud');
+      this.scene.stop('Desktop');
       this.s.input.setVirtualStick(0, 0);
     });
     this.cam = { x: SPAWN.x, y: SPAWN.y - CHAR_H / 2 };
@@ -107,6 +115,8 @@ export class OfficeScene extends BaseScene {
   }
 
   protected override fixedUpdate(dt: number): void {
+    // Der Arbeitstag läuft, egal ob am PC oder im Büro (nur die Pause hält ihn an).
+    currentShift().tick(dt);
     this.prev = { x: this.mover.x, y: this.mover.y };
     if (this.seatedAt !== null) return;
     stepMover(this.mover, this.s.input.move, dt, this.params, this.world);
@@ -115,7 +125,8 @@ export class OfficeScene extends BaseScene {
   protected override frameUpdate(dt: number, alpha: number): void {
     const paused = this.s.pause.paused;
     const inp = this.s.input;
-    if (!paused) {
+    // Am PC steuert MogelOS (Aufstehen, Pause); das Büro wartet.
+    if (!paused && !this.desktopOpen) {
       if (inp.justPressed('pause')) this.openPause();
       else if (this.seatedAt !== null && (inp.justPressed('interact') || inp.justPressed('leave'))) this.standUp();
       else if (this.seatedAt === null && this.focus && inp.justPressed('interact')) this.sitDown(this.focus.ref);
@@ -150,6 +161,30 @@ export class OfficeScene extends BaseScene {
     this.prev = { x: g.seat.x, y: g.seat.y };
     this.s.sfx.confirm();
     this.events.emit('seated', deskIndex);
+    this.openDesktop(deskIndex);
+  }
+
+  /** Ansicht wechselt zum MogelOS-Desktop (OFF-17). */
+  private openDesktop(deskIndex: number): void {
+    this.desktopOpen = true;
+    this.s.input.setVirtualStick(0, 0);
+    this.scene.sleep('OfficeHud');
+    const data: DesktopData = {
+      desk: deskIndex,
+      onLeave: () => this.closeDesktop(),
+      onPause: () => this.openPause(),
+      onScreen: (on) => this.cameras.main.setVisible(!on),
+    };
+    this.scene.launch('Desktop', data);
+  }
+
+  private closeDesktop(): void {
+    if (!this.desktopOpen) return;
+    this.desktopOpen = false;
+    this.cameras.main.setVisible(true);
+    this.scene.stop('Desktop');
+    this.scene.wake('OfficeHud');
+    this.standUp();
   }
 
   private standUp(): void {
@@ -202,7 +237,9 @@ export class OfficeScene extends BaseScene {
     let px = 0;
     let py = 0;
     let below = false;
-    if (this.seatedAt !== null) {
+    if (this.desktopOpen) {
+      // Am PC zeigt MogelOS, wie man aufsteht (Taskleiste, Tab, B).
+    } else if (this.seatedAt !== null) {
       // Unter dem Stuhl, damit der Hinweis nicht den Monitor verdeckt.
       text = actionHint('interact', t('office.prompt.stand'), mode, bindings);
       px = this.player.x;
@@ -257,6 +294,7 @@ export class OfficeScene extends BaseScene {
       y: Math.round(this.mover.y * 10) / 10,
       facing: this.mover.facing,
       seated: this.seatedAt,
+      desktop: this.desktopOpen,
       focus: this.focus?.id ?? null,
       prompt: this.prompt.main.visible ? this.prompt.main.text : null,
       zoom: this.zoom,

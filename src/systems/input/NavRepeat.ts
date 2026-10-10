@@ -17,7 +17,9 @@ export class NavRepeat {
       return false;
     }
     if (justPressed || this.held === 0) {
-      this.held = dt > 0 ? dt : 1e-6;
+      // Die Haltezeit beginnt jetzt – die Dauer des Frames, in dem gedrückt wurde, zählt nicht
+      // (bei niedriger Bildrate würde sonst schon der nächste Frame eine Wiederholung auslösen).
+      this.held = 1e-6;
       this.nextFire = this.delay;
       return true;
     }

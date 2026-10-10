@@ -20,6 +20,24 @@ export function createUiSfx(audio: AudioEngine) {
       audio.tone(bus(), 1320, 0.07, 'sine', 0.14, 0, 0.1);
       audio.tone(bus(), 1100, 0.07, 'sine', 0.14, 0, 0.18);
     },
+    /** MogelOS-Benachrichtigung: freundliches Doppel-„Pling“. */
+    notify(): void {
+      audio.tone(bus(), 1046, 0.09, 'sine', 0.16);
+      audio.tone(bus(), 1568, 0.14, 'sine', 0.14, 0, 0.08);
+    },
+    /** Röhrenmonitor an (Hinsetzen) bzw. aus (Aufstehen). */
+    crtOn(): void {
+      audio.tone(bus(), 90, 0.05, 'square', 0.18, 60);
+      audio.tone(bus(), 2400, 0.25, 'sine', 0.05, 6000, 0.03);
+    },
+    crtOff(): void {
+      audio.tone(bus(), 3000, 0.18, 'sine', 0.06, 400);
+      audio.tone(bus(), 70, 0.08, 'square', 0.16, 45, 0.12);
+    },
+    /** Papierkorb leeren: zerknülltes Papier (Rauschen gibt es ab M11, bis dahin Sägezahn-Knistern). */
+    crumple(): void {
+      for (let i = 0; i < 4; i++) audio.tone(bus(), 300 + i * 170, 0.04, 'sawtooth', 0.08, 120, i * 0.045);
+    },
   };
 }
 

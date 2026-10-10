@@ -15,6 +15,8 @@ export default defineConfig({
   reporter: [['list'], ['html', { open: 'never', outputFolder: 'playwright-report' }]],
   // Großzügig, weil Headless-Chromium ohne GPU per Software rendert (SwiftShader).
   timeout: 90_000,
+  // Software-Rendering (HiDPI unter Parallel-Last teils 1–3 FPS): Zustandswechsel brauchen mehrere Frames.
+  expect: { timeout: 15_000 },
   use: {
     baseURL: 'http://127.0.0.1:4173',
     trace: 'retain-on-failure',

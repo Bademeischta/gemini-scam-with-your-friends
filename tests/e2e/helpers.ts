@@ -25,7 +25,7 @@ export async function hook<T>(page: Page, fn: string): Promise<T> {
 
 /** Wartet, bis eine Hook-Abfrage den erwarteten Wert liefert. */
 export async function expectHook(page: Page, fn: string, expected: unknown): Promise<void> {
-  await expect.poll(() => hook(page, fn), { timeout: 5_000 }).toEqual(expected);
+  await expect.poll(() => hook(page, fn)).toEqual(expected);
 }
 
 /** Speichert einen Screenshot unter test-results/screens/<projekt>-<name>.png (zum Ansehen). */
@@ -62,6 +62,7 @@ export interface OfficeState {
   y: number;
   facing: string;
   seated: number | null;
+  desktop: boolean;
   focus: string | null;
   prompt: string | null;
   zoom: number;
@@ -130,44 +131,49 @@ export async function touchDrag(
 
 export async function installFakePad(page: Page): Promise<void> {
   await page.addInitScript(() => {
-    const state = {
-      buttons: Array.from({ length: 17 }, () => ({ pressed: false, touched: false, value: 0 })),
-      axes: [0, 0, 0, 0],
-    };
+    const raw = Array.from({ length: 17 }, () => ({ pressed: false, value: 0 }));
+    // Kurzer Druck = gedrückt für die nächsten N Abfragen (das Spiel fragt einmal pro Frame ab).
+    const tapUntil = new Array<number>(17).fill(-1);
+    let poll = 0;
+    const buttons = raw.map((b, i) => ({
+      get pressed() {
+        return b.pressed || poll <= tapUntil[i]!;
+      },
+      get touched() {
+        return this.pressed;
+      },
+      get value() {
+        return this.pressed ? 1 : b.value;
+      },
+    }));
+    const state = { buttons: raw, axes: [0, 0, 0, 0], tapUntil, poll: () => poll };
     (window as unknown as { __pad: typeof state }).__pad = state;
-    const pad = {
-      id: 'Fake Pad (STANDARD GAMEPAD)',
-      index: 0,
-      connected: true,
-      mapping: 'standard',
-      timestamp: 0,
-      get buttons() {
-        return state.buttons;
+    const pad = { id: 'Fake Pad (STANDARD GAMEPAD)', index: 0, connected: true, mapping: 'standard', timestamp: 0, buttons, axes: state.axes };
+    Object.defineProperty(navigator, 'getGamepads', {
+      value: () => {
+        poll++;
+        return [pad, null, null, null];
       },
-      get axes() {
-        return state.axes;
-      },
-    };
-    Object.defineProperty(navigator, 'getGamepads', { value: () => [pad, null, null, null], configurable: true });
+      configurable: true,
+    });
   });
 }
 
+type FakePad = { tapUntil: number[]; poll: () => number };
+
+/**
+ * Kurzer Knopfdruck: genau zwei Abfragen lang gedrückt, danach losgelassen – unabhängig davon,
+ * wie schnell die Seite rendert (zeitbasiertes Halten löst bei niedriger Bildrate die Menü-Wiederholung aus
+ * oder geht ganz verloren).
+ */
 export async function padButton(page: Page, index: number): Promise<void> {
-  const set = (down: boolean): Promise<void> =>
-    page.evaluate(
-      ([i, d]) => {
-        const b = (window as unknown as { __pad: { buttons: { pressed: boolean; value: number }[] } }).__pad.buttons[i as number]!;
-        b.pressed = d as boolean;
-        b.value = d ? 1 : 0;
-      },
-      [index, down] as const,
-    );
-  // Mindestens zwei echte Frames halten bzw. loslassen: Das Gamepad wird nur einmal pro Frame
-  // abgefragt, und bei niedriger Bildrate (Software-Rendering) ginge ein reiner 80-ms-Druck verloren.
-  await set(true);
-  await Promise.all([nextFrames(page, 2), page.waitForTimeout(80)]);
-  await set(false);
-  await Promise.all([nextFrames(page, 2), page.waitForTimeout(80)]);
+  const until = await page.evaluate((i) => {
+    const pad = (window as unknown as { __pad: FakePad }).__pad;
+    pad.tapUntil[i] = pad.poll() + 2;
+    return pad.tapUntil[i];
+  }, index);
+  // Warten, bis das Spiel auch das Loslassen gesehen hat.
+  await page.waitForFunction((u) => (window as unknown as { __pad: FakePad }).__pad.poll() > u + 1, until);
 }
 
 /** Wartet, bis die Seite `n` Animation-Frames gezeichnet hat (Phaser läuft im selben Takt). */
@@ -237,7 +243,7 @@ export const keyPulse =
   async (dir: Dir, ms: number): Promise<void> => {
     const key = { up: 'KeyW', down: 'KeyS', left: 'KeyA', right: 'KeyD' }[dir];
     await page.keyboard.down(key);
-    await holdFor(page, ms);
+    await page.waitForTimeout(ms);
     await page.keyboard.up(key);
   };
 
@@ -246,9 +252,24 @@ export const padPulse =
   async (dir: Dir, ms: number): Promise<void> => {
     const [axis, v] = { up: [1, -1], down: [1, 1], left: [0, -1], right: [0, 1] }[dir] as [number, number];
     await padAxis(page, axis, v);
-    await holdFor(page, ms);
+    await page.waitForTimeout(ms);
     await padAxis(page, axis, 0);
   };
+
+/**
+ * Schneller Wisch per CDP mit festen Zeitstempeln (Dauer `ms`): Die Spiellogik misst die Gesten-Dauer
+ * an den Event-Zeitstempeln; ohne sie würde die Verarbeitungszeit des Test-Browsers mitgezählt.
+ */
+export async function touchSwipe(page: Page, from: { x: number; y: number }, to: { x: number; y: number }, ms = 200): Promise<void> {
+  const cdp = await cdpFor(page);
+  const t0 = Date.now() / 1000;
+  const steps = 4;
+  const pt = (i: number) => [{ x: Math.round(from.x + ((to.x - from.x) * i) / steps), y: Math.round(from.y + ((to.y - from.y) * i) / steps), id: 1, radiusX: 4, radiusY: 4, force: 1 }];
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: pt(0), timestamp: t0 });
+  for (let i = 1; i <= steps; i++) await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: pt(i), timestamp: t0 + (ms / 1000) * (i / (steps + 1)) });
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [], timestamp: t0 + ms / 1000 });
+  await nextFrames(page, 2);
+}
 
 /**
  * Touch-Joystick geregelt zu Wegpunkten führen: Der Finger bleibt unten, die Auslenkung wird
@@ -290,10 +311,105 @@ export async function touchWalkPath(page: Page, points: { x: number; y: number }
   return office(page);
 }
 
-/**
- * Hält eine Eingabe mindestens `ms` lang und mindestens zwei echte Frames: Bei sehr niedriger
- * Bildrate (große Canvas im Software-Rendering) ginge ein kurzer Impuls sonst zwischen zwei Frames verloren.
- */
-async function holdFor(page: Page, ms: number): Promise<void> {
-  await Promise.all([page.waitForTimeout(ms), nextFrames(page, 2)]);
+
+// ---------- MogelOS ----------
+
+export interface OsTarget {
+  id: string;
+  scope: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
 }
+
+export interface OsWindowState {
+  id: string;
+  app: string;
+  title: string;
+  active: boolean;
+  minimized: boolean;
+  rect: { x: number; y: number; w: number; h: number };
+  titleRect: { x: number; y: number; w: number; h: number };
+  state: Record<string, unknown> | null;
+}
+
+export interface OsState {
+  /** Nimmt Eingaben an (kein Übergangs-Effekt, nicht pausiert). */
+  ready: boolean;
+  compact: boolean;
+  wallpaper: string;
+  theme: string;
+  ring: boolean;
+  focus: string | null;
+  start: boolean;
+  ctx: boolean;
+  /** Desktop-Fläche zwischen den Leisten. */
+  area: { x: number; y: number; w: number; h: number };
+  windows: OsWindowState[];
+  toasts: { title: string; body: string }[];
+  toastRects: { x: number; y: number; w: number; h: number }[];
+  taskbar: { money: string; team: string; countdown: string };
+  icons: { id: string; selected: boolean; rect: { x: number; y: number; w: number; h: number } }[];
+  targets: OsTarget[];
+}
+
+export async function osState(page: Page): Promise<OsState> {
+  return hook<OsState>(page, 'os');
+}
+
+/** Mittelpunkt eines Klickziels von MogelOS (CSS-Pixel). */
+export async function osTarget(page: Page, id: string): Promise<{ x: number; y: number }> {
+  let t: OsTarget | undefined;
+  await expect
+    .poll(
+      async () => {
+        t = (await osState(page))?.targets.find((tt) => tt.id === id);
+        return t !== undefined;
+      },
+      { message: `Ziel ${id}` },
+    )
+    .toBe(true);
+  return { x: t!.x + t!.w / 2, y: t!.y + t!.h / 2 };
+}
+
+export async function osWindow(page: Page, app: string): Promise<OsWindowState | undefined> {
+  return (await osState(page))?.windows.find((w) => w.app === app);
+}
+
+/** Vom Titel an Platz 7 setzen (Desktop: Tastatur, Touch: Joystick + Kontext-Button); wartet, bis MogelOS bereit ist. */
+export async function sitAtDesk(page: Page, touch: boolean, alreadyInOffice = false): Promise<void> {
+  if (touch) {
+    if (await hook<boolean>(page, 'rotateHintVisible')) await page.locator('#rotate-continue').tap();
+    await page.touchscreen.tap(20, 200);
+    await expectHook(page, 'titleState', 'menu');
+    const startBtn = await menuCenter(page, 'start');
+    await page.touchscreen.tap(startBtn.x, startBtn.y);
+    await expectHook(page, 'scene', 'Office');
+    await expect.poll(async () => (await hook<{ action: { w: number } } | undefined>(page, 'touchRects'))?.action.w ?? 0).toBeGreaterThan(50);
+    const rects = await hook<{ stickRest: { x: number; y: number }; action: { x: number; y: number; w: number; h: number } }>(page, 'touchRects');
+    await touchWalkPath(page, DESK7_PATH, rects.stickRest);
+    await expect.poll(async () => (await office(page)).focus).toBe('desk7');
+    await page.touchscreen.tap(rects.action.x + rects.action.w / 2, rects.action.y + rects.action.h / 2);
+  } else {
+    if (!alreadyInOffice) await enterOfficeByKeyboard(page);
+    await expect.poll(async () => (await office(page))?.zoom ?? 0).toBeGreaterThan(0);
+    await walkPath(page, DESK7_PATH, keyPulse(page));
+    await expect.poll(async () => (await office(page)).focus).toBe('desk7');
+    await page.keyboard.press('KeyE');
+  }
+  await waitOsReady(page);
+}
+
+/** Wartet, bis MogelOS Eingaben annimmt (Einschalt-Effekt vorbei). */
+export async function waitOsReady(page: Page): Promise<void> {
+  await expect.poll(async () => (await office(page)).desktop).toBe(true);
+  await expect.poll(async () => (await osState(page))?.ready ?? false).toBe(true);
+}
+
+/** Weg vom Eingang zu Platz 7 (Reihe B, ganz rechts), komplett im freien Gang. */
+export const DESK7_PATH = [
+  { x: 288, y: 306 },
+  { x: 256, y: 306 },
+  { x: 256, y: 292 },
+];

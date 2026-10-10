@@ -23,7 +23,9 @@ export interface TestHook {
   menuRects(): { id: string; x: number; y: number; w: number; h: number }[];
   hintMode(): string;
   /** Zustand der Spielerfigur im Büro. */
-  office(): { x: number; y: number; facing: string; seated: number | null; focus: string | null; prompt: string | null; zoom: number } | undefined;
+  office(): { x: number; y: number; facing: string; seated: number | null; desktop: boolean; focus: string | null; prompt: string | null; zoom: number } | undefined;
+  /** Zustand von MogelOS (Fenster, Fokus, Klickziele in CSS-Pixeln) oder null, wenn nicht am PC. */
+  os(): unknown;
   /** Touch-Steuerelemente in CSS-Pixeln. */
   touchRects(): { stickZone: Rect; stickRest: { x: number; y: number }; action: Rect; pause: Rect } | undefined;
   /** Alle aktiven Szenen (oberste zuletzt). */
@@ -56,6 +58,7 @@ export function installTestHook(game: Phaser.Game, s: Services): void {
     menuRects: () => (game.registry.get('menuRects') as { id: string; x: number; y: number; w: number; h: number }[] | undefined) ?? [],
     hintMode: () => s.device.hintMode,
     office: () => game.registry.get('office') as ReturnType<TestHook['office']>,
+    os: () => (game.registry.get('os') as unknown) ?? null,
     touchRects: () => game.registry.get('touchRects') as ReturnType<TestHook['touchRects']>,
     scenes: () => game.scene.getScenes(true).map((sc) => sc.scene.key),
     inputKind: () => s.device.kind,
