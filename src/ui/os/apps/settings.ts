@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { hex, PALETTE } from '../../../config/palette';
-import { TUNING } from '../../../config/tuning';
+import { AI_PROVIDERS, providerDef, type AiProviderId } from '../../../data/aiProviders';
 import { OS_THEME_IDS, WALLPAPERS } from '../../../data/os/appearance';
 import { t } from '../../../i18n';
 import { MIC_MODES, VOICE_MODES } from '../../../systems/save/settings';
@@ -15,8 +15,9 @@ const PAGE = { look: 0, sound: 1, voice: 2, ai: 3, info: 4 } as const;
 
 /**
  * Systemsteuerung (APP-54, OS-13, MEN-05): Hintergrund und Farbschema, Lautstärken, Vibration,
- * Sprache (Anruferstimmen, Stimmwahl, Spracheingabe, Mikrofon-Test), KI-Anrufer (eigener API-Schlüssel,
- * nur lokal gespeichert; Verbindungstest, Verbrauch), Info.
+ * Sprache (Anruferstimmen, Stimmwahl, Spracheingabe, Mikrofon-Test), KI-Anrufer (Anbieter, Modell,
+ * eigener API-Schlüssel je Anbieter, nur lokal gespeichert; Fallback-Kette, Verbindungstest, Verbrauch
+ * je Anbieter), Info.
  * Weitere Spiel-Einstellungen (Tastenbelegung, Komfort-Optionen) kommen mit M11 hinzu.
  */
 class SettingsView implements AppView {
@@ -44,10 +45,17 @@ class SettingsView implements AppView {
   private micError = false;
   private readonly info: OsTextView;
   private readonly aiToggle: OsToggle;
+  private readonly aiChain: OsToggle;
+  private readonly aiProviders: OsButton[];
+  private readonly aiModel: OsButton;
+  /** Das Eingabefeld nimmt einen Schlüssel oder (eigenes Modell) einen Modellnamen auf. */
+  private aiInputMode: 'key' | 'model' = 'key';
   private readonly aiSave: OsButton;
   private readonly aiTest: OsButton;
   private readonly aiClear: OsButton;
-  private readonly aiNote: Phaser.GameObjects.Text;
+  /** Status, Verbrauch je Anbieter, Hinweise (scrollbar, damit es auch auf dem Handy reinpasst). */
+  private readonly aiNote: OsTextView;
+  private aiNoteText = '';
   private readonly aiG: Phaser.GameObjects.Graphics;
   private aiInput: Rect | null = null;
   private aiResult = '';
@@ -57,6 +65,11 @@ class SettingsView implements AppView {
     placeholder: t('os.settings.ai.placeholder'),
     maxLength: 300,
     secret: true,
+    onSubmit: (text) => this.saveKey(text),
+  };
+  private readonly modelOpts: TextInputOptions = {
+    placeholder: t('os.settings.ai.modelPlaceholder'),
+    maxLength: 120,
     onSubmit: (text) => this.saveKey(text),
   };
   private size = { w: 0, h: 0 };
@@ -151,12 +164,25 @@ class SettingsView implements AppView {
       st.update({ aiCallers: v });
       this.syncAi();
     };
+    this.aiChain = new OsToggle(host, `${id}:aiChain`, t('os.settings.ai.chain'), st.get().aiChain);
+    this.aiChain.onChange = (v) => {
+      st.update({ aiChain: v });
+      this.syncAi();
+    };
+    this.aiProviders = AI_PROVIDERS.map(
+      (p) =>
+        new OsButton(host, `${id}:aiProv:${p}`, {
+          label: t(`os.settings.ai.providers.${p}`),
+          onClick: () => this.selectProvider(p),
+        }),
+    );
+    this.aiModel = new OsButton(host, `${id}:aiModel`, { label: '', align: 'left', onClick: () => this.nextModel() });
     this.aiSave = new OsButton(host, `${id}:aiSave`, { label: t('os.settings.ai.save'), variant: 'primary', onClick: () => this.saveKey(this.bridge.ownedBy === this ? this.bridge.value : '') });
     this.aiTest = new OsButton(host, `${id}:aiTest`, { label: t('os.settings.ai.test'), onClick: () => void this.testAi() });
     this.aiClear = new OsButton(host, `${id}:aiClear`, { label: t('os.settings.ai.clear'), onClick: () => this.clearKey() });
     this.aiG = host.scene.add.graphics();
-    this.aiNote = note();
-    host.container.add([this.aiG, this.aiNote]);
+    host.container.add(this.aiG);
+    this.aiNote = new OsTextView(host, `${id}:aiNote`, '');
     this.syncActive();
     this.syncLabels();
   }
@@ -186,9 +212,14 @@ class SettingsView implements AppView {
       micMode: st.micMode,
       micText: this.micText,
       aiCallers: st.aiCallers,
+      aiProvider: st.aiProvider,
+      aiModel: this.ctx.host.s.ai.model(),
+      aiChain: st.aiChain,
+      aiInputMode: this.aiInputMode,
       aiStatus: this.ctx.host.s.ai.status(),
-      aiKey: this.ctx.host.s.ai.hasKey,
-      aiNote: this.aiNote.text,
+      aiKey: this.ctx.host.s.ai.hasKey(),
+      aiKeys: AI_PROVIDERS.filter((p) => this.ctx.host.s.ai.hasKey(p)),
+      aiNote: this.aiNoteText,
       aiInputRect: this.aiInputCss(),
     };
   }
@@ -200,8 +231,9 @@ class SettingsView implements AppView {
   destroy(): void {
     this.aiTesting?.abort();
     this.bridge.detach(this);
-    for (const b of [this.aiSave, this.aiTest, this.aiClear]) b.destroy();
+    for (const b of [this.aiSave, this.aiTest, this.aiClear, this.aiModel, ...this.aiProviders]) b.destroy();
     this.aiToggle.destroy();
+    this.aiChain.destroy();
     this.aiNote.destroy();
     this.aiG.destroy();
     this.tabs.destroy();
@@ -279,17 +311,73 @@ class SettingsView implements AppView {
 
   // ------------------------------------------------------------------ KI-Anrufer
 
+  private selectProvider(p: AiProviderId): void {
+    this.ctx.host.s.settings.update({ aiProvider: p });
+    this.setInputMode('key');
+    this.aiResult = '';
+    this.syncAi();
+  }
+
+  /** Modell durchschalten: Vorschläge des Anbieters, dann „eigenes eintragen“ (Eingabefeld). */
+  private nextModel(): void {
+    const ai = this.ctx.host.s.ai;
+    const p = ai.provider;
+    const list = providerDef(p).models;
+    if (this.aiInputMode === 'model') {
+      this.setModel(p, list[0]!);
+      this.setInputMode('key');
+    } else {
+      const i = list.indexOf(ai.model());
+      if (i >= 0 && i < list.length - 1) this.setModel(p, list[i + 1]!);
+      else {
+        this.setInputMode('model');
+        this.bridge.focus(this);
+      }
+    }
+    this.aiResult = '';
+    this.syncAi();
+  }
+
+  private setModel(p: AiProviderId, model: string): void {
+    const st = this.ctx.host.s.settings;
+    const models = { ...st.get().aiModels };
+    if (model === providerDef(p).defaultModel) delete models[p];
+    else models[p] = model;
+    st.update({ aiModels: models });
+  }
+
+  private setInputMode(mode: 'key' | 'model'): void {
+    if (this.aiInputMode === mode) return;
+    this.aiInputMode = mode;
+    // Neu anbinden: anderer Platzhalter, Schlüssel verdeckt, Modellname sichtbar.
+    if (this.bridge.ownedBy === this) this.bridge.detach(this);
+    this.placeKeyInput();
+  }
+
   private saveKey(text: string): void {
-    const key = text.trim();
-    if (!key) {
+    const value = text.trim();
+    if (!value) {
       this.bridge.focus(this);
       return;
     }
-    this.ctx.host.s.ai.setKey(key);
-    this.bridge.setValue(this, '');
+    const s = this.ctx.host.s;
+    if (this.aiInputMode === 'model') {
+      if (!/^[\w.:/@-]{1,120}$/.test(value)) {
+        this.aiResult = t('os.settings.ai.modelInvalid');
+        this.syncAi();
+        return;
+      }
+      this.setModel(s.ai.provider, value);
+      this.bridge.setValue(this, '');
+      this.setInputMode('key');
+      this.aiResult = t('os.settings.ai.modelSaved');
+    } else {
+      s.ai.setKey(value);
+      this.bridge.setValue(this, '');
+      this.aiResult = t('os.settings.ai.saved');
+    }
     this.bridge.blur();
-    this.aiResult = t('os.settings.ai.saved');
-    this.ctx.host.s.sfx.confirm();
+    s.sfx.confirm();
     this.syncAi();
   }
 
@@ -302,30 +390,51 @@ class SettingsView implements AppView {
 
   private async testAi(): Promise<void> {
     const ai = this.ctx.host.s.ai;
-    if (!ai.hasKey || this.aiTesting) return;
+    if (!ai.hasKey() || this.aiTesting) return;
     this.aiTesting = new AbortController();
     this.aiResult = t('os.settings.ai.testing');
     this.syncAi();
     const err = await ai.test(this.aiTesting.signal);
     this.aiTesting = null;
-    this.aiResult = err ? t(`calls.phone.ai.${err}`) : t('os.settings.ai.ok');
+    this.aiResult = err ? `${t(`calls.phone.ai.${err}`)}${err === 'network' ? ` ${t('os.settings.ai.networkHint')}` : ''}` : t('os.settings.ai.ok');
     this.syncAi();
   }
 
-  /** Status, Hinweis zum Datenschutz, Verbrauch, letztes Testergebnis. */
+  /** Auswahl, Status, Verbrauch je Anbieter, letztes Testergebnis, Hinweis zum Datenschutz. */
   private syncAi(): void {
     const ai = this.ctx.host.s.ai;
-    const st = ai.status();
+    const st = this.ctx.host.s.settings.get();
+    const p = st.aiProvider;
+    const name = t(`os.settings.ai.providers.${p}`);
+    this.aiProviders.forEach((b, i) => b.setActive(AI_PROVIDERS[i] === p));
+    const model = ai.model();
+    const custom = !providerDef(p).models.includes(model);
+    this.aiModel.setLabel(this.aiInputMode === 'model' ? t('os.settings.ai.modelCustom') : t(custom ? 'os.settings.ai.modelOwn' : 'os.settings.ai.model', { model }));
     const lines = [
-      ai.hasKey ? t('os.settings.ai.keySet', { key: ai.maskedKey() }) : t('os.settings.ai.keyNone'),
-      t(`os.settings.ai.status.${st}`),
-      t('os.settings.ai.usage', { input: ai.total.input, output: ai.total.output, requests: ai.total.requests }),
+      ai.hasKey() ? t('os.settings.ai.keySet', { provider: name, key: ai.maskedKey() }) : t('os.settings.ai.keyNone', { provider: name }),
+      t(`os.settings.ai.status.${ai.status()}`),
     ];
+    const used = AI_PROVIDERS.filter((id) => ai.byProvider[id].requests > 0 || ai.byProvider[id].rateLimited > 0);
+    if (used.length === 0) lines.push(t('os.settings.ai.usageNone'));
+    for (const id of used) {
+      const u = ai.byProvider[id];
+      const cool = Math.ceil(ai.coolingFor(id) / 1000);
+      lines.push(
+        t('os.settings.ai.usage', { provider: t(`os.settings.ai.providers.${id}`), input: u.input, output: u.output, requests: u.requests }) +
+          (u.rateLimited > 0 ? t('os.settings.ai.usageRate', { count: u.rateLimited }) : '') +
+          (cool > 0 ? t('os.settings.ai.usageCooling', { seconds: cool }) : ''),
+      );
+    }
     if (this.aiResult) lines.push(this.aiResult);
-    lines.push(t('os.settings.ai.privacy', { model: TUNING.ai.model }));
-    this.aiNote.setText(lines.join('\n'));
-    this.aiTest.setEnabled(ai.hasKey && !this.aiTesting);
-    this.aiClear.setEnabled(ai.hasKey);
+    lines.push(t(providerDef(p).free ? 'os.settings.ai.free' : 'os.settings.ai.paid'));
+    lines.push(t('os.settings.ai.privacy'));
+    const text = lines.join('\n');
+    if (text !== this.aiNoteText) {
+      this.aiNoteText = text;
+      this.aiNote.setContent(text);
+    }
+    this.aiTest.setEnabled(ai.hasKey() && !this.aiTesting);
+    this.aiClear.setEnabled(ai.hasKey());
   }
 
   private aiInputCss(): { x: number; y: number; w: number; h: number } | null {
@@ -345,7 +454,7 @@ class SettingsView implements AppView {
       if (this.bridge.ownedBy === this) this.bridge.place(this, null, this.ctx.host.dpr());
       return;
     }
-    if (this.bridge.ownedBy !== this) this.bridge.attach(this, this.keyOpts);
+    if (this.bridge.ownedBy !== this) this.bridge.attach(this, this.aiInputMode === 'model' ? this.modelOpts : this.keyOpts);
     const o = this.ctx.host.origin();
     const u = this.ctx.host.u();
     this.bridge.place(this, { x: o.x + r.x + u, y: o.y + r.y + u, w: r.w - 2 * u, h: r.h - 2 * u }, this.ctx.host.dpr());
@@ -447,28 +556,50 @@ class SettingsView implements AppView {
 
     // Seite 4: KI-Anrufer.
     const aiPage = page === PAGE.ai;
-    for (const b of [this.aiSave, this.aiTest, this.aiClear]) b.setVisible(aiPage);
+    for (const b of [this.aiSave, this.aiTest, this.aiClear, this.aiModel, ...this.aiProviders]) b.setVisible(aiPage);
     this.aiToggle.setVisible(aiPage);
+    this.aiChain.setVisible(aiPage);
     this.aiNote.setVisible(aiPage);
     this.aiG.clear();
     this.aiInput = null;
     if (aiPage) {
-      let ay = ch + 2 * gap;
-      this.aiToggle.layout(0, ay, w, ch);
-      ay += ch + gap;
-      const saveW = Math.min(w * 0.35, this.aiSave.preferredWidth() + 8 * u);
-      this.aiInput = { x: 0, y: ay, w: w - saveW - gap, h: ch };
+      const top = ch + 2 * gap;
+      // Breit und niedrig (Handy quer): Bedienung links, Hinweise rechts; sonst untereinander.
+      const split = w > 2 * (h - top);
+      const cw = split ? Math.round(w * 0.56) : w;
+      // Schalter nebeneinander, wenn Platz ist; Zeilen schrumpfen bei wenig Höhe (Platz für die Hinweise).
+      const sideBySide = cw >= 200 * u;
+      const rows = sideBySide ? 5 : 6;
+      const rowH = Math.max(12 * u, Math.min(ch, Math.floor((h - top - rows * gap - (split ? 0 : 40 * u)) / rows)));
+      let ay = top;
+      if (sideBySide) {
+        const tw = (cw - gap) / 2;
+        this.aiToggle.layout(0, ay, tw, rowH);
+        this.aiChain.layout(tw + gap, ay, cw - tw - gap, rowH);
+      } else {
+        this.aiToggle.layout(0, ay, cw, rowH);
+        ay += rowH + gap;
+        this.aiChain.layout(0, ay, cw, rowH);
+      }
+      ay += rowH + gap;
+      const pw = (cw - 2 * u * (this.aiProviders.length - 1)) / this.aiProviders.length;
+      this.aiProviders.forEach((b, i) => b.layout(i * (pw + 2 * u), ay, pw, rowH));
+      ay += rowH + gap;
+      this.aiModel.layout(0, ay, cw, rowH);
+      ay += rowH + gap;
+      const saveW = Math.min(cw * 0.35, this.aiSave.preferredWidth() + 8 * u);
+      this.aiInput = { x: 0, y: ay, w: cw - saveW - gap, h: rowH };
       const th = this.ctx.host.theme();
-      this.aiG.fillStyle(hex('ink0'), 1).fillRect(0, ay, this.aiInput.w, ch);
-      this.aiG.fillStyle(hex(th.windowDark), 1).fillRect(u, ay + u, this.aiInput.w - 2 * u, ch - 2 * u);
-      this.aiSave.layout(w - saveW, ay, saveW, ch);
-      ay += ch + gap;
-      const bw = (w - gap) / 2;
-      this.aiTest.layout(0, ay, bw, ch);
-      this.aiClear.layout(bw + gap, ay, w - bw - gap, ch);
-      ay += ch + gap;
-      const d = this.ctx.host.dpr();
-      this.aiNote.setStyle({ fontSize: `${Math.round(12 * d)}px`, color: PALETTE[this.ctx.host.theme().textDim], wordWrap: { width: w, useAdvancedWrap: true } }).setPosition(0, ay);
+      this.aiG.fillStyle(hex('ink0'), 1).fillRect(0, ay, this.aiInput.w, rowH);
+      this.aiG.fillStyle(hex(th.windowDark), 1).fillRect(u, ay + u, this.aiInput.w - 2 * u, rowH - 2 * u);
+      this.aiSave.layout(cw - saveW, ay, saveW, rowH);
+      ay += rowH + gap;
+      const bw = (cw - gap) / 2;
+      this.aiTest.layout(0, ay, bw, rowH);
+      this.aiClear.layout(bw + gap, ay, cw - bw - gap, rowH);
+      ay += rowH + gap;
+      if (split) this.aiNote.layout(cw + gap, top, w - cw - gap, h - top);
+      else this.aiNote.layout(0, ay, w, Math.max(20 * u, h - ay));
       this.syncAi();
     }
 
@@ -521,7 +652,7 @@ export const settingsApp: AppDef = {
   icon: 'settings',
   titleKey: 'os.apps.settings.title',
   shortKey: 'os.apps.settings.short',
-  size: { w: 220, h: 170 },
+  size: { w: 250, h: 210 },
   onDesktop: true,
   inStartMenu: true,
   create: (ctx) => new SettingsView(ctx),

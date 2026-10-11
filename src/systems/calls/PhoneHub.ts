@@ -1,5 +1,6 @@
 import { TUNING } from '../../config/tuning';
-import { addUsage, emptyTotals, timeoutSignal, type AiBrain, type AiStatus, type UsageTotals } from '../ai/brain';
+import type { AiProviderId } from '../../data/aiProviders';
+import { addTotals, emptyTotals, timeoutSignal, type AiBrain, type AiNotice, type AiStatus, type UsageTotals } from '../ai/brain';
 import { SentenceSplitter } from '../ai/rules';
 import type { AiFailure, AiMessage } from '../ai/transport';
 import type { CallerDef } from '../conversation/caller';
@@ -39,9 +40,11 @@ export class CallSession {
   aiNotice: AiStatus | AiFailure | null = null;
   /** Die KI überlegt gerade (Eingaben warten, Karten sind gesperrt). */
   thinking = false;
+  /** Anbieter, der zuletzt geantwortet hat. */
+  aiProvider: AiProviderId | null = null;
   /** Token-Verbrauch dieses Anrufs. */
   readonly usage: UsageTotals = emptyTotals();
-  /** Verlauf mit der KI (Spieler, Regie, Antwort). */
+  /** Verlauf mit der KI (Spieler, Antwort; die Regie gilt nur je Zug). */
   readonly aiHistory: AiMessage[] = [];
   /** Vom Spiel gesprochene Anrufer-Zeilen seit der letzten KI-Antwort (für die Regie). */
   aiEvents: string[] = [];
@@ -200,7 +203,8 @@ export type PhoneEvent =
   | { type: 'ended'; desk: number; session: CallSession; record: CallRecord }
   | { type: 'capture'; desk: number; capture: Capture }
   | { type: 'scheme'; desk: number; scheme: SchemeDef | null }
-  | { type: 'aiFallback'; desk: number; session: CallSession; error: AiFailure };
+  | { type: 'aiFallback'; desk: number; session: CallSession; error: AiFailure }
+  | { type: 'aiNotice'; desk: number; session: CallSession; notice: AiNotice };
 
 /**
  * Verbindet den CallManager mit der Telefon-App: hält je Platz die laufende (bzw. zuletzt beendete)
@@ -295,7 +299,7 @@ export class PhoneHub {
     c.waiting = true;
     s.abort = new AbortController();
     const limit = timeoutSignal(s.abort.signal, TUNING.ai.timeoutMs);
-    const splitter = new SentenceSplitter();
+    let splitter = new SentenceSplitter();
     let streamed = '';
     const floskel = ai.floskeln.peek(plan.text);
     const events = s.aiEvents;
@@ -312,20 +316,29 @@ export class PhoneHub {
         streamed = text;
         if (s.active && !s.hungUp) for (const sentence of splitter.push(text)) s.addCallerText(sentence);
       },
+      onNotice: (notice) => {
+        // Neuer Versuch bzw. anderer Anbieter: dessen Antwort beginnt wieder von vorn.
+        splitter = new SentenceSplitter();
+        streamed = '';
+        if (s.active) this.emit({ type: 'aiNotice', desk: s.desk, session: s, notice });
+      },
     });
+    const timedOut = limit.timedOut;
     limit.cancel();
     s.abort = null;
     s.thinking = false;
     c.waiting = false;
-    addUsage(s.usage, res.usage);
-    addUsage(ai.total, res.usage);
+    addTotals(s.usage, res.usage);
+    if (res.ok) s.aiProvider = res.provider;
     // Inzwischen aufgelegt (oder neuer Anruf): nur der Verbrauch zählt.
     if (!s.active || c.state === 'ended' || this.sessions.get(s.desk) !== s) return;
     if (!res.ok) {
       // Rückfall: Dieser Satz geht an die lokale Engine; bei Schlüssel-Problemen der Rest des Anrufs auch.
-      s.aiNotice = res.error;
-      if (res.error === 'auth' || res.error === 'permission' || res.error === 'refusal') s.engine = 'local';
-      this.emit({ type: 'aiFallback', desk: s.desk, session: s, error: res.error });
+      const error: AiFailure = res.error === 'aborted' && timedOut ? 'timeout' : res.error;
+      s.aiNotice = error;
+      if ((error === 'auth' || error === 'permission') && ai.candidates().length <= 1) s.engine = 'local';
+      if (error === 'refusal') s.engine = 'local';
+      this.emit({ type: 'aiFallback', desk: s.desk, session: s, error });
       if (c.state === 'active') this.sayLocal(s, plan.text, plan.source, playerLine, before);
       this.sayPending(s);
       return;

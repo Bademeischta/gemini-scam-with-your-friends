@@ -5,10 +5,11 @@ import { schemeById } from '../../src/data/schemes';
 import { i18n } from '../../src/i18n';
 import { I18n, type Dict } from '../../src/i18n/i18n';
 import { DE } from '../../src/i18n/locales';
-import { AiBrain, trimHistory, type AiEnv } from '../../src/systems/ai/brain';
-import { buildPersona, buildRegie } from '../../src/systems/ai/persona';
+import { providerDef, type AiProviderId } from '../../src/data/aiProviders';
+import { AiBrain, splitHistory, type AiConfig, type AiEnv, type AiNotice } from '../../src/systems/ai/brain';
+import { buildPersona, buildRegie, summarizeHistory } from '../../src/systems/ai/persona';
 import { cleanSay, detectInjection, extractSay, FloskelMeter, parseVerdict, SentenceSplitter, signature, type AiVerdict } from '../../src/systems/ai/rules';
-import { AiError, type AiMessage, type AiRequest, type AiTransport } from '../../src/systems/ai/transport';
+import { AiError, errorKind, GeminiTransport, makeTransport, OpenAiCompatTransport, retryAfter, toGeminiContents, type AiMessage, type AiRequest, type AiTransport } from '../../src/systems/ai/transport';
 import { CallManager } from '../../src/systems/calls/CallManager';
 import { PhoneHub } from '../../src/systems/calls/PhoneHub';
 import { Conversation, makeVariant } from '../../src/systems/conversation/engine';
@@ -38,9 +39,32 @@ class FakeTransport implements AiTransport {
   }
 }
 
-function brain(t: FakeTransport, key = 'sk-ant-test-1234'): AiBrain {
-  let k = key;
-  const env: AiEnv = { keys: { get: () => k, set: (v) => (k = v), clear: () => (k = '') }, enabled: () => true, online: () => true, text: i18n, transport: () => t };
+interface BrainOpts {
+  /** Schlüssel je Anbieter (Standard: nur Claude). */
+  keys?: Partial<Record<AiProviderId, string>>;
+  config?: Partial<AiConfig>;
+  notices?: AiNotice[];
+  waits?: number[];
+}
+
+/** KI mit simulierten Anbietern: `t` für alle oder je Anbieter; Warten passiert sofort. */
+function brain(t: FakeTransport | Partial<Record<AiProviderId, FakeTransport>>, o: BrainOpts = {}): AiBrain {
+  const keys: Partial<Record<AiProviderId, string>> = { ...(o.keys ?? { claude: 'sk-ant-test-1234' }) };
+  let clock = 1000;
+  const cfg: AiConfig = { provider: 'claude', models: {}, chain: true, ...o.config };
+  const env: AiEnv = {
+    keys: { get: (p) => keys[p] ?? '', set: (p, v) => (keys[p] = v), clear: (p) => delete keys[p] },
+    enabled: () => true,
+    online: () => true,
+    config: () => cfg,
+    text: i18n,
+    transport: (p) => (t instanceof FakeTransport ? t : t[p]!),
+    sleep: async (ms) => {
+      o.waits?.push(ms);
+      clock += ms;
+    },
+    now: () => clock,
+  };
   return new AiBrain(env);
 }
 
@@ -90,12 +114,136 @@ describe('KI-Regeln', () => {
     expect(signature('Na, also: Hallo!')).toBe('hallo');
   });
 
-  it('kürzt den Verlauf auf ganze Züge', () => {
+  it('teilt den Verlauf in ganze Züge: die letzten wörtlich, der Rest wird zusammengefasst', () => {
     const h: AiMessage[] = [];
-    for (let i = 0; i < 5; i++) h.push({ role: 'user', content: `u${i}` }, { role: 'system', content: 'r' }, { role: 'assistant', content: 'a' });
-    const t = trimHistory(h, 2);
-    expect(t).toHaveLength(6);
-    expect(t[0]).toEqual({ role: 'user', content: 'u3' });
+    for (let i = 0; i < 5; i++) h.push({ role: 'user', content: `Satz ${i}` }, { role: 'assistant', content: 'a' });
+    const { recent, older } = splitHistory(h, 2);
+    expect(recent).toHaveLength(4);
+    expect(recent[0]).toEqual({ role: 'user', content: 'Satz 3' });
+    expect(older).toHaveLength(6);
+    const sum = summarizeHistory(older, i18n);
+    expect(sum).toContain('„Satz 0“');
+    expect(sum).toContain('„Satz 2“');
+    expect(summarizeHistory([], i18n)).toBe('');
+    // Lange Gespräche: Anfang und letzte Sätze, gekürzt.
+    const long: AiMessage[] = [];
+    for (let i = 0; i < 20; i++) long.push({ role: 'user', content: `Nummer ${i} ${'x'.repeat(100)}` }, { role: 'assistant', content: 'a' });
+    const s2 = summarizeHistory(long, i18n);
+    expect(s2).toContain('Nummer 0');
+    expect(s2).toContain('Nummer 19');
+    expect(s2).not.toContain('Nummer 10 ');
+    expect(s2.length).toBeLessThan(TUNING.ai.summaryItems * (TUNING.ai.summaryChars + 12) + 40);
+  });
+
+  it('liest JSON auch aus Codeblöcken und Text (Modelle ohne Schema-Zwang)', () => {
+    expect(parseVerdict('```json\n' + json({ say: 'Na so was.' }) + '\n```')?.say).toBe('Na so was.');
+    expect(parseVerdict('Klar: ' + json({ trust_delta: 4 }) + ' Fertig.')?.trustDelta).toBe(4);
+  });
+});
+
+describe('KI-Anbieter: Schnittstellen', () => {
+  it('bildet HTTP-Fehler auf Gründe ab (429 = Limit, Gemini meldet falsche Schlüssel als 400)', () => {
+    expect(errorKind(429, '')).toBe('rate');
+    expect(errorKind(401, '')).toBe('auth');
+    expect(errorKind(400, 'API key not valid. Please pass a valid API key.')).toBe('auth');
+    expect(errorKind(400, 'response_format not supported')).toBe('badRequest');
+    expect(errorKind(503, '')).toBe('overloaded');
+    expect(retryAfter('2')).toBe(2000);
+    expect(retryAfter('0.5')).toBe(500);
+    expect(retryAfter(null)).toBeNull();
+  });
+
+  it('Gemini: Rollen user/model, Regie hängt an der Spieler-Nachricht', () => {
+    const c = toGeminiContents([
+      { role: 'user', content: 'Hallo' },
+      { role: 'assistant', content: '{"say":"Ja?"}' },
+      { role: 'user', content: 'Wer da?' },
+      { role: 'system', content: 'Regie' },
+    ]);
+    expect(c.map((m) => m.role)).toEqual(['user', 'model', 'user']);
+    expect(c[2]!.parts[0]!.text).toBe('Wer da?\n\nRegie');
+  });
+
+  const sse = (events: unknown[]): Response =>
+    new Response(events.map((e) => `data: ${JSON.stringify(e)}\n\n`).join('') + 'data: [DONE]\n\n', { status: 200, headers: { 'Content-Type': 'text/event-stream' } });
+  const answer = json({ say: 'Ach, wie schön.' });
+
+  it('OpenRouter (OpenAI-kompatibel): streamt, schickt Schema und Schlüssel, liest den Verbrauch', async () => {
+    const calls: { url: string; init: RequestInit }[] = [];
+    const fetchFn = (async (url: string, init: RequestInit) => {
+      calls.push({ url, init });
+      return sse([{ choices: [{ delta: { content: answer.slice(0, 20) } }] }, { choices: [{ delta: { content: answer.slice(20) }, finish_reason: 'stop' }] }, { choices: [], usage: { prompt_tokens: 210, completion_tokens: 25 } }]);
+    }) as unknown as typeof fetch;
+    const tr = makeTransport(providerDef('openrouter'), 'sk-or-test', 'google/gemma-4-31b-it:free', fetchFn);
+    const snaps: string[] = [];
+    const res = await tr.send({ system: 'S', messages: [{ role: 'user', content: 'Hallo' }] }, (t) => snaps.push(t), new AbortController().signal);
+    expect(res.json).toBe(answer);
+    expect(res.usage).toMatchObject({ input: 210, output: 25 });
+    expect(snaps.length).toBe(2);
+    expect(calls[0]!.url).toBe('https://openrouter.ai/api/v1/chat/completions');
+    expect((calls[0]!.init.headers as Record<string, string>)['Authorization']).toBe('Bearer sk-or-test');
+    const body = JSON.parse(calls[0]!.init.body as string) as Record<string, unknown>;
+    expect(body['model']).toBe('google/gemma-4-31b-it:free');
+    expect(body['stream']).toBe(true);
+    expect(body['messages']).toEqual([{ role: 'system', content: 'S' }, { role: 'user', content: 'Hallo' }]);
+    expect((body['response_format'] as { type: string }).type).toBe('json_schema');
+  });
+
+  it('Groq: ohne Streaming (Schema), wenig Nachdenken bei GPT-OSS; 429 liefert die Wartezeit', async () => {
+    let body: Record<string, unknown> = {};
+    let n = 0;
+    const fetchFn = (async (_url: string, init: RequestInit) => {
+      body = JSON.parse(init.body as string) as Record<string, unknown>;
+      if (n++ === 0) return new Response(JSON.stringify({ error: { message: 'Rate limit reached' } }), { status: 429, headers: { 'retry-after': '3' } });
+      return new Response(JSON.stringify({ choices: [{ message: { content: answer } }], usage: { prompt_tokens: 300, completion_tokens: 40 } }), { status: 200 });
+    }) as unknown as typeof fetch;
+    const tr = new OpenAiCompatTransport(providerDef('groq'), 'gsk_test', 'openai/gpt-oss-20b', fetchFn);
+    const err = await tr.send({ system: 'S', messages: [] }, () => undefined, new AbortController().signal).catch((e: unknown) => e);
+    expect(err).toBeInstanceOf(AiError);
+    expect((err as AiError).kind).toBe('rate');
+    expect((err as AiError).retryAfterMs).toBe(3000);
+    const res = await tr.send({ system: 'S', messages: [], json: 'object' }, () => undefined, new AbortController().signal);
+    expect(res.json).toBe(answer);
+    expect(body['stream']).toBe(false);
+    expect(body['reasoning_effort']).toBe('low');
+    expect(body['response_format']).toEqual({ type: 'json_object' });
+  });
+
+  it('Gemini: eigene Schnittstelle mit Schlüssel im Header, Schema, Denk-Teile werden übersprungen', async () => {
+    let url = '';
+    let init: RequestInit = {};
+    const fetchFn = (async (u: string, i: RequestInit) => {
+      url = u;
+      init = i;
+      return sse([
+        { candidates: [{ content: { parts: [{ text: 'hmm', thought: true }] } }] },
+        { candidates: [{ content: { parts: [{ text: answer.slice(0, 10) }] } }] },
+        { candidates: [{ content: { parts: [{ text: answer.slice(10) }] }, finishReason: 'STOP' }], usageMetadata: { promptTokenCount: 180, candidatesTokenCount: 22, thoughtsTokenCount: 5 } },
+      ]);
+    }) as unknown as typeof fetch;
+    const tr = new GeminiTransport(providerDef('gemini'), 'AIza-test', 'gemini-3.5-flash-lite', fetchFn);
+    const res = await tr.send({ system: 'S', messages: [{ role: 'user', content: 'Hallo' }] }, () => undefined, new AbortController().signal);
+    expect(res.json).toBe(answer);
+    expect(res.usage).toMatchObject({ input: 180, output: 27 });
+    expect(url).toBe('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:streamGenerateContent?alt=sse');
+    expect((init.headers as Record<string, string>)['x-goog-api-key']).toBe('AIza-test');
+    const body = JSON.parse(init.body as string) as { systemInstruction: unknown; generationConfig: Record<string, unknown> };
+    expect(body.systemInstruction).toEqual({ parts: [{ text: 'S' }] });
+    expect(body.generationConfig['responseMimeType']).toBe('application/json');
+    expect(body.generationConfig['responseJsonSchema']).toBeDefined();
+  });
+
+  it('Netzfehler (auch vom Browser blockiert) und Abbruch werden unterschieden', async () => {
+    const fail = (async () => {
+      throw new TypeError('Failed to fetch');
+    }) as unknown as typeof fetch;
+    const tr = new OpenAiCompatTransport(providerDef('groq'), 'k', 'm', fail);
+    expect(((await tr.send({ system: '', messages: [] }, () => undefined, new AbortController().signal).catch((e: unknown) => e)) as AiError).kind).toBe('network');
+    const abort = (async () => {
+      throw new DOMException('aborted', 'AbortError');
+    }) as unknown as typeof fetch;
+    const tr2 = new OpenAiCompatTransport(providerDef('groq'), 'k', 'm', abort);
+    expect(((await tr2.send({ system: '', messages: [] }, () => undefined, new AbortController().signal).catch((e: unknown) => e)) as AiError).kind).toBe('aborted');
   });
 });
 
@@ -107,6 +255,9 @@ describe('KI-Prompts', () => {
       const p = buildPersona(c, strict);
       expect(p).toContain(strict.t(`callers.${c.id}.name`));
       expect(p).toContain(strict.t('ai.prompt.rules').slice(0, 20));
+      expect(p).toContain('"trust_delta"');
+      // Sparsam: kurzer System-Prompt (geht bei jeder Anfrage mit).
+      expect(p.length, c.id).toBeLessThan(2900);
     }
     expect(missing).toEqual([]);
   });
@@ -188,10 +339,10 @@ describe('KI-Anrufer in der Spiellogik', () => {
 });
 
 describe('KI-Anrufer im Telefon', () => {
-  function call(t: FakeTransport): { hub: PhoneHub; calls: CallManager; ai: AiBrain } {
+  function call(t: FakeTransport | Partial<Record<AiProviderId, FakeTransport>>, o: BrainOpts = {}): { hub: PhoneHub; calls: CallManager; ai: AiBrain } {
     const calls = new CallManager(new Rng(3), CALLERS, 8);
     const hub = new PhoneHub(calls, CALLERS, i18n, () => undefined);
-    const ai = brain(t);
+    const ai = brain(t, o);
     hub.setAi(ai);
     calls.open = false;
     calls.scripted = ['hildegard'];
@@ -253,4 +404,131 @@ describe('KI-Anrufer im Telefon', () => {
     expect(t.requests[1]!.messages.at(-1)?.role).toBe('user');
     expect(t.requests[1]!.messages.at(-1)?.content).toContain(i18n.t('ai.regie.head'));
   });
+
+  const settle = async (): Promise<void> => {
+    for (let i = 0; i < 6; i++) await new Promise((r) => setTimeout(r, 0));
+  };
+
+  it('schickt nur die letzten Züge wörtlich mit, Älteres als Zusammenfassung in der Regie', async () => {
+    const t = new FakeTransport(() => json({}));
+    const { hub } = call(t);
+    const lines = ['Wie geht es Mausi?', 'Was backen Sie heute?', 'Wie ist das Wetter bei Ihnen?', 'Haben Sie einen Garten?', 'Trinken Sie gern Kaffee?', 'Wie geht es der Familie?', 'Was machen die Rosen?'];
+    for (const line of lines.slice(0, TUNING.ai.historyTurns + 3)) {
+      hub.say(0, line, 'typed');
+      await settle();
+    }
+    expect(hub.session(0)!.active).toBe(true);
+    const last = t.requests.at(-1)!;
+    const users = last.messages.filter((m) => m.role === 'user');
+    expect(users).toHaveLength(TUNING.ai.historyTurns + 1);
+    // Regie der früheren Züge geht nicht mehr mit, nur die aktuelle.
+    expect(last.messages.filter((m) => m.role === 'system')).toHaveLength(1);
+    expect(last.messages.at(-1)!.content).toContain('Wie geht es Mausi?');
+    expect(users[0]!.content).toBe(lines[2]);
+  });
+
+  it('Rate-Limit: kurze Meldung, neuer Versuch mit Wartezeit, dann klappt es', async () => {
+    let n = 0;
+    const t = new FakeTransport(() => (n++ < 2 ? new AiError('rate', 'rate', null, n === 1 ? 1500 : null) : json({ say: 'Da bin ich wieder.' })));
+    const waits: number[] = [];
+    const { hub, ai } = call({ groq: t }, { keys: { groq: 'gsk_x' }, config: { provider: 'groq' }, waits });
+    const notices: AiNotice[] = [];
+    hub.on((e) => {
+      if (e.type === 'aiNotice') notices.push(e.notice);
+    });
+    hub.say(0, 'Hallo, wie geht es?', 'typed');
+    await settle();
+    const s = hub.session(0)!;
+    expect(t.requests).toHaveLength(3);
+    expect(waits).toEqual([1500, TUNING.ai.rateBackoffMs[1]]);
+    expect(notices.map((x) => x.kind)).toEqual(['retry', 'retry']);
+    expect(s.transcript.at(-1)!.text).toBe('Da bin ich wieder.');
+    expect(s.aiProvider).toBe('groq');
+    expect(ai.byProvider.groq.rateLimited).toBe(2);
+    expect(ai.byProvider.groq.requests).toBe(3);
+  });
+
+  it('Rate-Limit ohne Ende: nächster eingetragener Anbieter übernimmt, der erste pausiert', async () => {
+    const groq = new FakeTransport(() => new AiError('rate'));
+    const gemini = new FakeTransport(() => json({ say: 'Hier spricht die Kette.' }));
+    const { hub, ai } = call({ groq, gemini }, { keys: { groq: 'gsk_x', gemini: 'AIza_y' }, config: { provider: 'groq' } });
+    const notices: AiNotice[] = [];
+    hub.on((e) => {
+      if (e.type === 'aiNotice') notices.push(e.notice);
+    });
+    hub.say(0, 'Guten Tag!', 'typed');
+    await settle();
+    expect(groq.requests).toHaveLength(TUNING.ai.rateRetries + 1);
+    expect(notices.at(-1)).toMatchObject({ kind: 'switch', from: 'groq', to: 'gemini', reason: 'rate' });
+    expect(hub.session(0)!.aiProvider).toBe('gemini');
+    expect(ai.coolingFor('groq')).toBeGreaterThan(0);
+    // Nächster Satz: Groq pausiert noch, Gemini antwortet direkt.
+    hub.say(0, 'Wie geht es Ihnen?', 'typed');
+    await settle();
+    expect(groq.requests).toHaveLength(TUNING.ai.rateRetries + 1);
+    expect(gemini.requests).toHaveLength(2);
+    // Andere Anbieter bekommen die Regie im Nutzertext (nicht alle Modelle kennen System-Nachrichten im Verlauf).
+    expect(gemini.requests[0]!.messages.at(-1)!.role).toBe('user');
+    expect(gemini.requests[0]!.messages.at(-1)!.content).toContain(i18n.t('ai.regie.head'));
+  });
+
+  it('ohne Kette bzw. ohne weiteren Schlüssel: Rückfall auf die lokale Engine mit Meldung', async () => {
+    const groq = new FakeTransport(() => new AiError('rate'));
+    const { hub } = call({ groq }, { keys: { groq: 'gsk_x', gemini: 'AIza_y' }, config: { provider: 'groq', chain: false } });
+    const errors: string[] = [];
+    hub.on((e) => {
+      if (e.type === 'aiFallback') errors.push(e.error);
+    });
+    const s = hub.session(0)!;
+    const lines = s.transcript.length;
+    hub.say(0, 'Hallo?', 'typed');
+    await settle();
+    expect(errors).toEqual(['rate']);
+    expect(s.engine).toBe('ai');
+    expect(s.transcript.length).toBeGreaterThan(lines + 1);
+    // Während der Pause wird gar nicht erst gefragt.
+    hub.say(0, 'Sind Sie noch da?', 'typed');
+    await settle();
+    expect(groq.requests).toHaveLength(TUNING.ai.rateRetries + 1);
+    expect(errors).toEqual(['rate', 'rate']);
+  });
+
+  it('lange Wartezeit laut Anbieter (Tageslimit): kein Warten, sofort weiter', async () => {
+    const groq = new FakeTransport(() => new AiError('rate', 'rate', null, 3_600_000));
+    const or = new FakeTransport(() => json({}));
+    const waits: number[] = [];
+    const { hub, ai } = call({ groq, openrouter: or }, { keys: { groq: 'g', openrouter: 'o' }, config: { provider: 'groq' }, waits });
+    hub.say(0, 'Hallo!', 'typed');
+    await settle();
+    expect(groq.requests).toHaveLength(1);
+    expect(waits).toEqual([]);
+    expect(or.requests).toHaveLength(1);
+    expect(ai.coolingFor('groq')).toBe(TUNING.ai.rateCooldownMaxMs);
+  });
+
+  it('lehnt ein Modell das Schema ab, wird die Vorgabe schwächer (nur JSON, dann per Anweisung)', async () => {
+    const t = new FakeTransport((req) => (req.json === 'prompt' ? 'Gern: ' + json({ say: 'Klappt auch so.' }) : new AiError('badRequest')));
+    const { hub } = call({ openrouter: t }, { keys: { openrouter: 'o' }, config: { provider: 'openrouter' } });
+    hub.say(0, 'Hallo!', 'typed');
+    await settle();
+    expect(t.requests.map((r) => r.json)).toEqual(['schema', 'object', 'prompt']);
+    expect(hub.session(0)!.transcript.at(-1)!.text).toBe('Klappt auch so.');
+    hub.say(0, 'Und weiter?', 'typed');
+    await settle();
+    expect(t.requests.at(-1)!.json).toBe('prompt');
+  });
+
+  it('Status und Kette folgen den eingetragenen Schlüsseln; eigenes Modell je Anbieter', () => {
+    const t = new FakeTransport(() => json({}));
+    expect(brain(t, { keys: {}, config: { provider: 'groq' } }).status()).toBe('noKey');
+    const b = brain(t, { keys: { gemini: 'AIza_y', claude: 'c' }, config: { provider: 'groq' } });
+    expect(b.status()).toBe('ready');
+    expect(b.candidates()).toEqual(['gemini', 'claude']);
+    expect(brain(t, { keys: { gemini: 'AIza_y' }, config: { provider: 'groq', chain: false } }).status()).toBe('noKey');
+    const m = brain(t, { keys: { groq: 'g' }, config: { provider: 'groq', models: { groq: 'qwen/qwen3.8-27b' } } });
+    expect(m.model()).toBe('qwen/qwen3.8-27b');
+    expect(m.model('gemini')).toBe(providerDef('gemini').defaultModel);
+    expect(m.maskedKey()).toBe('…g');
+  });
 });
+

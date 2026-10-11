@@ -247,7 +247,7 @@
     "close": "Schließen",
     "hint": "F9 öffnet und schließt dieses Menü.",
     "tokens": "KI-Tokens",
-    "tokensLine": "Anruf: {cin} rein / {cout} raus ({creq} Anfr.) · Gesamt: {tin} / {tout} ({treq}) · Cache gelesen: {cache}",
+    "tokensLine": "Anruf ({provider}): {cin} rein / {cout} raus ({creq} Anfr.) · Gesamt: {tin} / {tout} ({treq}) · Cache gelesen: {cache}",
     "tokensNone": "Noch keine KI-Anfragen."
   }
 }

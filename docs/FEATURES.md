@@ -528,10 +528,10 @@ Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die bel
 ## 29. Online (nach M12, entschieden am 10.10.2026)
 
 **M13 – KI-Anrufer mit eigenem API-Schlüssel (optional)**
-- [x] **NET-01** Einstellung „Echte KI-Anrufer“: Anbieter wählen, Schlüssel eingeben (maskiert), Verbindungstest. Der Schlüssel liegt nur lokal (optional nur für die Sitzung), nie im Repo, Build oder Log. *O (Cloud-LLM) [SD]* · M13 (vorgezogen: Systemsteuerung › KI mit Claude API, verdecktes Feld, Test, Löschen; Anbieterwahl und „nur für die Sitzung“ fehlen noch)
+- [x] **NET-01** Einstellung „Echte KI-Anrufer“: Anbieter wählen, Schlüssel eingeben (maskiert), Verbindungstest. Der Schlüssel liegt nur lokal (optional nur für die Sitzung), nie im Repo, Build oder Log. *O (Cloud-LLM) [SD]* · M13 (vorgezogen: Systemsteuerung › KI mit Anbieterwahl Groq/Gemini/OpenRouter/Claude, Schlüssel je Anbieter verdeckt, Modell änderbar, Fallback-Kette, Test, Löschen, Verbrauch je Anbieter; „nur für die Sitzung“ fehlt noch)
 - [x] **NET-02** LLM schreibt die Anrufer-Antworten aus Persönlichkeit, Gedächtnis, Masche-Phase und Gesprächsverlauf. *O [SD]* · M13 (vorgezogen: System-Prompt je Figur aus den Daten, Regie je Satz)
 - [x] **NET-03** Strukturierte Antwort (Text, ΔVertrauen-Vorschlag, Stimmung, Beute-Bereitschaft), begrenzt durch die lokalen Spielregeln (Schwellen, Auflegen, Diktat). *E/D* · M13 (vorgezogen; dazu Floskel-Abnutzung über den Run und Schutz vor Manipulationsversuchen)
-- [x] **NET-04** Fallback auf die lokale Engine bei Fehler, Zeitüberschreitung, Offline oder Kostenlimit, ohne dass das Gespräch abbricht. *D* · M13 (vorgezogen; ein einstellbares Kostenlimit fehlt noch, der Verbrauch wird angezeigt)
+- [x] **NET-04** Fallback auf die lokale Engine bei Fehler, Zeitüberschreitung, Offline oder Kostenlimit, ohne dass das Gespräch abbricht. *D* · M13 (vorgezogen; Rate-Limits mit Meldung, Retry mit Wartezeit und nächstem Anbieter; ein einstellbares Kostenlimit fehlt noch, der Verbrauch wird angezeigt)
 - [ ] **NET-05** Antwortzeit-Kaschierung (Tipp- bzw. „Hmm…“-Laute, Brabbeln), damit Latenz wie im Original nicht stört. *D* · M13 (teilweise: Streaming Satz für Satz mit Stimme, Anzeige „… überlegt“; Hmm-Laute fehlen noch)
 - [x] **NET-06** Datenschutz-Hinweis (welche Daten an den Anbieter gehen), Opt-in, Abschalten jederzeit. *A* · M13
 

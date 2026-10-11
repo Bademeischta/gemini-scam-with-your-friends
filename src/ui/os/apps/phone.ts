@@ -126,8 +126,15 @@ class PhoneView implements AppView {
     this.info = sc.add.text(0, 0, '', { fontFamily: BODY_FONT, color: PALETTE.paper, fontSize: '14px', align: 'center' }).setOrigin(0.5, 0);
     this.live = sc.add.text(0, 0, '', { fontFamily: BODY_FONT, color: PALETTE.mustard, fontSize: '13px', fontStyle: 'italic' });
     host.container.add([this.info, this.live]);
-    // KI fällt auf die lokale Engine zurück: kurz Bescheid geben, warum.
+    // KI am Limit (neuer Versuch, anderer Anbieter) oder Rückfall auf die lokale Engine: kurz Bescheid geben.
     this.offHub = this.hub.on((e) => {
+      if (e.type === 'aiNotice' && e.desk === this.desk) {
+        const n = e.notice;
+        const name = (id: string): string => t(`os.settings.ai.providers.${id}`);
+        if (n.kind === 'retry') this.notice(t('calls.phone.ai.retry', { provider: name(n.provider), seconds: Math.max(1, Math.round(n.waitMs / 1000)) }));
+        else this.notice(t(n.reason === 'rate' ? 'calls.phone.ai.switch' : 'calls.phone.ai.switchError', { from: name(n.from), to: name(n.to) }));
+        return;
+      }
       if (e.type !== 'aiFallback' || e.desk !== this.desk) return;
       this.notice(t(`calls.phone.ai.${e.error}`));
       if (e.session.engine === 'local') this.ctx.os.toast({ icon: 'phone', title: t('calls.phone.ai.fallbackTitle'), body: t(`calls.phone.ai.${e.error}`) });
@@ -305,7 +312,8 @@ class PhoneView implements AppView {
           : c?.scheme
             ? t('calls.phone.phaseScheme', { phase: t(`calls.phase.${c.phase}`), scheme: t(`schemes.${c.scheme.id}.name`), time: clock(c.time) })
             : t('calls.phone.phase', { phase: t(`calls.phase.${c?.phase ?? 'einstieg'}`), time: clock(c?.time ?? 0) });
-    const engineTag = this.mode === 'call' && s.engine === 'ai' ? ` · ${t('calls.phone.ai.tag')}` : '';
+    const aiTag = s.aiProvider ? t('calls.phone.ai.tagProvider', { provider: t(`os.settings.ai.providers.${s.aiProvider}`) }) : t('calls.phone.ai.tag');
+    const engineTag = this.mode === 'call' && s.engine === 'ai' ? ` · ${aiTag}` : '';
     fitLabel(this.phase, phaseText + engineTag, Math.max(10, r.w - (this.phase.main.x - r.x)));
     this.phase.setColor(th.textDim);
     this.delta.setPosition(Math.round(this.status.main.x + this.status.width + 3 * this.ctx.host.u()), this.status.main.y);
@@ -465,13 +473,13 @@ class PhoneView implements AppView {
     this.noticeTime = 7;
   }
 
-  /** Mikrofon hat Vorrang, dann „überlegt …“, dann Hinweise. */
+  /** Mikrofon hat Vorrang, dann Hinweise (Limit, Anbieter-Wechsel, Rückfall), dann „überlegt …“. */
   private syncLive(dt: number): void {
     this.noticeTime = Math.max(0, this.noticeTime - dt);
     const s = this.session;
     let text = this.mode === 'call' ? this.micText : '';
-    if (!text && this.mode === 'call' && s?.thinking) text = t('calls.phone.thinking', { name: t(`callers.${s.caller.id}.short`) });
     if (!text && this.noticeTime > 0 && this.mode === 'call') text = this.noticeText;
+    if (!text && this.mode === 'call' && s?.thinking) text = t('calls.phone.thinking', { name: t(`callers.${s.caller.id}.short`) });
     if (text !== this.live.text) this.live.setText(text);
     this.live.setVisible(this.mode === 'call' && text !== '');
   }

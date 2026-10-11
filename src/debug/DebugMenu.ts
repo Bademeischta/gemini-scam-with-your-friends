@@ -93,12 +93,14 @@ export function installDebugMenu(game: Phaser.Game, doc: Document = document): v
   let timer: ReturnType<typeof setInterval> | null = null;
   function syncTokens(): void {
     const ai = services().ai;
-    const call = hasRun() ? currentRun().phone.latestAiSession()?.usage : undefined;
+    const session = hasRun() ? currentRun().phone.latestAiSession() : null;
+    const call = session?.usage;
+    const provider = session?.aiProvider ? t(`os.settings.ai.providers.${session.aiProvider}`) : '-';
     const tot = ai.total;
     tokens.textContent =
       tot.requests === 0
         ? t('debug.tokensNone')
-        : t('debug.tokensLine', { cin: call?.input ?? 0, cout: call?.output ?? 0, creq: call?.requests ?? 0, tin: tot.input, tout: tot.output, treq: tot.requests, cache: tot.cacheRead });
+        : t('debug.tokensLine', { provider, cin: call?.input ?? 0, cout: call?.output ?? 0, creq: call?.requests ?? 0, tin: tot.input, tout: tot.output, treq: tot.requests, cache: tot.cacheRead });
   }
 
   function setOpen(on: boolean): void {

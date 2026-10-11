@@ -271,15 +271,23 @@ export const TUNING = {
    * vor; die Spiellogik begrenzt beides und entscheidet allein über Forderungen und Beute.
    */
   ai: {
-    /** Kleines, schnelles Modell (Antwortzeit wie am Telefon). */
-    model: 'claude-haiku-5-5',
-    /** Kurze Antworten: Obergrenze der Ausgabe je Zug. */
-    maxTokens: 400,
-    effort: 'low',
     /** Abbruch, wenn die Antwort zu lange dauert (ms); dann antwortet die lokale Engine. */
     timeoutMs: 15000,
-    /** So viele Spieler-/Anrufer-Wechsel bleiben im Gesprächsgedächtnis der KI. */
-    historyTurns: 14,
+    /** So viele letzte Wechsel (Spieler + Anrufer) gehen wörtlich mit; Älteres nur als Zusammenfassung. */
+    historyTurns: 4,
+    /** Zusammenfassung älterer Züge: höchstens so viele Einträge, je höchstens so viele Zeichen. */
+    summaryItems: 6,
+    summaryChars: 70,
+    /** Beispielsätze für den Tonfall im System-Prompt. */
+    styleExamples: 3,
+    /** Rate-Limit (HTTP 429): so oft neu versuchen, Wartezeiten (ms) je Versuch. */
+    rateRetries: 2,
+    rateBackoffMs: [800, 2000],
+    /** Längste Wartezeit laut Anbieter („Retry-After“), die noch abgewartet wird (ms). */
+    rateMaxWaitMs: 4000,
+    /** Anbieter am Limit: so lange überspringen (ms), wenn keine Wartezeit bekannt ist. */
+    rateCooldownMs: 60000,
+    rateCooldownMaxMs: 600000,
     /** Rohwert der KI für ΔVertrauen wird hierauf begrenzt. */
     rawMin: -15,
     rawMax: 10,
