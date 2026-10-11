@@ -41,6 +41,8 @@ class StatusView {
   private readonly g: Phaser.GameObjects.Graphics;
   private barRect: Rect = { x: 0, y: 0, w: 0, h: 0 };
   private lastQuota = -1;
+  private lastMoney = -1;
+  private lastTeam = -1;
   private progress = 0;
   private reached = false;
   /** Kurze Texte ohne „Du:“/„Team“, wenn der Platz knapp ist (Handy hochkant). */
@@ -88,9 +90,12 @@ class StatusView {
     this.drawBar();
   }
 
-  quotaChanged(shift: ShiftState): boolean {
-    if (shift.quota === this.lastQuota) return false;
+  /** Breite der Anzeige hat sich womöglich geändert (Quota, Geld, Team-Summe): neu anordnen. */
+  widthChanged(shift: ShiftState): boolean {
+    if (shift.quota === this.lastQuota && shift.personal === this.lastMoney && shift.team === this.lastTeam) return false;
     this.lastQuota = shift.quota;
+    this.lastMoney = shift.personal;
+    this.lastTeam = shift.team;
     return true;
   }
 
@@ -289,7 +294,7 @@ export class Taskbar {
     const first = this.lastShift === null;
     this.lastShift = shift;
     this.status.update(shift, dt);
-    if ((this.status.quotaChanged(shift) || first) && this.geo) this.layout(this.geo);
+    if ((this.status.widthChanged(shift) || first) && this.geo) this.layout(this.geo);
   }
 
   /** Rechtecke für Tests (physische Pixel). */

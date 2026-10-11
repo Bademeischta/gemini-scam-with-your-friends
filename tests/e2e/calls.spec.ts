@@ -296,10 +296,14 @@ test.describe('Anrufe', () => {
     expect((await phone(page))!.trust).toBeGreaterThanOrEqual(60);
     await page.keyboard.type('Bitte lesen Sie mir Ihre Bürgernummer vor.');
     await page.keyboard.press('Enter');
-    await expect.poll(async () => (await phone(page))?.outcome).toBe('success');
     await expect.poll(async () => (await calls(page)).notes.length).toBe(1);
     expect((await calls(page)).notes[0]!.from).toBe('hildegard');
     await expect.poll(async () => (await osState(page)).toasts.some((t) => t.title === 'Notiert!')).toBe(true);
+    // Mit der Beute ist das Gespräch nicht vorbei: Verabschieden beendet es erfolgreich.
+    expect((await phone(page))!.mode).toBe('call');
+    await page.keyboard.type('Vielen Dank, auf Wiederhören!');
+    await page.keyboard.press('Enter');
+    await expect.poll(async () => (await phone(page))?.outcome).toBe('success');
     await shot(page, info, 'call-success');
     // Notizblock öffnen und eine eigene Notiz anlegen.
     const ni = await osTarget(page, 'icon:notes');

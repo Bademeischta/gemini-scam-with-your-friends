@@ -84,6 +84,26 @@ export function createUiSfx(audio: AudioEngine) {
     micOff(): void {
       audio.tone(bus(), 1320, 0.05, 'sine', 0.1, 880);
     },
+    /** Auszahlung: Registrierkasse („Ka-tsching“). */
+    cash(): void {
+      audio.tone(bus(), 220, 0.05, 'square', 0.16, 140);
+      audio.tone(bus(), 1975, 0.07, 'square', 0.1, 0, 0.07);
+      audio.tone(bus(), 2637, 0.22, 'triangle', 0.12, 0, 0.12);
+      audio.tone(bus(), 3951, 0.18, 'sine', 0.06, 0, 0.16);
+    },
+    /** Eingabe abgelehnt (falscher Code). */
+    deny(): void {
+      audio.tone(bus(), 196, 0.09, 'square', 0.14);
+      audio.tone(bus(), 147, 0.14, 'square', 0.14, 0, 0.1);
+    },
+    /** Geschenk verschickt (Plauderbude). */
+    gift(): void {
+      for (let i = 0; i < 4; i++) audio.tone(bus(), 784 * 1.26 ** i, 0.06, 'triangle', 0.12, 0, i * 0.06);
+    },
+    /** Mausklick auf dem fremden PC (Fernzugriff). */
+    click(): void {
+      audio.tone(bus(), 2200, 0.015, 'square', 0.08);
+    },
   };
 }
 

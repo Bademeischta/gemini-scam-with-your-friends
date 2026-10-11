@@ -1,5 +1,6 @@
 import type { Rng } from '../rng/rng';
-import { DEMANDS, ROLES, TOPICS, type Mood, type Role, type Topic } from './types';
+import type { Phase } from './engine';
+import { DEMANDS, ROLES, TOPICS, type DemandKind, type Mood, type Role, type Topic } from './types';
 
 /**
  * Schnellantwort-Karten (CAL-06): vorgeschlagene Sätze passend zur Lage. Sie laufen durch dieselbe
@@ -30,9 +31,15 @@ export const CARD_CATEGORIES: readonly string[] = [
   'confirm',
   'farewell',
   'insult',
+  'askRepeat',
   ...DEMANDS.map((d) => `demand.${d}`),
   ...TOPICS.map((t) => `topic.${t}`),
 ];
+
+/** i18n-Schlüssel einer Kategorie (Maschen-Karten stehen unter schemes.<id>.cards.*). */
+function keyOf(category: string): string {
+  return category.startsWith('schemes.') ? category : `cards.${category}`;
+}
 
 export interface DealState {
   turns: number;
@@ -42,6 +49,11 @@ export interface DealState {
   role: Role | null;
   /** Themen, zu denen der Anrufer eine Meinung hat (Vorlieben und Abneigungen gemischt – welche was ist, muss man herausfinden). */
   hints?: readonly Topic[];
+  phase?: Phase;
+  /** Beute schon diktiert (Nachfragen und Verabschieden werden wichtiger). */
+  hasLoot?: boolean;
+  /** Gewählte Masche: deren Pitch- und Forderungs-Karten kommen dazu. */
+  scheme?: { id: string; phase: Phase; nextDemand: DemandKind | null };
 }
 
 export class CardDeck {
@@ -61,7 +73,7 @@ export class CardDeck {
   deal(s: DealState, n = 4, exclude: readonly Card[] = []): Card[] {
     const weights = this.weights(s);
     const excluded = new Set(exclude.map((c) => c.category));
-    const cats = [...weights.entries()].filter(([c, w]) => w > 0 && this.list(`cards.${c}`).length > 0);
+    const cats = [...weights.entries()].filter(([c, w]) => w > 0 && this.list(keyOf(c)).length > 0);
     const out: Card[] = [];
     const taken = new Set<string>();
     // Gewichtete Auswahl ohne Zurücklegen; gerade gezeigte Kategorien nur, wenn nichts anderes übrig ist.
@@ -85,7 +97,7 @@ export class CardDeck {
   }
 
   private pick(category: string): Card | null {
-    const texts = this.list(`cards.${category}`);
+    const texts = this.list(keyOf(category));
     if (texts.length === 0) return null;
     const ids = texts.map((_, i) => `${category}.${i}`);
     const fresh = ids.map((id, i) => ({ id, i })).filter((x) => !this.usedIds.has(x.id));
@@ -132,6 +144,17 @@ export class CardDeck {
     set('threat', 0.25);
     set('insult', 0.15);
     set('farewell', s.turns > 12 ? 1 : 0.2);
+    // Masche gewählt: Geschichte erzählen, dann passend fordern.
+    const sch = s.scheme;
+    if (sch) {
+      set(`schemes.${sch.id}.cards.pitch`, sch.phase === 'pitch' ? 3.5 : sch.phase === 'vertrauen' ? 0.8 : 0.3);
+      set(`schemes.${sch.id}.cards.demand`, sch.phase === 'forderung' && sch.nextDemand ? 3.5 : 0.3);
+    }
+    // Nach dem Diktat: nachfragen oder verabschieden.
+    if (s.hasLoot) {
+      set('askRepeat', s.phase === 'beute' ? 2.5 : 1);
+      set('farewell', 2);
+    }
     return w;
   }
 }

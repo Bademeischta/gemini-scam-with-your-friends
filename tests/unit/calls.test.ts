@@ -129,6 +129,9 @@ describe('Telefon-Sitzung', () => {
     hub.say(0, 'Bitte lesen Sie mir Ihre Bürgernummer vor.', 'typed');
     expect(captures).toHaveLength(1);
     expect(captures[0]!.loot.kind).toBe('nummer');
+    // Nach dem Diktat läuft das Gespräch weiter; Auflegen zählt dann als Erfolg.
+    expect(hub.session(0)!.active).toBe(true);
+    hub.hangUp(0);
     expect(hub.session(0)!.record?.outcome).toBe('success');
   });
 
@@ -203,6 +206,7 @@ describe('Inhalte', () => {
         else if (kind === 'demand') ok = f.demands.includes(sub as never);
         else if (kind === 'topic') ok = f.topics.includes(sub as never);
         else if (kind === 'ask') ok = f.question;
+        else if (kind === 'askRepeat') ok = f.askRepeat;
         else if (kind === 'smalltalk') ok = (f.intents.smalltalk ?? 0) > 0 || f.topics.length > 0;
         else ok = ((f.intents as Record<string, number>)[kind] ?? 0) > 0;
         expect(ok, `${cat}: ${text}`).toBe(true);

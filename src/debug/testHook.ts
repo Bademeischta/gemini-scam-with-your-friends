@@ -82,6 +82,17 @@ export function installTestHook(game: Phaser.Game, s: Services): void {
         views: run.calls.views(),
         history: run.calls.history.map((r) => ({ desk: r.desk, callerId: r.callerId, outcome: r.outcome, trust: r.trust })),
         notes: run.notes.notes.map((n) => ({ text: n.text, from: n.from })),
+        loot: run.ledger.items.map((i) => ({ callerId: i.callerId, schemeId: i.schemeId, kind: i.kind, value: i.value, amount: i.amount, input: i.input, status: i.status, attempts: i.attempts, bait: i.bait ?? false })),
+        team: run.shift.team,
+        personal: run.shift.personal,
+        schemes: run.calls.views().map((_, i) => run.phone.scheme(i)?.id ?? null),
+        dossier: Object.fromEntries(
+          run.phone.dossier.ids().map((id) => {
+            const e = run.phone.dossier.get(id)!;
+            return [id, { calls: e.calls, likes: [...e.likes], dislikes: [...e.dislikes], fans: [...e.fans], skeptics: [...e.skeptics], best: e.best, wins: e.wins }];
+          }),
+        ),
+        plauder: run.plauder.chats.map((c) => ({ handle: c.handle, unread: c.unread, messages: c.messages.length })),
         arrows: (game.registry.get('ringArrows') as number | undefined) ?? 0,
       };
     },

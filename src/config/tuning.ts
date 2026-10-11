@@ -111,6 +111,35 @@ export const TUNING = {
     countdownWarnSeconds: 60,
   },
 
+  /** Auszahlungen der Maschen (SCH-19): Tages-Zuschlag und Zuschlag je Schwierigkeit des Anrufers. */
+  payout: {
+    dayBonus: 0.08,
+    difficulty: { leicht: 1, mittel: 1.25, schwer: 1.6 },
+    /** Auf so viel ₮ runden. */
+    round: 5,
+    /** FernGucker: Kontostand auf dem Opfer-PC (₮, zufällig dazwischen); über diesem Anteil wird der Anrufer misstrauisch. */
+    victimBalance: [600, 1200] as const,
+    victimGreedyShare: 0.6,
+    /** Überweisung zählt höchstens bis … ₮ (Spanne der FernGucker-Maschen). */
+    victimMax: 900,
+  },
+
+  /** Opfer-PC beim Fernzugriff (SCH-22) und Plauderbude (APP-05). */
+  remote: {
+    /** Ordner und private Dateien auf dem fremden Desktop. */
+    folders: 3,
+    files: 4,
+    /** Überweisungsbetrag: Start und Schritt (₮). */
+    startAmount: 100,
+    amountStep: 50,
+  },
+  plauder: {
+    /** Abstand zwischen Spam-Nachrichten der „Freunde“ (s, zufällig dazwischen), solange man am PC sitzt. */
+    spamEvery: [35, 70] as const,
+    /** So viele Nachrichten behält ein Chat. */
+    keep: 12,
+  },
+
   /** Anrufe und Gesprächs-Engine (GAME_DESIGN.md §3 und §8). */
   calls: {
     /** Abnehm-Fenster (s): danach legt der Anrufer auf (verpasst). */
@@ -135,6 +164,24 @@ export const TUNING = {
     angryHangupTrust: 15,
     angryHangupSeconds: 6,
     /** Wiederholung: gleiche Absicht wirkt pro Wiederholung × …, ähnlicher Satz × … */
+    /** Forderungs-Schwelle je Art relativ zur Schwelle des Anrufers (Guck-Code verlangt mehr Vertrauen). */
+    demandOffset: { nummer: 0, code: 12, gutschein: 5, geld: 5, daten: 0, klick: 3, jawort: -5 },
+    /** Ab diesem Vertrauen ist die Geschichte einer Masche glaubwürdig (Pitch, CAL-14). */
+    pitchTrust: 35,
+    /** Fans einer Masche: früher bereit, Skeptiker: viel später (SCH-17). */
+    fanBonus: 10,
+    skepticMalus: 15,
+    /** Wirkung eines gelungenen Pitches; passende Rolle beim Vorstellen gibt extra. */
+    pitchGain: 7,
+    roleFitBonus: 3,
+    /** Diktat (CAL-15): Wahrscheinlichkeit eines Versprechers je Stück, höchstens so viele je Beute. */
+    slipChance: 0.2,
+    maxSlips: 2,
+    /** Nach dem Diktat wechselt die Phase von „Beute“ zu „Abschluss“ nach … s. */
+    lootPhaseSeconds: 6,
+    /** Wiederholen lassen kostet Geduld und ab der zweiten Wiederholung Vertrauen. */
+    repeatPatienceCost: 0.15,
+    repeatTrustCost: 2,
     wearPerRepeat: 0.6,
     /** Mehrere gute Auslöser in einem Satz: der stärkste zählt voll, jeder weitere × dieser Faktor mehr (gegen Schlagwort-Sätze). */
     stackFalloff: 0.6,

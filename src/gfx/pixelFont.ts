@@ -21,6 +21,8 @@ export interface AtlasEntry {
 export function layoutAtlas(maxWidth = 256): { entries: AtlasEntry[]; width: number; height: number } {
   const glyphs: ParsedGlyph[] = [
     { char: ' ', top: 0, width: FONT_SPACE_WIDTH, height: 0, pixels: [] },
+    // Geschütztes Leerzeichen („73 %“ bricht nicht um).
+    { char: '\u00a0', top: 0, width: FONT_SPACE_WIDTH, height: 0, pixels: [] },
     ...GLYPHS.map(parseGlyph),
   ];
   const entries: AtlasEntry[] = [];

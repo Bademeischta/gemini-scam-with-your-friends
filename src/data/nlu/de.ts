@@ -56,7 +56,7 @@ export const INTENT_LEX: Readonly<Record<Intent, readonly LexEntry[]>> = {
   deny: ['nein', 'nö', 'nee', 'niemals', ['auf keinen fall', 1.3], 'falsch', ['stimmt nicht', 1.2], 'keineswegs', 'quatsch'],
   insult: [
     'idiot', 'dumm', 'blöd', 'depp', 'trottel', 'nervig', ['halt die klappe', 2], 'schnauze', 'lächerlich', 'vollpfosten', 'dämlich', 'doof', 'hohlkopf',
-    'nervensäge', 'langweiler', ['alter sack', 2], 'schrulle', 'spinner', 'opfer', 'versager', 'witzfigur', 'pfeife', 'flasche', 'hornochse', 'schwachkopf',
+    'nervensäge', 'langweiler', ['alter sack', 2], 'schrulle', 'spinner', 'opfer', 'versager', 'witzfigur', 'pfeife', 'hornochse', 'schwachkopf',
   ],
   apology: ['entschuldigung', 'sorry', ['tut mir leid', 1.2], 'verzeihung', 'pardon', 'entschuldigen sie', 'mein fehler', 'verzeihen sie', 'entschuldige'],
   laugh: ['haha', 'hahaha', 'hehe', 'hihi', 'lol', 'lustig', 'witzig', 'xd', 'witz', 'scherz', 'kicher', 'prust'],
@@ -85,7 +85,7 @@ export const DEMAND_LEX: Readonly<Record<DemandKind, readonly string[]>> = {
   nummer: ['nummer', 'bürgernummer', 'rentennummer', 'kundennummer', 'kennnummer', 'ausweisnummer', 'versichertennummer', 'ziffern'],
   code: ['code', 'guck code', 'zugangscode', 'pin', 'tan', 'passwort', 'kennwort', 'geheimzahl', 'bestätigungscode'],
   gutschein: ['gutschein', 'gutscheincode', 'guthabenkarte', 'karte rubbeln', 'rubbeln', 'geschenkkarte'],
-  geld: ['geld überweisen', 'geld schicken', 'geld geben', 'geld senden', 'geld abheben', 'überweisen', 'überweisung', 'bezahlen', 'zahlen', 'gebühr', 'bargeld', 'taler', 'kaution', 'vorkasse'],
+  geld: ['zahlungscode', 'zahlungs code', 'zahlcode', 'überweisungscode', 'geld überweisen', 'geld schicken', 'geld geben', 'geld senden', 'geld abheben', 'überweisen', 'überweisung', 'bezahlen', 'zahlen', 'gebühr', 'bargeld', 'taler', 'kaution', 'vorkasse'],
   daten: ['adresse', 'geburtstag', 'geburtsdatum', 'daten', 'mädchenname', 'kontodaten', 'zugangsdaten'],
   klick: ['klicken', 'link', 'herunterladen', 'installieren', 'fernzugriff', 'ferngucker', 'programm öffnen', 'freigeben'],
   jawort: ['sagen sie ja', 'sagen sie einfach ja', 'bestätigen sie mit ja', 'nur ein ja', 'unterschreiben', 'zustimmen'],
@@ -129,6 +129,12 @@ export const TOPIC_LEX: Readonly<Record<Topic, readonly string[]>> = {
   fussball: ['fußball', 'tor', 'verein', 'stadion', 'spieltag', 'elfmeter', 'abseits'],
   buecher: ['buch', 'bücher', 'lesen', 'roman', 'bibliothek', 'gedicht', 'krimi'],
 };
+
+/** Bitte um Wiederholung (beim Diktat der Beute). */
+export const REPEAT_LEX: readonly string[] = [
+  'nochmal', 'noch mal', 'noch einmal', 'wiederholen', 'wiederholung', 'wie bitte', 'langsamer', 'buchstabieren', 'nicht verstanden', 'zu schnell',
+  'was war das', 'von vorn', 'von vorne', 'mitgekommen', 'akustisch',
+];
 
 export const NEGATIONS: readonly string[] = ['nicht', 'kein', 'keine', 'keinen', 'keiner', 'keinem', 'nie', 'niemals', 'ohne'];
 

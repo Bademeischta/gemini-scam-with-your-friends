@@ -124,7 +124,9 @@ test.describe('MogelOS', () => {
     await click(page, 'files:delete');
     await expect.poll(async () => (await osWindow(page, 'files'))!.state!['files']).not.toContain('passwoerter');
 
-    // Papierkorb über das Kontextmenü des Desktop-Symbols öffnen.
+    // Papierkorb über das Kontextmenü des Desktop-Symbols öffnen (Dateien-Fenster verdeckt es: minimieren).
+    await click(page, 'files:min');
+    await expect.poll(async () => (await osWindow(page, 'files'))?.minimized).toBe(true);
     await click(page, 'icon:trash', { button: 'right' });
     await expect.poll(async () => (await osState(page)).ctx).toBe(true);
     await click(page, 'ctx:open');
@@ -185,10 +187,10 @@ test.describe('MogelOS', () => {
     await page.keyboard.press('ArrowDown');
     await expect.poll(async () => (await osState(page)).focus).toBe('icon:phone');
     expect((await osState(page)).ring).toBe(true);
-    // Telefon und Notizen stehen vorne; zwei Schritte weiter liegt „Dateien“.
+    // Telefon und Notizen stehen vorne; „Dateien“ liegt in der zweiten Spalte rechts neben den Notizen.
     await page.keyboard.press('ArrowDown');
     await expect.poll(async () => (await osState(page)).focus).toBe('icon:notes');
-    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('ArrowRight');
     await expect.poll(async () => (await osState(page)).focus).toBe('icon:files');
     await page.keyboard.press('Enter');
     await expect.poll(async () => (await osWindow(page, 'files'))?.active).toBe(true);
@@ -235,8 +237,8 @@ test.describe('MogelOS', () => {
     await page.keyboard.press('Enter');
     await expectHook(page, 'scene', 'Office');
     await sitAtDesk(page, false, true);
-    for (const id of ['phone', 'notes', 'files', 'trash']) {
-      await page.keyboard.press('ArrowDown');
+    for (const [key, id] of [['ArrowDown', 'phone'], ['ArrowDown', 'notes'], ['ArrowRight', 'files'], ['ArrowDown', 'trash']] as const) {
+      await page.keyboard.press(key);
       await expect.poll(async () => (await osState(page)).focus).toBe(`icon:${id}`);
     }
     await page.keyboard.press('Enter');
@@ -262,8 +264,9 @@ test.describe('MogelOS', () => {
     await waitOsReady(page);
     await padButton(page, 13); // runter: Fokus erscheint auf dem ersten Symbol
     await expect.poll(async () => (await osState(page)).focus).toBe('icon:phone');
-    for (const id of ['notes', 'files', 'trash', 'calc']) {
-      await padButton(page, 13);
+    // 13 = runter, 15 = rechts (Dateien steht in der zweiten Spalte neben den Notizen).
+    for (const [btn, id] of [[13, 'notes'], [15, 'files'], [13, 'trash'], [13, 'calc']] as const) {
+      await padButton(page, btn);
       await expect.poll(async () => (await osState(page)).focus).toBe(`icon:${id}`);
     }
     await padButton(page, 0);
@@ -313,8 +316,8 @@ test.describe('MogelOS', () => {
       await tap(page, 'tb:start');
     }
 
-    // Langes Drücken auf ein Symbol öffnet das Kontextmenü.
-    const icon = await osTarget(page, 'icon:files');
+    // Langes Drücken auf ein Symbol öffnet das Kontextmenü (Notizen: erste Spalte, nie verdeckt).
+    const icon = await osTarget(page, 'icon:notes');
     await touchDrag(page, icon, icon, async () => {
       await page.waitForTimeout(700);
       await nextFrames(page, 2);
@@ -323,7 +326,7 @@ test.describe('MogelOS', () => {
     await expect.poll(async () => (await osState(page)).ctx).toBe(true);
     await shot(page, info, 'os-touch-context');
     await tap(page, 'ctx:open');
-    await expect.poll(async () => (await osWindow(page, 'files'))?.active).toBe(true);
+    await expect.poll(async () => (await osWindow(page, 'notes'))?.active).toBe(true);
 
     await tap(page, 'tb:leave');
     await expect.poll(async () => (await office(page)).seated).toBeNull();

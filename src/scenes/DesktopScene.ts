@@ -59,6 +59,8 @@ export class DesktopScene extends BaseScene {
       desk: this.opts.desk,
       phone: run.phone,
       notes: run.notes,
+      ledger: run.ledger,
+      plauder: run.plauder,
       onLeave: () => this.leave(),
       onPause: () => this.opts.onPause(),
     });

@@ -4,17 +4,22 @@ import type { Services } from '../../core/services';
 import { WALLPAPERS, OS_THEME_IDS, type OsThemeId, type Wallpaper } from '../../data/os/appearance';
 import { buildOsIcon, buildWallpaper, buildWeatherIcon, OS_ICONS, type WeatherIcon } from '../../gfx/osArt';
 import { gridTexture } from '../../gfx/phaserTextures';
-import { t } from '../../i18n';
+import { i18n, t } from '../../i18n';
 import { callerById } from '../../data/callers';
+import { DEFAULT_SCHEME_FOR, schemeById } from '../../data/schemes';
+import type { LootLedger } from '../../systems/calls/ledger';
 import type { PhoneHub } from '../../systems/calls/PhoneHub';
 import type { ShiftState } from '../../systems/day/ShiftState';
 import { NavRepeat } from '../../systems/input/NavRepeat';
 import type { Notebook } from '../../systems/os/notebook';
+import type { Plauder } from '../../systems/os/plauder';
 import type { VirtualFs } from '../../systems/os/vfs';
 import { haptic } from '../../systems/platform/haptics';
 import { safeRect, pixelScale, type ViewportState } from '../../systems/viewport/viewportMath';
 import { icon as touchIcon } from '../touch/touchArt';
 import { APPS, appById } from './apps';
+import { lootTarget, lootTargetName } from './apps/loot';
+import { chatName } from './apps/plauder';
 import { emptyTrash } from './apps/trash';
 import type { AppDef, AppView, ContextItem, OsApi, OsEnv, ToastOptions } from './apps/types';
 import { CallPopup } from './CallPopup';
@@ -49,6 +54,8 @@ export interface MogelOSOptions {
   desk: number;
   phone: PhoneHub;
   notes: Notebook;
+  ledger: LootLedger;
+  plauder: Plauder;
   /** Aufstehen angefordert (Taskleiste, Tab, B). */
   onLeave: () => void;
   onPause: () => void;
@@ -118,6 +125,8 @@ export class MogelOS implements OsApi {
       desk: o.desk,
       phone: o.phone,
       notes: o.notes,
+      ledger: o.ledger,
+      plauder: o.plauder,
     };
     this.unit = pixelScale(this.vp, TUNING.display.uiArtScale);
     const nr = (): NavRepeat => new NavRepeat(TUNING.input.navRepeatDelay, TUNING.input.navRepeatInterval);
@@ -156,16 +165,35 @@ export class MogelOS implements OsApi {
     });
     this.toasts = new Toasts(this.base, DEPTH.toasts);
     this.popup = new CallPopup(this.base, DEPTH.call, { onAnswer: () => this.answerCall(), onDecline: () => this.declineCall() });
-    // Beute aus Gesprächen an diesem Platz landet im Notizblock – kurz Bescheid geben.
+    // Beute aus Gesprächen an diesem Platz landet im Notizblock – kurz Bescheid geben, wohin damit.
     this.offs.push(
       o.phone.on((e) => {
         if (e.type !== 'capture' || e.desk !== o.desk) return;
+        const { loot } = e.capture;
+        if (loot.kind !== 'nummer' && loot.kind !== 'code' && loot.kind !== 'gutschein' && loot.kind !== 'geld') return;
+        const scheme = schemeById(loot.schemeId ?? DEFAULT_SCHEME_FOR[loot.kind] ?? '');
+        const target = scheme ? lootTarget(scheme.input, scheme.id) : null;
         this.s.sfx.note();
         this.toast({
           icon: 'notes',
           title: t('os.notes.toastTitle'),
-          body: t('os.notes.captured', { demand: t(`calls.demands.${e.capture.loot.kind}`), value: e.capture.loot.value }),
-          onClick: () => this.open('notes'),
+          body:
+            scheme && target
+              ? t('os.loot.captured', { demand: t(`calls.demands.${loot.kind}`), value: loot.heard, app: lootTargetName(scheme.input, scheme.id) })
+              : t('os.notes.captured', { demand: t(`calls.demands.${loot.kind}`), value: loot.heard }),
+          onClick: () => (target ? this.open(target.app, target.args) : this.open('notes')),
+        });
+      }),
+    );
+    // Auszahlung (SCH-19): Kasse klingelt.
+    this.offs.push(
+      o.ledger.onPaid((item) => {
+        if (item.desk !== o.desk || item.amount <= 0) return;
+        this.s.sfx.cash();
+        this.toast({
+          icon: 'coin',
+          title: t('os.loot.toastTitle', { amount: i18n.formatMoney(item.amount) }),
+          body: t('os.loot.toastBody', { scheme: t(`schemes.${item.schemeId}.name`), name: t(`callers.${item.callerId}.short`) }),
         });
       }),
     );
@@ -220,7 +248,7 @@ export class MogelOS implements OsApi {
     this.s.sfx.confirm();
     const win = new OsWindow({
       id,
-      title: t(def.titleKey),
+      title: def.title ? def.title(args) : t(def.titleKey),
       icon: this.iconTexture(def),
       scene: this.scene,
       s: this.s,
@@ -315,6 +343,16 @@ export class MogelOS implements OsApi {
     } else this.popup.hide();
   }
 
+  /** Freunde in der Plauderbude melden sich, solange man am PC sitzt (APP-05). */
+  private tickPlauder(dt: number): void {
+    const p = this.o.plauder;
+    const chat = p.tick(dt);
+    if (!chat || p.muted || this.activeEntry()?.def.id === 'plauder') return;
+    const msg = chat.messages[chat.messages.length - 1];
+    this.s.sfx.notify();
+    this.toast({ icon: 'plauder', title: t('os.plauder.newMessage', { name: chatName(chat.handle) }), body: msg?.text ?? '', onClick: () => this.open('plauder') });
+  }
+
   private get ringVisible(): boolean {
     const k = this.s.device.kind;
     return k === 'keyboard' || k === 'gamepad';
@@ -363,6 +401,7 @@ export class MogelOS implements OsApi {
   /** Pro Frame (nur wenn nicht pausiert und kein Übergang läuft). */
   update(dt: number, acceptInput: boolean): void {
     this.syncPopup(dt);
+    this.tickPlauder(dt);
     if (acceptInput) this.handleInput(dt);
     for (const e of this.windows) e.view.update?.(dt);
     this.taskbar.update(this.o.shift(), dt);
@@ -633,14 +672,23 @@ export class MogelOS implements OsApi {
     const u = this.unit;
     const a = this.area;
     const compact = this.isCompact;
-    const iconScale = compact ? Math.max(u, Math.round(u * 1.6)) : u;
+    let iconScale = compact ? Math.max(u, Math.round(u * 1.6)) : u;
     const pad = 4 * u;
-    const cellH = 16 * iconScale + 30 * u;
+    let cellH = 16 * iconScale + 30 * u;
     // Zellen so breit wie die längste Beschriftung (ein Wort bricht nicht um).
     const widest = Math.max(0, ...this.icons.map((ic) => ic.labelWidth(u))) + 6 * u;
     if (compact) {
-      const minCell = Math.max(16 * iconScale + 16 * u, widest);
-      const cols = Math.max(3, Math.floor((a.w - 2 * pad) / minCell));
+      // Startbildschirm: alle Symbole ohne Scrollen – notfalls kleinere Symbole und engere Zeilen.
+      const n = this.icons.length;
+      let cols = 3;
+      for (let s = iconScale; s >= 1; s--) {
+        const minCell = Math.max(16 * s + 16 * u, widest);
+        cols = Math.max(3, Math.floor((a.w - 2 * pad) / minCell));
+        const rows = Math.ceil(n / cols);
+        iconScale = s;
+        cellH = Math.min(16 * s + 30 * u, Math.floor((a.h - 2 * pad) / rows));
+        if (cellH >= 16 * s + 15 * u) break;
+      }
       const cellW = (a.w - 2 * pad) / cols;
       this.icons.forEach((ic, i) => ic.layout(a.x + pad + (i % cols) * cellW, a.y + pad + Math.floor(i / cols) * cellH, cellW, cellH, iconScale));
     } else {

@@ -2,6 +2,9 @@ import type { Params } from '../../i18n/i18n';
 import type { Rng } from '../rng/rng';
 import type { LineRef } from './engine';
 
+/** Allgemeine Zeile, wenn eine Masche für eine Situation keine eigene hat. */
+const SCHEME_FALLBACK: Readonly<Record<string, string>> = { why: 'demand.why', done: 'end.success' };
+
 /** Woher die Texte kommen (i18n; in Tests austauschbar). */
 export interface LineSource {
   list(key: string): string[];
@@ -43,6 +46,15 @@ export class LinePicker {
     const s = ref.situation;
     const topic = ref.params?.['topic'];
     const candidates: string[] = [];
+    if (s.startsWith('scheme.')) {
+      // Maschen-Reaktionen: erst die Zeilen der Masche, dann allgemeine.
+      const rest = s.slice('scheme.'.length);
+      const scheme = ref.params?.['scheme'];
+      if (typeof scheme === 'string') candidates.push(`schemes.${scheme}.lines.${rest}`);
+      candidates.push(`calls.lines.${SCHEME_FALLBACK[rest] ?? rest}`);
+      for (const c of candidates) if (this.src.list(c).length > 0) return c;
+      return null;
+    }
     if (topic !== undefined && (s === 'topic.like' || s === 'topic.dislike')) candidates.push(`callers.${this.callerId}.${s === 'topic.like' ? 'like' : 'dislike'}.${topic}`);
     candidates.push(`callers.${this.callerId}.lines.${s}`, `calls.lines.${s}`);
     // Situationen mit Unterfällen (z. B. react.urgency.pos) fallen auf die allgemeine Form zurück.

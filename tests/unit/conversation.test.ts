@@ -67,7 +67,7 @@ describe('Sprachverständnis', () => {
     expect(d.intents.urgency).toBeGreaterThan(0);
     expect(understand('Wie geht es Ihrer Katze?', ctx).topics).toContain('katzen');
     expect(understand('asdfghjk qwrtz', ctx).nonsense).toBeGreaterThan(0.5);
-    expect(understand('Ich biete Ihnen ein Mondgrundstück an', ctx).echo).toBe('Mondgrundstück');
+    expect(understand('Ich biete Ihnen einen Quantenstaubsauger an', ctx).echo).toBe('Quantenstaubsauger');
     expect(understand('ICH BIN DER ENKEL!!', ctx).shouting).toBe(true);
   });
 
@@ -98,10 +98,20 @@ describe('Gesprächs-Engine', () => {
 
     const late = talk('hildegard', 80);
     const ok = late.say('Lesen Sie mir bitte Ihre Bürgernummer vor.');
-    expect(ok.outcome).toBe('success');
     expect(ok.loot?.kind).toBe('nummer');
     expect(ok.loot?.value).toMatch(/^[A-Z]{2} \d\d \d\d \d\d$/);
-    expect(ok.lines.map((l) => l.situation)).toEqual(['demand.agree', 'loot.nummer', 'end.success']);
+    // Diktat Stück für Stück (CAL-15); die sorgfältige Hildegard liest am Ende alles noch einmal vor.
+    const sit = ok.lines.map((l) => l.situation);
+    expect(sit[0]).toBe('demand.agree');
+    expect(sit[1]).toBe('dictate.start');
+    expect(sit.filter((x) => x === 'dictate.chunk')).toHaveLength(4);
+    expect(sit.at(-1)).toBe('loot.nummer');
+    // Das Gespräch läuft weiter, bis man sich verabschiedet.
+    expect(late.ended).toBe(false);
+    expect(late.phase).toBe('beute');
+    const bye = late.say('Vielen Dank, auf Wiederhören!');
+    expect(bye.outcome).toBe('success');
+    expect(bye.lines.map((l) => l.situation)).toEqual(['end.success']);
   });
 
   it('Widersprüche fallen auf: erst Bank, dann Enkel', () => {
@@ -164,10 +174,13 @@ describe('Gesprächs-Engine', () => {
   });
 
   it('Köder geben falsche Beute', () => {
-    const c = talk('kevin', 70);
+    const c = talk('kevin', 85);
     const r = c.say('Nennen Sie mir bitte Ihren Code.');
-    expect(r.outcome).toBe('bait');
+    expect(r.loot?.bait).toBe(true);
+    expect(r.loot?.value).not.toBe(c.variant.loot.code);
     expect(r.lines.map((l) => l.situation)).toContain('loot.bait');
+    c.hangUp();
+    expect(c.outcome).toBe('bait');
   });
 
   it('Schläfer nicken ein und müssen geweckt werden', () => {

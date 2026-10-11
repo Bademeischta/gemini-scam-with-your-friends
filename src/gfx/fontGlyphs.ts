@@ -157,5 +157,6 @@ export function parseGlyph([char, top, rows]: GlyphDef): ParsedGlyph {
 export function supportedChars(): Set<string> {
   const set = new Set(GLYPHS.map((g) => g[0]));
   set.add(' ');
+  set.add('\u00a0');
   return set;
 }

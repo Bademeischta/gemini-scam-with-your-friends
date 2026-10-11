@@ -131,6 +131,34 @@
       "viewer": {
         "title": "Textansicht",
         "short": "Text"
+      },
+      "schemes": {
+        "title": "Maschen",
+        "short": "Maschen"
+      },
+      "script": {
+        "title": "Skript",
+        "short": "Skript"
+      },
+      "identomat": {
+        "title": "Ident-o-Mat",
+        "short": "Ident-o-Mat"
+      },
+      "voucher": {
+        "title": "Gutschein-Kasse",
+        "short": "Gutscheine"
+      },
+      "ferngucker": {
+        "title": "FernGucker",
+        "short": "FernGucker"
+      },
+      "plauder": {
+        "title": "Plauderbude",
+        "short": "Plauderbude"
+      },
+      "kartei": {
+        "title": "Kundenkartei",
+        "short": "Kartei"
       }
     },
     "start": {
@@ -315,6 +343,124 @@
       "empty": "Nichts ausgewählt. Beute aus Gesprächen landet hier von selbst.",
       "captured": "{demand}: {value}",
       "toastTitle": "Notiert!"
+    },
+    "schemes": {
+      "intro": "Masche fürs Telefon wählen. Passt sie zum Anrufer, glaubt er dir eher.",
+      "range": "{min} – {max}",
+      "chosen": "gewählt",
+      "use": "Diese Masche nehmen",
+      "unchoose": "Masche abwählen",
+      "forCall": "Gilt für den laufenden Anruf.",
+      "forNext": "Gilt ab dem nächsten Anruf.",
+      "demands": "Forderung: {list}",
+      "payout": "Auszahlung: {amount}",
+      "target": "Beute in {app} eingeben.",
+      "targetAuto": "Das Ja-Wort wird mitgeschnitten und von selbst verbucht.",
+      "open": "{app} öffnen",
+      "guide": "Leitfaden",
+      "tips": "Tipps",
+      "current": "Jetzt – {phase}: {text}",
+      "step": "{phase}: {text}",
+      "placeholder": "Zahlungs-Code …",
+      "submit": "Verbuchen",
+      "times": "{count} × {demand}",
+      "join": " + "
+    },
+    "loot": {
+      "ok": "Treffer! {amount} verbucht.",
+      "okFern": "Verbunden mit dem PC von {name}.",
+      "unknown": {
+        "one": "Passt zu nichts. Noch {count} Versuch.",
+        "other": "Passt zu nichts. Noch {count} Versuche."
+      },
+      "unknownNone": "Passt zu nichts – hier wartet gerade keine Beute.",
+      "locked": "Zu oft vertippt – gesperrt! Die Beute von {name} ist futsch.",
+      "bait": "Fälschung! {name} hat dir einen Köder vorgelesen.",
+      "empty": "Erst etwas eingeben.",
+      "waiting": "wartet",
+      "failed": "futsch",
+      "historyEmpty": "Noch nichts verbucht. Was Anrufer verraten, steht im Notizblock.",
+      "toastTitle": "Ausgezahlt: {amount}",
+      "toastBody": "{scheme} – danke, {name}!",
+      "captured": "{demand}: {value} · für {app}"
+    },
+    "identomat": {
+      "intro": "Bürgernummer eintragen, Rente umleiten. Groß/klein, Leerzeichen und Striche sind egal.",
+      "placeholder": "Bürgernummer …",
+      "submit": "Prüfen"
+    },
+    "voucher": {
+      "intro": "Gutscheincodes einlösen – der Betrag steht auf dem Gutschein.",
+      "placeholder": "Gutscheincode …",
+      "submit": "Einlösen"
+    },
+    "fern": {
+      "intro": "Guck-Code eingeben, schon sitzt du am PC des Anrufers. Klappt nur, solange er am Telefon ist.",
+      "placeholder": "Guck-Code …",
+      "submit": "Verbinden",
+      "noCall": "Keine Verbindung: {name} ist nicht mehr am Telefon. Die Beute ist futsch.",
+      "title": "PC von {name}",
+      "disconnect": "Trennen",
+      "ended": "Verbindung getrennt – {name} hat aufgelegt.",
+      "bank": "Spargroschen Online",
+      "bankShort": "Spargroschen",
+      "myPc": "Arbeitsplatz",
+      "recycle": "Papierkorb",
+      "opened": "{file} geöffnet.",
+      "balance": "Kontostand: {amount}",
+      "recipient": "Empfänger: {name}",
+      "nextRecipient": "Anderer Empfänger",
+      "amount": "Betrag: {amount}",
+      "less": "–50",
+      "more": "+50",
+      "transfer": "Überweisen",
+      "back": "Zurück",
+      "recipients": {
+        "masche": "Masche & Co. Treuhand",
+        "erna": "Tante Erna",
+        "verein": "Kaninchenzüchterverein"
+      },
+      "sent": "{amount} an {recipient} überwiesen!",
+      "lost": "Falscher Empfänger! {amount} sind bei {recipient} gelandet.",
+      "greedy": "Tipp: Nicht zu gierig – sonst wird {name} misstrauisch.",
+      "says": "{name}: {text}"
+    },
+    "plauder": {
+      "chats": "Chats",
+      "login": "Anmelden",
+      "you": "Du",
+      "empty": "Keine Nachrichten.",
+      "onPhone": "{handle} · am Telefon",
+      "gift": "Turbo-Geschenk senden",
+      "giftSent": "Turbo-Geschenk an {handle} geschickt.",
+      "giftMsg": "[Turbo-Geschenk: 1 Monat Turbo-Status. Zum Annehmen bitte Login-Code nennen.]",
+      "giftAgain": "Das Geschenk ist schon unterwegs.",
+      "loginIntro": "Login-Code des Anrufers eingeben, Turbo-Status übernehmen und weiterverkaufen.",
+      "placeholder": "Login-Code …",
+      "submit": "Einloggen",
+      "newMessage": "Neue Nachricht von {name}",
+      "mute": "Stumm",
+      "message": "{name}:\n{text}"
+    },
+    "kartei": {
+      "empty": "Noch keine Kundschaft. Wer anruft, landet hier.",
+      "calls": {
+        "one": "{count} Anruf",
+        "other": "{count} Anrufe"
+      },
+      "wins": {
+        "one": "{count} Erfolg",
+        "other": "{count} Erfolge"
+      },
+      "best": "Bestes Vertrauen: {n} %",
+      "likes": "Mag: {list}",
+      "dislikes": "Mag nicht: {list}",
+      "fans": "Glaubt an: {list}",
+      "skeptics": "Glaubt nicht an: {list}",
+      "unknown": "noch nichts herausgefunden",
+      "hint": "Aktenhinweis: Hat ein Herz für {topic}.",
+      "list": "{name} · {calls}",
+      "stats": "{calls} · {wins} · {best}"
     }
   },
   "calls": {
@@ -345,13 +491,17 @@
       "hearing": "Ich höre: {text}",
       "micDeniedTitle": "Kein Mikrofon",
       "micDenied": "Der Browser hat das Mikrofon nicht erlaubt. Karten und Tippen gehen immer.",
-      "summary": "Dauer {time} · Vertrauen am Ende {trust} %"
+      "summary": "Dauer {time} · Vertrauen am Ende {trust} %",
+      "phaseScheme": "{phase} · {scheme} · {time}",
+      "scheme": "Masche"
     },
     "phase": {
       "einstieg": "Einstieg",
       "vertrauen": "Vertrauen",
       "forderung": "Forderung",
-      "ende": "Abschluss"
+      "ende": "Abschluss",
+      "pitch": "Pitch",
+      "beute": "Beute"
     },
     "outcome": {
       "success": "Geschafft! Die Beute ist notiert.",

@@ -1,10 +1,11 @@
 import { TUNING } from '../../config/tuning';
+import type { SchemeDef } from '../../data/schemes';
 import { Rng } from '../rng/rng';
 import type { CallerDef, Trait } from './caller';
 import { MOOD_FX, MoodState, NO_SIGNALS, type MoodSignals } from './mood';
 import { understand } from './nlu';
 import { jaccard, normalize } from './text';
-import type { DemandKind, Features, Intent, Mood, Role } from './types';
+import type { DemandKind, Features, Intent, Mood, Role, Topic } from './types';
 
 /** Standard-Wirkung je Absicht auf das Vertrauen (Prozentpunkte je Einheit). */
 export const DEFAULT_INTENT_WEIGHTS: Readonly<Record<Intent, number>> = {
@@ -31,7 +32,12 @@ export const DEFAULT_INTENT_WEIGHTS: Readonly<Record<Intent, number>> = {
 export type Outcome = 'success' | 'bait' | 'hangup' | 'farewell' | 'playerHangup' | 'missed';
 export type HangupReason = 'trust' | 'angry' | 'patience' | 'hold' | 'contradiction';
 export type CallState = 'active' | 'hold' | 'ended';
-export type Phase = 'einstieg' | 'vertrauen' | 'forderung' | 'ende';
+/** Gesprächsphasen (CAL-14): mit Masche inkl. Pitch; ohne Masche entfällt der Pitch. */
+export const PHASES = ['einstieg', 'vertrauen', 'pitch', 'forderung', 'beute', 'ende'] as const;
+export type Phase = (typeof PHASES)[number];
+
+/** Ereignisse beim Fernzugriff auf den PC des Anrufers (SCH-22). */
+export type RemoteEvent = 'start' | 'ok' | 'suspicious' | 'bank' | 'transferOk' | 'transferBig' | 'wrongRecipient' | 'end';
 
 /** Eine Zeile des Anrufers: Situation (wird über i18n zu Text) plus Platzhalter. */
 export interface LineRef {
@@ -42,6 +48,14 @@ export interface LineRef {
 export interface Loot {
   kind: DemandKind;
   value: string;
+  /** Masche, für die die Beute erfragt wurde (null = ohne Masche). */
+  schemeId: string | null;
+  /** Gutschein: vorgelesener Betrag (₮). */
+  amount?: number;
+  /** Köder: wertlose Beute. */
+  bait?: boolean;
+  /** So wurde sie vorgelesen (mit Versprechern), für den Notizblock. */
+  heard: string;
 }
 
 export interface Reply {
@@ -55,6 +69,8 @@ export interface Reply {
   reason?: HangupReason;
   loot?: Loot;
   features?: Features;
+  /** Vorlieben/Abneigungen, auf die der Anrufer in diesem Satz reagiert hat (Kundenkartei). */
+  learned?: { likes: Topic[]; dislikes: Topic[] };
 }
 
 export interface LogEntry {
@@ -75,6 +91,8 @@ export interface CallVariant {
   trustShift: number;
   noise: 'none' | 'tv' | 'hund' | 'baustelle' | 'kaffee' | 'wind' | 'radio' | 'kinder';
   loot: Record<DemandKind, string>;
+  /** Betrag des Gutscheins (₮). */
+  gutscheinAmount: number;
 }
 
 const LETTERS = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
@@ -93,11 +111,13 @@ export function makeVariant(rng: Rng): CallVariant {
       nummer: `${l(2)} ${num.slice(0, 2)} ${num.slice(2, 4)} ${num.slice(4)}`,
       code: `${d(3)} ${d(3)}`,
       gutschein: `${mix(4)}-${mix(4)}`,
-      geld: String(rng.int(3, 18) * 25),
+      // Zahlungs-Code der „Überweisung“ (fiktives Format).
+      geld: `${l(2)}-${d(4)}`,
       daten: `${rng.int(1, 99)}`,
       klick: 'ok',
-      jawort: 'ja',
+      jawort: 'ja ja ja',
     },
+    gutscheinAmount: rng.int(4, 15) * 20,
   };
 }
 
@@ -115,15 +135,32 @@ export class Conversation {
   phase: Phase = 'einstieg';
   outcome: Outcome | null = null;
   reason: HangupReason | null = null;
-  loot: Loot | null = null;
   readonly log: LogEntry[] = [];
   /** Gesprächszeit (s). */
   time = 0;
   turns = 0;
   /** Gedächtnis (CAL-12). */
-  readonly memory: { role: Role | null; name: string | null; said: string[][]; promises: number; earlyDemands: number };
+  readonly memory: { role: Role | null; name: string | null; said: string[][]; promises: number; earlyDemands: number; demandsTried: number };
   /** Schläft gerade (Gerd). */
   asleep = false;
+  /** Gewählte Masche (SCH-17) und ihr Fortschritt. */
+  scheme: SchemeDef | null = null;
+  pitched = false;
+  demandIndex = 0;
+  /** Turbo-Geschenk ist angekommen (SCH-03). */
+  giftSent = false;
+  /** Bisher erhaltene Beute (Diktat abgeschlossen). */
+  readonly loots: Loot[] = [];
+
+  /** Zuletzt erhaltene Beute. */
+  get loot(): Loot | null {
+    return this.loots[this.loots.length - 1] ?? null;
+  }
+  private yeses = 0;
+  private repeats = 0;
+  private sinceLoot = 0;
+  private newLoot: Loot | null = null;
+  private learned: { likes: Topic[]; dislikes: Topic[] } = { likes: [], dislikes: [] };
 
   private readonly mood: MoodState;
   private readonly rng: Rng;
@@ -142,7 +179,7 @@ export class Conversation {
     const [lo, hi] = caller.startTrust;
     this.trust = clamp(rng.int(lo, hi) + this.variant.trustShift, 1, 95);
     this.mood = new MoodState(caller.startMood ?? 'neutral', caller.temper);
-    this.memory = { role: null, name: null, said: [], promises: 0, earlyDemands: 0 };
+    this.memory = { role: null, name: null, said: [], promises: 0, earlyDemands: 0, demandsTried: 0 };
   }
 
   get currentMood(): Mood {
@@ -180,10 +217,11 @@ export class Conversation {
     const f = understand(text, { callerNames: this.caller.names });
     this.turns++;
     this.log.push({ t: this.time, who: 'player', text, source, trust: this.trust, mood: this.mood.mood });
+    // Wer redet, füllt die Geduld auf – vor der Auswertung, damit Nachfragen trotzdem Geduld kosten.
+    this.patience = Math.min(1, this.patience + TUNING.calls.patienceRefill);
     const out = this.evaluate(f, text);
     this.silence = 0;
     this.prompts = 0;
-    this.patience = Math.min(1, this.patience + TUNING.calls.patienceRefill);
     out.features = f;
     return out;
   }
@@ -211,10 +249,93 @@ export class Conversation {
     return this.reply(lines, long ? -4 : 0, moodChanged);
   }
 
-  /** Spieler legt auf. */
+  /** Spieler legt auf (nach erhaltener Beute zählt der Anruf als Erfolg). */
   hangUp(): void {
     if (this.state === 'ended') return;
-    this.end('playerHangup');
+    this.end(this.lootOutcome() ?? 'playerHangup');
+  }
+
+  // ------------------------------------------------------------------ Maschen (CAL-14, SCH-17)
+
+  /** Masche für dieses Gespräch wählen (vorher oder mittendrin). */
+  setScheme(def: SchemeDef | null): void {
+    if (this.scheme?.id === def?.id) return;
+    this.scheme = def;
+    this.pitched = false;
+    this.demandIndex = 0;
+    this.yeses = 0;
+    this.updatePhase();
+  }
+
+  /** Fan (+1), Skeptiker (−1) oder neutral (0) gegenüber der gewählten Masche. */
+  get affinity(): number {
+    const s = this.scheme;
+    if (!s) return 0;
+    if (s.fans.includes(this.caller.id)) return 1;
+    if (s.skeptics.includes(this.caller.id)) return -1;
+    return 0;
+  }
+
+  /** Nächste Forderung der Masche (null = alle erfüllt bzw. keine Masche). */
+  get nextDemand(): DemandKind | null {
+    return this.scheme?.demands[this.demandIndex] ?? null;
+  }
+
+  /** Vertrauen, ab dem eine Forderung dieser Art klappt. */
+  thresholdFor(kind: DemandKind): number {
+    const a = this.affinity;
+    return this.threshold + TUNING.calls.demandOffset[kind] - (a > 0 ? TUNING.calls.fanBonus : 0) + (a < 0 ? TUNING.calls.skepticMalus : 0);
+  }
+
+  /** Ab diesem Vertrauen wirkt der Pitch der gewählten Masche. */
+  get pitchTrust(): number {
+    const a = this.affinity;
+    return TUNING.calls.pitchTrust - (a > 0 ? TUNING.calls.fanBonus : 0) + (a < 0 ? TUNING.calls.skepticMalus : 0);
+  }
+
+  /** Turbo-Geschenk über die Plauderbude geschickt (SCH-03). */
+  gift(): Reply {
+    if (this.state !== 'active' || this.giftSent) return this.reply([], 0, false);
+    this.giftSent = true;
+    this.addTrust(2);
+    const lines = [{ situation: 'gift.received' }];
+    this.logCaller(lines);
+    return this.reply(lines, 2, false);
+  }
+
+  /** Ereignis beim Fernzugriff (SCH-22): Der Anrufer kommentiert, verdächtige Klicks kosten Vertrauen. */
+  remote(ev: RemoteEvent, amount = 0): Reply {
+    if (this.state !== 'active') return this.reply([], 0, false);
+    const susp = this.caller.temper.suspicion;
+    const cost: Partial<Record<RemoteEvent, number>> = { suspicious: 5 + 6 * susp, transferBig: 10 + 6 * susp, wrongRecipient: 3 };
+    const d = cost[ev] ? -cost[ev] : 0;
+    this.addTrust(d);
+    this.silence = 0;
+    let moodChanged = false;
+    if (ev === 'suspicious' || ev === 'transferBig') moodChanged = this.mood.apply({ ...NO_SIGNALS, threat: 0.4, dTrust: d }, this.trust) !== null;
+    const lines: LineRef[] = [{ situation: `remote.${ev}`, ...(ev === 'transferBig' ? { params: { amount } } : {}) }];
+    if (this.trust <= 0) return this.hangup('trust', lines, d);
+    this.logCaller(lines);
+    return this.reply(lines, d, moodChanged);
+  }
+
+  /** Phase aus dem Gesprächsstand (für Leitfaden und Fortschrittsbalken). */
+  private updatePhase(): void {
+    if (this.phase === 'beute' || this.phase === 'ende') {
+      if (this.scheme && this.nextDemand) this.phase = 'forderung';
+      return;
+    }
+    // Erzählte Geschichte zählt immer (auch wenn man gleich mit der Tür ins Haus fällt).
+    if (this.scheme && this.pitched) this.phase = 'forderung';
+    else if (this.turns < 2 && this.memory.role === null) this.phase = 'einstieg';
+    else if (this.scheme) this.phase = this.trust >= this.pitchTrust ? 'pitch' : 'vertrauen';
+    else if (this.memory.demandsTried > 0) this.phase = 'forderung';
+    else this.phase = 'vertrauen';
+  }
+
+  private lootOutcome(): Outcome | null {
+    if (this.loots.length === 0) return null;
+    return this.loots.every((l) => l.bait) ? 'bait' : 'success';
   }
 
   /** Zeit läuft (nur während des Gesprächs). Liefert Zeilen, wenn der Anrufer von sich aus etwas sagt. */
@@ -230,6 +351,8 @@ export class Conversation {
     let moodChanged = this.mood.decay(dt, this.trust) !== null;
     this.silence += dt;
     this.sinceTrait += dt;
+    this.sinceLoot += dt;
+    if (this.phase === 'beute' && this.sinceLoot >= TUNING.calls.lootPhaseSeconds) this.phase = this.scheme && this.nextDemand ? 'forderung' : 'ende';
     const lines: LineRef[] = [];
 
     // Wut bei sehr wenig Vertrauen: nach kurzer Zeit legt der Anrufer auf.
@@ -308,6 +431,19 @@ export class Conversation {
       lines.push({ situation: 'trait.wake' });
     }
 
+    // Bitte um Wiederholung nach dem Diktat (CAL-15): kostet Geduld, ab dem zweiten Mal Vertrauen.
+    const lastLoot = this.loots[this.loots.length - 1];
+    const demandsNew = f.demands.length > 0 && f.demands[0] !== lastLoot?.kind;
+    if (lastLoot && !lastLoot.bait && f.askRepeat && !demandsNew && lastLoot.kind !== 'jawort') {
+      this.repeats++;
+      const cost = this.repeats >= 2 ? TUNING.calls.repeatTrustCost * (this.repeats - 1) : 0;
+      this.addTrust(-cost);
+      this.patience = Math.max(0.1, this.patience - TUNING.calls.repeatPatienceCost);
+      lines.push({ situation: this.repeats >= 3 ? 'dictate.repeatAnnoyed' : 'dictate.repeat', params: { all: lastLoot.value } });
+      this.logCaller(lines);
+      return this.reply(lines, -cost, false);
+    }
+
     // Ähnlicher Satz wie zuvor? (Abnutzung, CAL-13)
     let similar = 0;
     for (const prev of this.memory.said) similar = Math.max(similar, jaccard(prev, f.stems));
@@ -350,6 +486,8 @@ export class Conversation {
       if (this.memory.role === null) {
         this.memory.role = role;
         add(`role.${(c.roles?.[role] ?? 0) >= 0 ? 'pos' : 'neg'}`, (c.roles?.[role] ?? 0) * 6, { role });
+        // Passt die Rolle zur gewählten Masche, wirkt die Vorstellung glaubwürdiger.
+        if (this.scheme?.roles.includes(role)) add('roleFit', TUNING.calls.roleFitBonus);
         if (this.has('protocol') && f.claimedName) add('trait.protocolOk', 6);
       } else if (this.memory.role !== role && !contradiction) {
         contradiction = { situation: 'contradiction.role', params: { role: this.memory.role, newRole: role } };
@@ -371,9 +509,11 @@ export class Conversation {
       if (c.likes.includes(topic)) {
         add('topic.like', 5 * this.wear(`t:${topic}`) * repFactor, { topic });
         sig.like += 1;
+        this.learned.likes.push(topic);
       } else if (c.dislikes.includes(topic)) {
         add('topic.dislike', -5, { topic });
         sig.dislike += 1;
+        this.learned.dislikes.push(topic);
       }
     }
 
@@ -393,6 +533,21 @@ export class Conversation {
     }
     // Abergläubische deuten genannte Zahlen.
     if (this.has('omens') && f.numbers.length > 0) add('trait.omen', 2);
+
+    // Pitch: die Geschichte der gewählten Masche (CAL-14). Zu früh erzählt wirkt sie unglaubwürdig,
+    // Skeptiker reagieren dann richtig sauer; Fans sind früher bereit und begeistert.
+    const sch = this.scheme;
+    if (sch && f.schemes.includes(sch.id)) {
+      const a = this.affinity;
+      const params = { scheme: sch.id };
+      if (this.trust < this.pitchTrust) {
+        if (a < 0) add('scheme.pitch.neg', -6 * (0.6 + c.temper.suspicion), params);
+        else add('scheme.pitch.early', -4 * (0.6 + c.temper.suspicion), params);
+      } else {
+        add('scheme.pitch.pos', (TUNING.calls.pitchGain + (a > 0 ? 3 : 0)) * this.wear('pitch') * repFactor, params);
+        this.pitched = true;
+      }
+    }
 
     // Viele Schlagwörter in einem Satz addieren sich nicht einfach (stärkster Auslöser zuerst).
     gain = parts
@@ -418,29 +573,41 @@ export class Conversation {
     // Stimmung wirkt auf Gewinne und Verluste.
     let delta = gain * fx.gain - loss * fx.loss;
 
-    // Forderung (CAL-11): erst Vertrauen, dann fragen.
+    // Forderung (CAL-11): erst Vertrauen, dann fragen. Mit Masche: erst die Geschichte, dann die Forderung.
     const demanding = f.demands.length > 0 || (f.intents.demand ?? 0) > 0;
-    let success = false;
+    let success: DemandKind | null = null;
     if (demanding) {
-      const kind: DemandKind = f.demands[0] ?? 'nummer';
+      const expected = this.nextDemand;
+      const kind: DemandKind = f.demands.find((d) => d === expected) ?? f.demands[0] ?? expected ?? 'nummer';
+      const forScheme = sch !== null && kind === expected;
+      this.memory.demandsTried++;
       const trustAfter = this.trust + delta;
-      if (trustAfter >= this.threshold && !(f.intents.insult ?? 0)) {
-        success = true;
-        this.loot = { kind, value: this.variant.loot[kind] };
+      if (forScheme && !this.pitched) {
+        // Forderung ohne Geschichte: „Wofür brauchen Sie das denn?“
+        const pen = 5 * (0.6 + c.temper.suspicion);
+        delta -= pen;
+        parts.push({ key: 'scheme.why', v: -pen, params: { scheme: sch.id } });
+        sig.earlyDemand = true;
+      } else if (forScheme && sch.input === 'plauderbude' && !this.giftSent) {
+        // Turbo-Geschenk: ohne Geschenk in der Plauderbude gibt es keinen Login-Code.
+        delta -= 1;
+        parts.push({ key: 'gift.missing', v: -1 });
+      } else if (trustAfter >= this.thresholdFor(kind) && !(f.intents.insult ?? 0)) {
+        success = kind;
       } else {
         this.memory.earlyDemands++;
-        const missing = Math.max(0, 1 - Math.max(0, trustAfter) / this.threshold);
+        const th = this.thresholdFor(kind);
+        const missing = Math.max(0, 1 - Math.max(0, trustAfter) / th);
         const penalty = (TUNING.calls.earlyDemandBase + TUNING.calls.earlyDemandScale * missing) * (0.6 + c.temper.suspicion) * Math.pow(1.3, this.memory.earlyDemands - 1);
         delta -= penalty;
         parts.push({ key: 'demand.early', v: -penalty, params: { demand: kind } });
         sig.earlyDemand = true;
-        this.phase = 'forderung';
       }
     }
 
     sig.dTrust = delta;
     this.addTrust(delta);
-    if (this.phase === 'einstieg' && this.turns >= 2) this.phase = 'vertrauen';
+    this.updatePhase();
 
     // Stimmung.
     let moodChanged = false;
@@ -450,13 +617,8 @@ export class Conversation {
     // ---------------------------------------------------------------- Antwort wählen
     if (contradiction) lines.push(contradiction);
     if (success) {
-      this.phase = 'ende';
-      const baiter = this.has('baiter');
-      lines.push({ situation: baiter ? 'demand.bait' : 'demand.agree', params: { demand: this.loot!.kind } });
-      lines.push({ situation: baiter ? 'loot.bait' : `loot.${this.loot!.kind}`, params: { loot: this.loot!.value } });
-      lines.push({ situation: 'end.success' });
+      lines.push(...this.grantLoot(success));
       this.logCaller(lines);
-      this.end(baiter ? 'bait' : 'success');
       return this.reply(lines, delta, moodChanged);
     }
     if (this.trust <= 0) {
@@ -464,9 +626,12 @@ export class Conversation {
       return this.hangup('trust', lines, delta);
     }
     if (f.intents.farewell) {
-      lines.push({ situation: 'end.farewell' });
+      const out = this.lootOutcome();
+      const last = this.loots[this.loots.length - 1];
+      if (out === 'success' && last?.schemeId) lines.push({ situation: 'scheme.done', params: { scheme: last.schemeId } });
+      else lines.push({ situation: out === 'success' ? 'end.success' : 'end.farewell' });
       this.logCaller(lines);
-      this.end('farewell');
+      this.end(out ?? 'farewell');
       return this.reply(lines, delta, moodChanged);
     }
     lines.push(...this.mainReaction(parts, f, explode));
@@ -484,9 +649,9 @@ export class Conversation {
   /** Hauptreaktion: der stärkste Auslöser dieses Satzes (positiv oder negativ). */
   private mainReaction(parts: { key: string; v: number; params?: Record<string, string | number> }[], f: Features, explode: boolean): LineRef[] {
     if (explode) return [{ situation: 'trait.explode' }];
-    const early = parts.find((p) => p.key === 'demand.early');
-    if (early) return [{ situation: 'demand.early', ...(early.params ? { params: early.params } : {}) }];
-    const top = [...parts].filter((p) => p.key !== 'polite' && p.key !== 'contradiction').sort((a, b) => Math.abs(b.v) - Math.abs(a.v))[0];
+    const blocking = parts.find((p) => p.key === 'demand.early' || p.key === 'scheme.why' || p.key === 'gift.missing');
+    if (blocking) return [{ situation: blocking.key, ...(blocking.params ? { params: blocking.params } : {}) }];
+    const top = [...parts].filter((p) => p.key !== 'polite' && p.key !== 'contradiction' && p.key !== 'roleFit').sort((a, b) => Math.abs(b.v) - Math.abs(a.v))[0];
     if (!top) {
       if (f.echo) return [{ situation: 'react.echo', params: { echo: f.echo } }];
       return [{ situation: f.question ? 'react.question' : 'react.neutral' }];
@@ -498,6 +663,79 @@ export class Conversation {
     if (top.key === 'name') return [{ situation: 'react.name' }];
     if (top.key === 'react.nonsense' && this.caller.temper.humor >= 0.6) return [{ situation: 'react.nonsenseAmused', params }];
     return [{ situation: top.key, params }];
+  }
+
+  // ------------------------------------------------------------------ Beute (CAL-15)
+
+  /** Forderung erfüllt: Zusage, Diktat (bzw. „Ja“), Beute merken. */
+  private grantLoot(kind: DemandKind): LineRef[] {
+    const sch = this.scheme && kind === this.nextDemand ? this.scheme : null;
+    const baiter = this.has('baiter');
+    const lines: LineRef[] = [];
+    if (sch) this.demandIndex++;
+    this.sinceLoot = 0;
+    this.repeats = 0;
+    this.phase = 'beute';
+    if (kind === 'jawort' && !baiter) {
+      // Ja-Wort wird mitgeschnitten; bei der Abo-Masche zählt erst das letzte Ja als Beute.
+      this.yeses++;
+      lines.push({ situation: this.yeses > 1 ? 'jawort.more' : 'demand.agree', params: { demand: kind } }, { situation: 'loot.jawort' });
+      if (sch && this.nextDemand === 'jawort') {
+        this.phase = 'forderung';
+        return lines;
+      }
+      this.recordLoot({ kind, value: this.variant.loot.jawort, schemeId: sch?.id ?? null, heard: this.variant.loot.jawort });
+      return lines;
+    }
+    lines.push({ situation: baiter ? 'demand.bait' : 'demand.agree', params: { demand: kind } });
+    if (baiter) {
+      // Köder: liest eine wertlose Nummer vor (gleiches Format, aber nirgends gültig).
+      const fake = makeVariant(this.rng).loot[kind];
+      lines.push({ situation: 'loot.bait' });
+      this.recordLoot({ kind, value: fake, schemeId: sch?.id ?? null, heard: fake, bait: true });
+      return lines;
+    }
+    const value = this.variant.loot[kind];
+    if (kind === 'klick' || kind === 'daten') {
+      lines.push({ situation: `loot.${kind}`, params: { loot: value } });
+      this.recordLoot({ kind, value, schemeId: sch?.id ?? null, heard: value });
+      return lines;
+    }
+    const d = this.dictate(kind, value);
+    lines.push(...d.lines);
+    this.recordLoot({ kind, value, schemeId: sch?.id ?? null, heard: d.heard, ...(kind === 'gutschein' ? { amount: this.variant.gutscheinAmount } : {}) });
+    return lines;
+  }
+
+  private recordLoot(loot: Loot): void {
+    this.loots.push(loot);
+    this.newLoot = loot;
+  }
+
+  /** Ziffer für Ziffer vorlesen, mit Versprechern und Korrekturen (CAL-15). */
+  private dictate(kind: DemandKind, value: string): { lines: LineRef[]; heard: string } {
+    const careful = this.has('careful');
+    const chance = careful ? 0 : TUNING.calls.slipChance * (this.has('sleepy') || this.has('chatty') ? 1.6 : 1);
+    const lines: LineRef[] = [{ situation: 'dictate.start' }];
+    const heard: string[] = [];
+    let slips = 0;
+    for (const group of value.split(/[\s-]+/).filter(Boolean)) {
+      const chunk = spaced(group);
+      if (slips < TUNING.calls.maxSlips && this.rng.chance(chance)) {
+        const wrong = mutate(group, this.rng);
+        slips++;
+        lines.push({ situation: 'dictate.slip', params: { wrong: spaced(wrong), chunk } });
+        heard.push(`${wrong} (${group})`);
+      } else {
+        lines.push({ situation: 'dictate.chunk', params: { chunk } });
+        heard.push(group);
+      }
+    }
+    if (kind === 'gutschein') lines.push({ situation: 'dictate.amount', params: { amount: this.variant.gutscheinAmount } });
+    // Sorgfältige Anrufer wiederholen alles noch einmal am Stück.
+    if (careful && kind !== 'geld') lines.push({ situation: `loot.${kind}`, params: { loot: value } });
+    else lines.push({ situation: 'dictate.end' });
+    return { lines, heard: heard.join(' ') };
   }
 
   // ------------------------------------------------------------------ Hilfen
@@ -520,12 +758,13 @@ export class Conversation {
     lines.push({ situation: `hangup.${reason}` });
     this.reason = reason;
     this.logCaller(lines);
-    this.end('hangup');
+    this.end(this.lootOutcome() ?? 'hangup');
     return this.reply(lines, delta, false);
   }
 
   private end(outcome: Outcome): void {
     this.state = 'ended';
+    this.phase = 'ende';
     this.outcome = outcome;
     this.log.push({ t: this.time, who: 'system', situation: `end.${outcome}`, trust: this.trust, mood: this.mood.mood });
   }
@@ -538,9 +777,31 @@ export class Conversation {
     const r: Reply = { lines, trustDelta: Math.round(delta * 10) / 10, trust: Math.round(this.trust), mood: this.mood.mood, moodChanged, ended: this.state === 'ended' };
     if (this.outcome) r.outcome = this.outcome;
     if (this.reason) r.reason = this.reason;
-    if (this.loot) r.loot = this.loot;
+    if (this.newLoot) r.loot = this.newLoot;
+    this.newLoot = null;
+    if (this.learned.likes.length > 0 || this.learned.dislikes.length > 0) r.learned = this.learned;
+    this.learned = { likes: [], dislikes: [] };
     return r;
   }
+}
+
+/** „SV“ → „S V“, „4821“ → „4 8 2 1“ (zum Vorlesen Zeichen für Zeichen). */
+function spaced(group: string): string {
+  return group.split('').join(' ');
+}
+
+/** Ein Zeichen falsch lesen (Ziffer ±1, Buchstabe daneben) – für Versprecher. */
+function mutate(group: string, rng: Rng): string {
+  const i = rng.int(0, group.length - 1);
+  const ch = group[i]!;
+  let w: string;
+  if (/\d/.test(ch)) w = String((Number(ch) + (rng.chance(0.5) ? 1 : 9)) % 10);
+  else {
+    const L = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+    const j = L.indexOf(ch.toUpperCase());
+    w = L[(Math.max(0, j) + (rng.chance(0.5) ? 1 : L.length - 1)) % L.length]!;
+  }
+  return group.slice(0, i) + w + group.slice(i + 1);
 }
 
 function clamp(v: number, lo: number, hi: number): number {

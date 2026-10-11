@@ -1,4 +1,5 @@
-import { DEMAND_LEX, INTENT_LEX, NEGATIONS, POLITE, ROLE_LEX, STOPWORDS, TOPIC_LEX, type LexEntry } from '../../data/nlu/de';
+import { DEMAND_LEX, INTENT_LEX, NEGATIONS, POLITE, REPEAT_LEX, ROLE_LEX, STOPWORDS, TOPIC_LEX, type LexEntry } from '../../data/nlu/de';
+import { SCHEMES } from '../../data/schemes';
 import { analyze, extractNumbers, isNumberWord, normalize, stem, wordMatches, type MatchMode, type Token } from './text';
 import { DEMANDS, INTENTS, ROLES, TOPICS, type DemandKind, type Features, type Intent, type Role, type Topic } from './types';
 
@@ -24,6 +25,9 @@ const INTENT_C = compileRecord(INTENTS, INTENT_LEX);
 const ROLE_C = compileRecord(ROLES, ROLE_LEX);
 const DEMAND_C = compileRecord(DEMANDS, DEMAND_LEX);
 const TOPIC_C = compileRecord(TOPICS, TOPIC_LEX);
+const SCHEME_IDS = SCHEMES.map((s) => s.id);
+const SCHEME_C = compileRecord(SCHEME_IDS, Object.fromEntries(SCHEMES.map((s) => [s.id, s.keywords])));
+const REPEAT_C = compile(REPEAT_LEX);
 const NEG = new Set(NEGATIONS.map(normalize));
 const STOP = new Set(STOPWORDS.map(normalize));
 const POLITE_SET = new Set(POLITE.map(normalize));
@@ -118,6 +122,17 @@ export function understand(text: string, ctx: NluContext): Features {
   });
   const topics = new Set<Topic>();
   scan(TOPIC_C, TOPICS, (k) => topics.add(k));
+  const schemes = new Set<string>();
+  scan(SCHEME_C, SCHEME_IDS, (k, _w, neg) => {
+    if (!neg) schemes.add(k);
+  });
+  let askRepeat = false;
+  for (const e of REPEAT_C) {
+    for (const i of findAll(tokens, e.words, 'compound')) {
+      askRepeat = true;
+      e.words.forEach((_, j) => known.add(i + j));
+    }
+  }
 
   // Forderungs-Absicht: eine Forderungs-Art zählt auch ohne „geben Sie mir“.
   if (demands.size > 0) intents.demand = Math.min(1.5, (intents.demand ?? 0) + 0.8);
@@ -141,7 +156,7 @@ export function understand(text: string, ctx: NluContext): Features {
   const unknown = tokens.filter((t, i) => !known.has(i) && !STOP.has(t.norm) && !/^\d+$/.test(t.norm) && !isNumberWord(t.norm) && !nameStems.some((n) => wordMatches(t, n)));
   const content = tokens.filter((t) => !STOP.has(t.norm));
   const unknownRatio = content.length === 0 ? 0 : unknown.length / content.length;
-  const hasMeaning = Object.keys(intents).length > 0 || topics.size > 0 || roleHits.size > 0 || numbers.length > 0 || nameMention;
+  const hasMeaning = Object.keys(intents).length > 0 || topics.size > 0 || roleHits.size > 0 || schemes.size > 0 || askRepeat || numbers.length > 0 || nameMention;
   let nonsense = 0;
   const gib = unknown.filter((t) => gibberish(t.norm)).length;
   if (gib > 0) nonsense = Math.min(1, 0.5 + gib * 0.25);
@@ -171,6 +186,8 @@ export function understand(text: string, ctx: NluContext): Features {
     echo: echoTok?.raw ?? null,
     stems: tokens.filter((t) => !STOP.has(t.norm)).map((t) => t.stem),
     shouting,
+    schemes: [...schemes],
+    askRepeat,
   };
 }
 

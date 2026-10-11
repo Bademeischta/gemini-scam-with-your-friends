@@ -123,8 +123,8 @@ Mechanik, Zweck und Funktion bleiben gleich. Namen, Figuren, Grafik, Texte und M
 - [x] **CAL-11** Vertrauen erst aufbauen, dann nach Sensiblem fragen: Wer zu früh fordert, verliert stark. *O [FN-Tutorial]* · M3
 - [x] **CAL-12** Gedächtnis des Anrufers: Widersprüche (erst „Bank“, dann „Enkel“) erzeugen Misstrauen, gemerkte Namen und Details erzeugen Vertrauen. *E (LLM-Kontext)* · M3
 - [x] **CAL-13** Abnutzung: Dieselbe Floskel wirkt mit jeder Wiederholung schwächer, es gibt keinen Satz, der immer funktioniert. *E (gegen die Kritik aus [CG])* · M3
-- [ ] **CAL-14** Gesprächsphasen pro Masche: Einstieg → Vertrauen → Pitch → Forderung → Beute → Abschluss. *O [FN-htp], D* · M4
-- [ ] **CAL-15** Anrufer nennt die Beute (Nummer oder Code) im Gespräch, Ziffer für Ziffer, auch mit Versprechern und Korrekturen; der Spieler muss mitschreiben. *O [FN „confirming a number back“]* · M4
+- [x] **CAL-14** Gesprächsphasen pro Masche: Einstieg → Vertrauen → Pitch → Forderung → Beute → Abschluss. *O [FN-htp], D* · M4
+- [x] **CAL-15** Anrufer nennt die Beute (Nummer oder Code) im Gespräch, Ziffer für Ziffer, auch mit Versprechern und Korrekturen; der Spieler muss mitschreiben. *O [FN „confirming a number back“]* · M4
 - [x] **CAL-16** Anrufer-Stimmen per Sprachsynthese, eigene Stimme je Persönlichkeit (Tonhöhe, Tempo, Stimmwahl). Fallback ist eine synthetische „Brabbel“-Stimme. *O [SD lokale TTS], E* · M3
 - [x] **CAL-17** Spracherkennung der Spielerstimme (Push-to-talk), wo der Browser sie unterstützt. Live-Untertitel des Erkannten. *O [SD lokale STT], E* · M3
 - [x] **CAL-18** Untertitel für alles, was Anrufer sagen (Schreibmaschinen-Effekt). *A* · M3
@@ -171,28 +171,28 @@ Jede Persönlichkeit ist datengetrieben (`src/data/callers/`) mit Pixel-Porträt
 
 Jede Masche ist datengetrieben (`src/data/schemes/`): Pitch-Themen, nötige Beute, Abschluss-App, Auszahlung, Freischaltung, passende und unpassende Anrufertypen. Alle Maschen sind absurd und fiktiv, fiktive Datenformate sind Pflicht.
 
-- [ ] **SCH-01** **Rentennummer-Raffer**: Bürgernummer erfragen und in den Ident-o-Mat eingeben, Auszahlung 250 ₮. Ab Tag 1. *O (Social Security Stealer, 250 $) [FN]* · M4
-- [ ] **SCH-02** **FernGucker-Support**: Guck-Code erfragen, per FernGucker auf den PC des Anrufers, dort die „Überweisung“ als Minispiel ausführen, während der Anrufer kommentiert. Ab Tag 3. *O (AnyViewer remote-support scam) [FN]* · M4
-- [ ] **SCH-03** **Turbo-Geschenk**: über die Plauderbude ein gefälschtes „Turbo-Geschenk“ schicken, der Anrufer muss es annehmen und seinen Login-Code vorlesen. *O (Disscord Nitro gift) [FN]* · M4
-- [ ] **SCH-04** **Gutschein-Gaudi**: Der Anrufer kauft Gutscheine und liest die Codes vor, Eingabe in die Gutschein-Kasse. *D* · M4
-- [ ] **SCH-05** **Enkel im Orbit**: „Ihr Enkel steckt auf der Raumstation fest“, Rückflugticket bezahlen. *D* · M4
-- [ ] **SCH-06** **Mondmakler**: Grundstück auf der Mondrückseite verkaufen. *D* · M4
-- [ ] **SCH-07** **Pinguinprinz**: Erbschaft eines Pinguin-Königshauses, Bearbeitungsgebühr. *D* · M4
-- [ ] **SCH-08** **Atlantis-Lotto**: Gewinn in der Unterwasser-Lotterie, „Tauchgebühr“. *D* · M4
-- [ ] **SCH-09** **Toaster-Doktor**: „Ihr Toaster hat einen Virus“, Fernwartung per FernGucker. *D* · M4
-- [ ] **SCH-10** **Goldfisch-Finanzamt**: Nachzahlung der Goldfischsteuer, Bürgernummer plus Gutschein. *D* · M4
-- [ ] **SCH-11** **Luftgitarren-Abo**: Abofalle, der Anrufer muss dreimal „Ja“ sagen (Ja-Wort wird mitgeschnitten). *D* · M4
-- [ ] **SCH-12** **Zeitreise-Police**: Versicherung gegen gestern. *D* · M4
-- [ ] **SCH-13** **SchwindelCoin**: eigener Krypto-Coin, Anrufer kauft ein (Gegenstück zu Moonboys HypeCoin). *D* · M4
-- [ ] **SCH-14** **Wunderwasser**: Heilwasser gegen Montage. *D* · M4
-- [ ] **SCH-15** **Promi-Dinner**: Abendessen mit dem Schlagerstar „Heino Hallodri“ gewonnen, Platzgebühr. *D* · M4
-- [ ] **SCH-16** **Büroklammer-Rettung**: Spendenaufruf für bedrohte Büroklammern. *D* · M4
-- [ ] **SCH-17** Maschen-Auswahl vor bzw. während des Anrufs (Skript-App öffnen), passende Masche je Anrufer erhöht die Erfolgschance. *O [FN „pick a scheme“]* · M4
-- [ ] **SCH-18** Leitfaden je Masche: Stichpunkte, Tipps und Fortschrittsbalken der Phasen. *D* · M4
-- [ ] **SCH-19** Auszahlung geht auf das persönliche Guthaben und auf die Team-Summe. *O [FN]* · M4
-- [ ] **SCH-20** Falsche Eingabe (vertippte Nummer) lässt die Masche scheitern oder erfordert Nachfragen (Vertrauensverlust). *D* · M4
+- [x] **SCH-01** **Rentennummer-Raffer**: Bürgernummer erfragen und in den Ident-o-Mat eingeben, Auszahlung 250 ₮. Ab Tag 1. *O (Social Security Stealer, 250 $) [FN]* · M4
+- [x] **SCH-02** **FernGucker-Support**: Guck-Code erfragen, per FernGucker auf den PC des Anrufers, dort die „Überweisung“ als Minispiel ausführen, während der Anrufer kommentiert. Ab Tag 3. *O (AnyViewer remote-support scam) [FN]* · M4 *Hinweis: Die Freischaltung erst ab Tag 3 kommt mit den Arbeitstagen (SCH-21, M5); bis dahin ab Tag 1 verfügbar.*
+- [x] **SCH-03** **Turbo-Geschenk**: über die Plauderbude ein gefälschtes „Turbo-Geschenk“ schicken, der Anrufer muss es annehmen und seinen Login-Code vorlesen. *O (Disscord Nitro gift) [FN]* · M4
+- [x] **SCH-04** **Gutschein-Gaudi**: Der Anrufer kauft Gutscheine und liest die Codes vor, Eingabe in die Gutschein-Kasse. *D* · M4
+- [x] **SCH-05** **Enkel im Orbit**: „Ihr Enkel steckt auf der Raumstation fest“, Rückflugticket bezahlen. *D* · M4
+- [x] **SCH-06** **Mondmakler**: Grundstück auf der Mondrückseite verkaufen. *D* · M4
+- [x] **SCH-07** **Pinguinprinz**: Erbschaft eines Pinguin-Königshauses, Bearbeitungsgebühr. *D* · M4
+- [x] **SCH-08** **Atlantis-Lotto**: Gewinn in der Unterwasser-Lotterie, „Tauchgebühr“. *D* · M4
+- [x] **SCH-09** **Toaster-Doktor**: „Ihr Toaster hat einen Virus“, Fernwartung per FernGucker. *D* · M4
+- [x] **SCH-10** **Goldfisch-Finanzamt**: Nachzahlung der Goldfischsteuer, Bürgernummer plus Gutschein. *D* · M4
+- [x] **SCH-11** **Luftgitarren-Abo**: Abofalle, der Anrufer muss dreimal „Ja“ sagen (Ja-Wort wird mitgeschnitten). *D* · M4
+- [x] **SCH-12** **Zeitreise-Police**: Versicherung gegen gestern. *D* · M4
+- [x] **SCH-13** **SchwindelCoin**: eigener Krypto-Coin, Anrufer kauft ein (Gegenstück zu Moonboys HypeCoin). *D* · M4
+- [x] **SCH-14** **Wunderwasser**: Heilwasser gegen Montage. *D* · M4
+- [x] **SCH-15** **Promi-Dinner**: Abendessen mit dem Schlagerstar „Heino Hallodri“ gewonnen, Platzgebühr. *D* · M4
+- [x] **SCH-16** **Büroklammer-Rettung**: Spendenaufruf für bedrohte Büroklammern. *D* · M4
+- [x] **SCH-17** Maschen-Auswahl vor bzw. während des Anrufs (Skript-App öffnen), passende Masche je Anrufer erhöht die Erfolgschance. *O [FN „pick a scheme“]* · M4
+- [x] **SCH-18** Leitfaden je Masche: Stichpunkte, Tipps und Fortschrittsbalken der Phasen. *D* · M4
+- [x] **SCH-19** Auszahlung geht auf das persönliche Guthaben und auf die Team-Summe. *O [FN]* · M4
+- [x] **SCH-20** Falsche Eingabe (vertippte Nummer) lässt die Masche scheitern oder erfordert Nachfragen (Vertrauensverlust). *D* · M4
 - [ ] **SCH-21** Maschen werden „immer absurder“: Freischaltung in Stufen über Tage und Ramschazon. *O [ST]* · M5/M6
-- [ ] **SCH-22** Opfer-PC beim Fernzugriff: prozedural erzeugter Desktop mit Dateien, Ordnern und Bank-App. Verdächtige Klicks kosten Vertrauen („Was machen Sie mit meiner Maus?!“). *O [FN AnyViewer], D* · M4
+- [x] **SCH-22** Opfer-PC beim Fernzugriff: prozedural erzeugter Desktop mit Dateien, Ordnern und Bank-App. Verdächtige Klicks kosten Vertrauen („Was machen Sie mit meiner Maus?!“). *O [FN AnyViewer], D* · M4
 
 ## 8. Apps (55 – Original: „mehr als 45“)
 
@@ -200,33 +200,33 @@ Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die bel
 
 **Arbeit**
 - [x] **APP-01** Telefon. *O* · M3
-- [ ] **APP-02** Ident-o-Mat (Bürgernummer prüfen und eintragen). *O (Identity)* · M4
-- [ ] **APP-03** Kundenkartei (Hobbys, Familie, Vorlieben der Anrufer, gibt Hinweise für Vertrauen). Ab Tag 3. *O (Customer Info)* · M4
-- [ ] **APP-04** FernGucker (Guck-Code eingeben, Opfer-PC fernsteuern). Ab Tag 3. *O (AnyViewer)* · M4
-- [ ] **APP-05** Plauderbude (Messenger, Turbo-Geschenk-Masche, Spam von „Freunden“). *O (Disscord)* · M4
+- [x] **APP-02** Ident-o-Mat (Bürgernummer prüfen und eintragen). *O (Identity)* · M4
+- [x] **APP-03** Kundenkartei (Hobbys, Familie, Vorlieben der Anrufer, gibt Hinweise für Vertrauen). Ab Tag 3. *O (Customer Info)* · M4 *Hinweis: Freischaltung ab Tag 3 siehe SCH-21 (M5).*
+- [x] **APP-04** FernGucker (Guck-Code eingeben, Opfer-PC fernsteuern). Ab Tag 3. *O (AnyViewer)* · M4 *Hinweis: Freischaltung ab Tag 3 siehe SCH-21 (M5).*
+- [x] **APP-05** Plauderbude (Messenger, Turbo-Geschenk-Masche, Spam von „Freunden“). *O (Disscord)* · M4
 - [ ] **APP-06** Team-Funk (Team-Chat, Emotes, Ping auf Orte, Bot-Kommentare). *E (Sprachchat)* · M8
 - [ ] **APP-07** Postfach (Chef-Mails, Tagesziele, Freischaltungen, Lieferscheine, Spam). *D* · M5
 - [x] **APP-08** Notizblock (eigene Notizen plus automatisch markierte Zahlen aus dem Gespräch). *D* · M3
 - [ ] **APP-09** Gesprächsanalyse (eigene Anrufe als Protokoll, beste und schlimmste Zitate). *O (Call Analysis)* · M9
 - [ ] **APP-10** Stempeluhr (Tagesziel, Ausstempel-Status aller Kollegen). *O (Clock Out)* · M5
-- [ ] **APP-11** Gutschein-Kasse (Gutscheincodes einlösen). *D* · M4
+- [x] **APP-11** Gutschein-Kasse (Gutscheincodes einlösen). *D* · M4
 
 **Maschen-Apps** (je eine pro Masche, siehe §7)
-- [ ] **APP-12** Rentennummer-Raffer. *O (Social Security Stealer)* · M4
-- [ ] **APP-13** Turbo-Gönner (Turbo-Geschenk-Masche). *O (Nitro-Masche)* · M4
-- [ ] **APP-14** Gutschein-Gaudi. *D* · M4
-- [ ] **APP-15** Enkel im Orbit. *D* · M4
-- [ ] **APP-16** Mondmakler. *D* · M4
-- [ ] **APP-17** Pinguinprinz. *D* · M4
-- [ ] **APP-18** Atlantis-Lotto. *D* · M4
-- [ ] **APP-19** Toaster-Doktor. *D* · M4
-- [ ] **APP-20** Goldfisch-Finanzamt. *D* · M4
-- [ ] **APP-21** Luftgitarren-Abo. *D* · M4
-- [ ] **APP-22** Zeitreise-Police. *D* · M4
-- [ ] **APP-23** SchwindelCoin. *D* · M4
-- [ ] **APP-24** Wunderwasser. *D* · M4
-- [ ] **APP-25** Promi-Dinner. *D* · M4
-- [ ] **APP-26** Büroklammer-Rettung. *D* · M4
+- [x] **APP-12** Rentennummer-Raffer. *O (Social Security Stealer)* · M4
+- [x] **APP-13** Turbo-Gönner (Turbo-Geschenk-Masche). *O (Nitro-Masche)* · M4
+- [x] **APP-14** Gutschein-Gaudi. *D* · M4
+- [x] **APP-15** Enkel im Orbit. *D* · M4
+- [x] **APP-16** Mondmakler. *D* · M4
+- [x] **APP-17** Pinguinprinz. *D* · M4
+- [x] **APP-18** Atlantis-Lotto. *D* · M4
+- [x] **APP-19** Toaster-Doktor. *D* · M4
+- [x] **APP-20** Goldfisch-Finanzamt. *D* · M4
+- [x] **APP-21** Luftgitarren-Abo. *D* · M4
+- [x] **APP-22** Zeitreise-Police. *D* · M4
+- [x] **APP-23** SchwindelCoin. *D* · M4
+- [x] **APP-24** Wunderwasser. *D* · M4
+- [x] **APP-25** Promi-Dinner. *D* · M4
+- [x] **APP-26** Büroklammer-Rettung. *D* · M4
 
 **Business-Apps** (Ramschazon)
 - [ ] **APP-27** Stimmverzerrer (klingt amtlicher: Bonus bei Behörden-Maschen, eigene Stimme wird verfremdet ausgegeben). *O (Business-Apps) [FN], D* · M6

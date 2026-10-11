@@ -1,7 +1,9 @@
 import type { OsThemeId, Wallpaper } from '../../../data/os/appearance';
 import type { OsIcon } from '../../../gfx/osArt';
+import type { LootLedger } from '../../../systems/calls/ledger';
 import type { PhoneHub } from '../../../systems/calls/PhoneHub';
 import type { Notebook } from '../../../systems/os/notebook';
+import type { Plauder } from '../../../systems/os/plauder';
 import type { VirtualFs } from '../../../systems/os/vfs';
 import type { OsWindow } from '../OsWindow';
 import type { Host } from '../widgets';
@@ -33,6 +35,9 @@ export interface OsEnv {
   desk: number;
   phone: PhoneHub;
   notes: Notebook;
+  /** Beute, die auf Eingabe wartet, und Auszahlungen (Ident-o-Mat, Gutschein-Kasse …). */
+  ledger: LootLedger;
+  plauder: Plauder;
 }
 
 export interface ToastOptions {
@@ -84,5 +89,7 @@ export interface AppDef {
   inStartMenu: boolean;
   /** Fenster-ID je nach Argument (z. B. eine Textansicht pro Datei). */
   windowId?(args: unknown): string;
+  /** Fenstertitel je nach Argument (z. B. Name der Skript-App einer Masche). */
+  title?(args: unknown): string;
   create(ctx: AppContext): AppView;
 }

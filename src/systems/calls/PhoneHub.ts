@@ -1,10 +1,12 @@
 import { TUNING } from '../../config/tuning';
 import type { CallerDef } from '../conversation/caller';
 import { CardDeck, type Card } from '../conversation/cards';
-import type { InputSource, Loot, Reply } from '../conversation/engine';
+import type { SchemeDef } from '../../data/schemes';
+import type { InputSource, Loot, RemoteEvent, Reply } from '../conversation/engine';
 import { LinePicker, type LineSource } from '../conversation/lines';
 import { Rng } from '../rng/rng';
 import type { CallEvent, CallManager, CallRecord } from './CallManager';
+import { Dossier } from './dossier';
 
 /** Eine Zeile im Gesprächsverlauf (Untertitel, Protokoll). */
 export interface TranscriptLine {
@@ -26,6 +28,8 @@ export class CallSession {
   record: CallRecord | null = null;
   /** Lautsprecher an (lauter, später hören Kollegen mit). */
   speaker = false;
+  /** Der Spieler hat aufgelegt (Anrufer wird mitten im Satz abgeschnitten). */
+  hungUp = false;
   private readonly queue: TranscriptLine[] = [];
   private current: TranscriptLine | null = null;
   private wait = 0;
@@ -88,8 +92,19 @@ export class CallSession {
       this.hand = [];
       return;
     }
+    const scheme = c.scheme ? { id: c.scheme.id, phase: c.phase, nextDemand: c.nextDemand } : undefined;
     this.hand = this.deck.deal(
-      { turns: c.turns, trust: c.trust, threshold: c.threshold, mood: c.currentMood, role: c.memory.role, hints: [...this.caller.likes, ...this.caller.dislikes] },
+      {
+        turns: c.turns,
+        trust: c.trust,
+        threshold: c.threshold,
+        mood: c.currentMood,
+        role: c.memory.role,
+        hints: [...this.caller.likes, ...this.caller.dislikes],
+        phase: c.phase,
+        hasLoot: c.loots.length > 0,
+        ...(scheme ? { scheme } : {}),
+      },
       4,
       reroll ? this.hand : [],
     );
@@ -147,6 +162,9 @@ export class CallSession {
 
 export interface Capture {
   callerId: string;
+  caller: CallerDef;
+  desk: number;
+  callId: number;
   loot: Loot;
 }
 
@@ -156,7 +174,8 @@ export type PhoneEvent =
   | { type: 'answered'; desk: number; session: CallSession }
   | { type: 'line'; desk: number; session: CallSession; line: TranscriptLine }
   | { type: 'ended'; desk: number; session: CallSession; record: CallRecord }
-  | { type: 'capture'; desk: number; capture: Capture };
+  | { type: 'capture'; desk: number; capture: Capture }
+  | { type: 'scheme'; desk: number; scheme: SchemeDef | null };
 
 /**
  * Verbindet den CallManager mit der Telefon-App: hält je Platz die laufende (bzw. zuletzt beendete)
@@ -166,6 +185,10 @@ export class PhoneHub {
   private readonly sessions = new Map<number, CallSession>();
   private readonly listeners = new Set<(e: PhoneEvent) => void>();
   private readonly off: () => void;
+  /** Gewählte Masche je Platz (gilt für den laufenden und alle folgenden Anrufe dort). */
+  private readonly chosen = new Map<number, SchemeDef | null>();
+  /** Was man über die Anrufer herausgefunden hat (Kundenkartei). */
+  readonly dossier = new Dossier();
 
   constructor(
     readonly calls: CallManager,
@@ -211,7 +234,44 @@ export class PhoneHub {
   }
 
   hangUp(desk: number): void {
+    const s = this.sessions.get(desk);
+    if (s?.active) s.hungUp = true;
     this.calls.hangUp(desk);
+  }
+
+  /**
+   * Masche an diesem Platz wählen (SCH-17), vor oder während des Anrufs. Ein laufendes Gespräch
+   * übernimmt sie sofort (die Karten passen sich an), sonst gilt sie ab dem nächsten Abheben.
+   */
+  setScheme(desk: number, scheme: SchemeDef | null): void {
+    this.chosen.set(desk, scheme);
+    const s = this.sessions.get(desk);
+    const c = this.calls.conversation(desk);
+    if (s && c && s.active) {
+      c.setScheme(scheme);
+      s.deal();
+    }
+    this.emit({ type: 'scheme', desk, scheme });
+  }
+
+  /** Masche des laufenden Gesprächs bzw. die für das nächste gewählte. */
+  scheme(desk: number): SchemeDef | null {
+    const s = this.sessions.get(desk);
+    const c = this.calls.conversation(desk);
+    if (s?.active && c) return c.scheme;
+    return this.chosen.get(desk) ?? null;
+  }
+
+  /** Turbo-Geschenk über die Plauderbude an den Anrufer schicken (SCH-03). */
+  gift(desk: number): Reply | null {
+    const r = this.calls.act(desk, (c) => c.gift());
+    this.sessions.get(desk)?.deal();
+    return r;
+  }
+
+  /** Fernzugriff: Der Anrufer kommentiert, was auf seinem PC passiert (SCH-22). */
+  remote(desk: number, ev: RemoteEvent, amount = 0): Reply | null {
+    return this.calls.act(desk, (c) => c.remote(ev, amount));
   }
 
   decline(desk: number): void {
@@ -232,7 +292,7 @@ export class PhoneHub {
   }
 
   capture(s: CallSession, loot: Loot): void {
-    const c = { callerId: s.caller.id, loot };
+    const c: Capture = { callerId: s.caller.id, caller: s.caller, desk: s.desk, callId: s.callId, loot };
     this.onCapture(c);
     this.emit({ type: 'capture', desk: s.desk, capture: c });
   }
@@ -254,20 +314,27 @@ export class PhoneHub {
         const caller = this.callers.find((c) => c.id === e.conversation.caller.id) ?? e.conversation.caller;
         const s = new CallSession(e.desk, e.callId, caller, this, this.src, new Rng(e.callId * 7919 + 17));
         this.sessions.set(e.desk, s);
+        const pre = this.chosen.get(e.desk);
+        if (pre) e.conversation.setScheme(pre);
         s.addReply(e.reply);
         s.deal();
+        this.dossier.met(caller.id);
         this.emit({ type: 'answered', desk: e.desk, session: s });
         break;
       }
       case 'reply': {
         const s = this.sessions.get(e.desk);
-        if (s && s.callId === e.callId) s.addReply(e.reply);
+        if (s && s.callId === e.callId) {
+          s.addReply(e.reply);
+          this.dossier.observe(s.caller.id, e.reply);
+        }
         break;
       }
       case 'ended': {
         const s = this.sessions.get(e.desk);
         if (s && s.callId === e.record.id) {
-          if (e.record.outcome === 'playerHangup') s.cutOff();
+          if (s.hungUp) s.cutOff();
+          if (e.record.outcome === 'success') this.dossier.win(s.caller.id);
           s.record = e.record;
           s.hand = [];
           this.emit({ type: 'ended', desk: e.desk, session: s, record: e.record });

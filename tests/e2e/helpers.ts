@@ -77,8 +77,11 @@ export async function office(page: Page): Promise<OfficeState> {
 export async function enterOfficeByKeyboard(page: Page): Promise<void> {
   await page.keyboard.press('Enter');
   await expectHook(page, 'menuFocus', 'start');
-  await page.keyboard.press('Enter');
-  await expectHook(page, 'scene', 'Office');
+  // Unter Parallel-Last geht ein Tastendruck im Software-Rendering gelegentlich unter: nachdrücken, solange der Titel steht.
+  await expect(async () => {
+    if ((await hook(page, 'scene')) === 'Title') await page.keyboard.press('Enter');
+    expect(await hook(page, 'scene')).toBe('Office');
+  }).toPass({ timeout: 30_000, intervals: [1500, 3000] });
   await expect.poll(async () => (await office(page))?.zoom ?? 0).toBeGreaterThan(0);
 }
 

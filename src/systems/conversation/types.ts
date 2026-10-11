@@ -67,4 +67,8 @@ export interface Features {
   stems: string[];
   /** Schreien (Großbuchstaben, viele Ausrufezeichen). */
   shouting: boolean;
+  /** Maschen, deren Schlüsselwörter fallen (Pitch, CAL-14). */
+  schemes: string[];
+  /** Bitte um Wiederholung („Nochmal bitte, langsamer“). */
+  askRepeat: boolean;
 }

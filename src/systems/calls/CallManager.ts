@@ -143,6 +143,16 @@ export class CallManager {
     return reply;
   }
 
+  /** Beliebige Aktion am Gespräch (Masche, Geschenk, Fernzugriff …); Antwort und Ende wie bei `say`. */
+  act(desk: number, fn: (c: Conversation) => Reply): Reply | null {
+    const s = this.desks[desk];
+    if (s?.kind !== 'active') return null;
+    const reply = fn(s.conversation);
+    if (reply.lines.length > 0 || reply.trustDelta !== 0) this.emit({ type: 'reply', desk, callId: s.callId, reply });
+    if (s.conversation.ended) this.finish(desk);
+    return reply;
+  }
+
   hold(desk: number, on: boolean): Reply | null {
     const s = this.desks[desk];
     if (s?.kind !== 'active') return null;

@@ -6,6 +6,7 @@ import { portraitTexture } from '../../../gfx/phaserTextures';
 import { t } from '../../../i18n';
 import type { CallSession } from '../../../systems/calls/PhoneHub';
 import type { Card } from '../../../systems/conversation/cards';
+import { PHASES } from '../../../systems/conversation/engine';
 import type { Mood } from '../../../systems/conversation/types';
 import { SpeechInput } from '../../../systems/voice/SpeechInput';
 import { PixelLabel } from '../../PixelLabel';
@@ -37,6 +38,7 @@ class PhoneView implements AppView {
   private readonly chat: ChatLog;
   private readonly cards: OsCard[];
   private readonly reroll: OsButton;
+  private readonly schemeBtn: OsButton;
   private readonly send: OsButton;
   private readonly mic: OsButton;
   private readonly holdBtn: OsButton;
@@ -94,6 +96,7 @@ class PhoneView implements AppView {
     this.chat = new ChatLog(host, `${id}:chat`);
     this.cards = [0, 1, 2, 3].map((i) => new OsCard(host, `${id}:card:${i}`, String(i + 1), () => this.playCard(i)));
     this.reroll = new OsButton(host, `${id}:reroll`, { label: t('calls.phone.reroll'), icon: 'os-icon-reroll', onClick: () => this.rerollCards() });
+    this.schemeBtn = new OsButton(host, `${id}:scheme`, { label: t('calls.phone.scheme'), icon: 'os-icon-scheme', onClick: () => this.openScheme() });
     this.send = new OsButton(host, `${id}:send`, { icon: 'os-icon-send', variant: 'primary', onClick: () => this.submitTyped() });
     this.mic = new OsButton(host, `${id}:mic`, {
       label: t('calls.phone.mic'),
@@ -168,6 +171,9 @@ class PhoneView implements AppView {
       trust: c ? Math.round(c.trust) : null,
       mood: c?.currentMood ?? null,
       phase: c?.phase ?? null,
+      scheme: c?.scheme?.id ?? null,
+      pitchTrust: c?.scheme ? c.pitchTrust : null,
+      need: c?.nextDemand ? c.thresholdFor(c.nextDemand) : null,
       hold: c?.state === 'hold',
       speaker: s?.speaker ?? false,
       speaking: s?.speaking ?? false,
@@ -185,7 +191,7 @@ class PhoneView implements AppView {
   destroy(): void {
     this.stopListening(true);
     this.bridge.detach(this);
-    for (const b of [this.reroll, this.send, this.mic, this.holdBtn, this.speakerBtn, this.kbdBtn, this.hangup, this.answerBtn, this.declineBtn, this.doneBtn]) b.destroy();
+    for (const b of [this.reroll, this.schemeBtn, this.send, this.mic, this.holdBtn, this.speakerBtn, this.kbdBtn, this.hangup, this.answerBtn, this.declineBtn, this.doneBtn]) b.destroy();
     for (const c of this.cards) c.destroy();
     for (const l of [this.name, this.status, this.phase, this.delta]) l.destroy();
     this.chat.destroy();
@@ -267,7 +273,9 @@ class PhoneView implements AppView {
         ? t(`calls.outcomeShort.${s.record?.outcome ?? 'hangup'}`)
         : c?.state === 'hold'
           ? t('calls.phone.onHold')
-          : t('calls.phone.phase', { phase: t(`calls.phase.${c?.phase ?? 'einstieg'}`), time: clock(c?.time ?? 0) });
+          : c?.scheme
+            ? t('calls.phone.phaseScheme', { phase: t(`calls.phase.${c.phase}`), scheme: t(`schemes.${c.scheme.id}.name`), time: clock(c.time) })
+            : t('calls.phone.phase', { phase: t(`calls.phase.${c?.phase ?? 'einstieg'}`), time: clock(c?.time ?? 0) });
     fitLabel(this.phase, phaseText, Math.max(10, r.w - (this.phase.main.x - r.x)));
     this.phase.setColor(th.textDim);
     this.delta.setPosition(Math.round(this.status.main.x + this.status.width + 3 * this.ctx.host.u()), this.status.main.y);
@@ -277,6 +285,7 @@ class PhoneView implements AppView {
     const active = this.mode === 'call' && c?.state === 'active';
     for (const k of this.cards) k.setEnabled(active);
     this.reroll.setEnabled(active);
+    this.schemeBtn.setLabel(c?.scheme ? t(`schemes.${c.scheme.id}.name`) : t('calls.phone.scheme'));
     this.send.setEnabled(active);
     this.mic.setEnabled(active && this.micAvailable());
     this.drawHeader();
@@ -336,6 +345,13 @@ class PhoneView implements AppView {
     if (!s || !card || this.mode !== 'call' || s.conversation?.state !== 'active') return;
     this.services.sfx.send();
     this.hub.say(this.desk, card.text, 'card', card);
+  }
+
+  /** Skript-App der gewählten Masche bzw. die Maschen-Übersicht öffnen (SCH-17). */
+  private openScheme(): void {
+    const c = this.session?.conversation;
+    if (c?.scheme) this.ctx.os.open('script', c.scheme.id);
+    else this.ctx.os.open('schemes');
   }
 
   private rerollCards(): void {
@@ -496,7 +512,7 @@ class PhoneView implements AppView {
     this.delta.setVisible(false);
     this.chat.setVisible(mode === 'call' || mode === 'ended');
     for (const c of this.cards) c.setVisible(inCall);
-    for (const b of [this.reroll, this.holdBtn, this.speakerBtn, this.mic, this.hangup]) b.setVisible(inCall);
+    for (const b of [this.reroll, this.schemeBtn, this.holdBtn, this.speakerBtn, this.mic, this.hangup]) b.setVisible(inCall);
     this.kbdBtn.setVisible(inCall && compact);
     this.send.setVisible(inCall && this.typingVisible());
     this.answerBtn.setVisible(mode === 'ringing');
@@ -528,7 +544,8 @@ class PhoneView implements AppView {
       this.status.setScale(u).setPosition(tx, 2 * u + lineH + 4 * u);
       // Unter Vertrauens- und Geduldsbalken (siehe drawHeader).
       this.phase.setScale(u).setPosition(tx, Math.round(2 * u + 2 * lineH + 17 * u));
-      headerH = Math.max(headerH, Math.round(this.phase.main.y + lineH + 2 * u));
+      // Darunter der Fortschritt der Gesprächsphasen (CAL-14).
+      headerH = Math.max(headerH, Math.round(this.phase.main.y + lineH + 6 * u));
       this.delta.setScale(u);
       if (mode === 'ringing') {
         this.status.setText(t('calls.popup.title'));
@@ -585,7 +602,7 @@ class PhoneView implements AppView {
       let text = rec ? t(`calls.outcome.${rec.outcome}`) : '';
       const c = rec?.conversation;
       if (rec?.outcome === 'hangup' && c?.reason) text = t(`calls.reason.${c.reason}`);
-      if (rec?.outcome === 'success' && c?.loot) text = t('calls.outcome.successLoot', { demand: t(`calls.demands.${c.loot.kind}`), value: c.loot.value });
+      if (rec?.outcome === 'success' && c?.loot) text = t('calls.outcome.successLoot', { demand: t(`calls.demands.${c.loot.kind}`), value: c.loot.heard });
       if (rec) text += `\n\n${t('calls.phone.summary', { time: clock(rec.duration), trust: rec.trust })}`;
       this.info.setText(text);
       this.info.setStyle({ fontSize: `${Math.round(15 * d)}px`, color: PALETTE[host.theme().text], wordWrap: { width: panel.w - 8 * u } });
@@ -603,7 +620,9 @@ class PhoneView implements AppView {
     const showLabels = cw >= 46 * u;
     ctrl.forEach((b, i) => b.setIconScale(u).setLabelVisible(showLabels).layout(panel.x + i * (cw + gap), cy, cw, ch));
     const ry = cy - gap - ch;
-    this.reroll.setIconScale(u).layout(panel.x, ry, panel.w, ch);
+    const rw = Math.round((panel.w - gap) / 2);
+    this.reroll.setIconScale(u).layout(panel.x, ry, rw, ch);
+    this.schemeBtn.setIconScale(u).layout(panel.x + rw + gap, ry, panel.w - rw - gap, ch);
     const cardsH = ry - gap - panel.y;
     const cols = panel.w >= 300 * d ? 2 : 1;
     const rows = 4 / cols;
@@ -667,6 +686,16 @@ class PhoneView implements AppView {
       const pat = c ? c.patience : 0;
       g.fillStyle(hex('ink0'), 1).fillRect(r.x, py, bw, 2 * u);
       g.fillStyle(hex(pat < 0.35 ? 'red' : 'sky'), 1).fillRect(r.x, py, Math.round(bw * pat), 2 * u);
+      // Phasen: erledigte grün, aktuelle in Akzentfarbe.
+      const phase = c?.phase ?? (this.mode === 'ended' ? 'ende' : 'einstieg');
+      const cur = PHASES.indexOf(phase);
+      const fy = Math.round(this.phase.main.y + this.lineHeight() + 2 * u);
+      const n = PHASES.length;
+      const seg = (bw - (n - 1) * u) / n;
+      for (let i = 0; i < n; i++) {
+        const sx = Math.round(r.x + i * (seg + u));
+        g.fillStyle(hex(i < cur ? 'mint' : i === cur ? th.accent : 'ink1'), 1).fillRect(sx, fy, Math.round(seg), 2 * u);
+      }
     }
     // Eingabefeld-Hintergrund.
     if (this.inputRect) {
