@@ -1,18 +1,22 @@
 import Phaser from 'phaser';
-import { PALETTE } from '../../../config/palette';
+import { hex, PALETTE } from '../../../config/palette';
+import { TUNING } from '../../../config/tuning';
 import { OS_THEME_IDS, WALLPAPERS } from '../../../data/os/appearance';
 import { t } from '../../../i18n';
 import { MIC_MODES, VOICE_MODES } from '../../../systems/save/settings';
-import { SpeechInput } from '../../../systems/voice/SpeechInput';
+import { SpeechInput, micIssueFor } from '../../../systems/voice/SpeechInput';
 import { PixelLabel } from '../../PixelLabel';
+import type { Rect } from '../focusNav';
+import { TextInputBridge, type TextInputOptions } from '../TextInputBridge';
 import { BODY_FONT, controlHeight, OsButton, OsSlider, OsTabs, OsTextView, OsToggle } from '../widgets';
 import type { AppContext, AppDef, AppView } from './types';
 
-const PAGE = { look: 0, sound: 1, voice: 2, info: 3 } as const;
+const PAGE = { look: 0, sound: 1, voice: 2, ai: 3, info: 4 } as const;
 
 /**
  * Systemsteuerung (APP-54, OS-13, MEN-05): Hintergrund und Farbschema, Lautstärken, Vibration,
- * Sprache (Anruferstimmen, Stimmwahl, Spracheingabe, Mikrofon-Test), Info.
+ * Sprache (Anruferstimmen, Stimmwahl, Spracheingabe, Mikrofon-Test), KI-Anrufer (eigener API-Schlüssel,
+ * nur lokal gespeichert; Verbindungstest, Verbrauch), Info.
  * Weitere Spiel-Einstellungen (Tastenbelegung, Komfort-Optionen) kommen mit M11 hinzu.
  */
 class SettingsView implements AppView {
@@ -37,7 +41,24 @@ class SettingsView implements AppView {
   private readonly voiceNote: Phaser.GameObjects.Text;
   private readonly micNote: Phaser.GameObjects.Text;
   private micText = '';
+  private micError = false;
   private readonly info: OsTextView;
+  private readonly aiToggle: OsToggle;
+  private readonly aiSave: OsButton;
+  private readonly aiTest: OsButton;
+  private readonly aiClear: OsButton;
+  private readonly aiNote: Phaser.GameObjects.Text;
+  private readonly aiG: Phaser.GameObjects.Graphics;
+  private aiInput: Rect | null = null;
+  private aiResult = '';
+  private aiTesting: AbortController | null = null;
+  private readonly bridge = TextInputBridge.get();
+  private readonly keyOpts: TextInputOptions = {
+    placeholder: t('os.settings.ai.placeholder'),
+    maxLength: 300,
+    secret: true,
+    onSubmit: (text) => this.saveKey(text),
+  };
   private size = { w: 0, h: 0 };
 
   constructor(private readonly ctx: AppContext) {
@@ -45,7 +66,7 @@ class SettingsView implements AppView {
     const id = ctx.win.id;
     const st = host.s.settings;
     const label = (key: string) => new PixelLabel(host.scene, t(key), { scale: host.u(), color: 'white', shadow: null, originY: 0.5, container: host.container });
-    this.tabs = new OsTabs(host, `${id}:tab`, [t('os.settings.tabs.look'), t('os.settings.tabs.sound'), t('os.settings.tabs.voice'), t('os.settings.tabs.info')]);
+    this.tabs = new OsTabs(host, `${id}:tab`, [t('os.settings.tabs.look'), t('os.settings.tabs.sound'), t('os.settings.tabs.voice'), t('os.settings.tabs.ai'), t('os.settings.tabs.info')]);
     this.tabs.onChange = () => this.relayout();
     this.wpLabel = label('os.settings.wallpaper');
     this.wpButtons = WALLPAPERS.map(
@@ -125,6 +146,17 @@ class SettingsView implements AppView {
     this.micNote = note();
     host.container.add([this.voiceNote, this.micNote]);
     this.info = new OsTextView(host, `${id}:info`, t('os.settings.infoText', { version: __APP_VERSION__ }));
+    this.aiToggle = new OsToggle(host, `${id}:aiOn`, t('os.settings.ai.toggle'), st.get().aiCallers);
+    this.aiToggle.onChange = (v) => {
+      st.update({ aiCallers: v });
+      this.syncAi();
+    };
+    this.aiSave = new OsButton(host, `${id}:aiSave`, { label: t('os.settings.ai.save'), variant: 'primary', onClick: () => this.saveKey(this.bridge.ownedBy === this ? this.bridge.value : '') });
+    this.aiTest = new OsButton(host, `${id}:aiTest`, { label: t('os.settings.ai.test'), onClick: () => void this.testAi() });
+    this.aiClear = new OsButton(host, `${id}:aiClear`, { label: t('os.settings.ai.clear'), onClick: () => this.clearKey() });
+    this.aiG = host.scene.add.graphics();
+    this.aiNote = note();
+    host.container.add([this.aiG, this.aiNote]);
     this.syncActive();
     this.syncLabels();
   }
@@ -153,10 +185,25 @@ class SettingsView implements AppView {
       speechInput: st.speechInput,
       micMode: st.micMode,
       micText: this.micText,
+      aiCallers: st.aiCallers,
+      aiStatus: this.ctx.host.s.ai.status(),
+      aiKey: this.ctx.host.s.ai.hasKey,
+      aiNote: this.aiNote.text,
+      aiInputRect: this.aiInputCss(),
     };
   }
 
+  update(): void {
+    this.placeKeyInput();
+  }
+
   destroy(): void {
+    this.aiTesting?.abort();
+    this.bridge.detach(this);
+    for (const b of [this.aiSave, this.aiTest, this.aiClear]) b.destroy();
+    this.aiToggle.destroy();
+    this.aiNote.destroy();
+    this.aiG.destroy();
     this.tabs.destroy();
     this.ctx.host.s.speech.abort();
     for (const b of [...this.wpButtons, ...this.themeButtons, ...this.voiceModes, ...this.micModes, this.voiceName, this.voiceTest, this.micTest]) b.destroy();
@@ -197,12 +244,17 @@ class SettingsView implements AppView {
 
   private testMic(): void {
     const s = this.ctx.host.s;
-    if (!SpeechInput.supported(window)) return;
+    const issue = SpeechInput.diagnose(window);
+    if (issue) {
+      this.micNote.setText(t(`calls.phone.micIssue.${issue}`));
+      return;
+    }
     if (s.speech.listening) {
       s.speech.stop();
       return;
     }
     this.micText = '';
+    this.micError = false;
     this.micNote.setText(t('os.settings.micTestListening'));
     const ok = s.speech.start('auto', {
       interim: (text) => this.micNote.setText(t('os.settings.micTestResult', { text })),
@@ -211,11 +263,92 @@ class SettingsView implements AppView {
         this.micNote.setText(t('os.settings.micTestResult', { text }));
       },
       end: () => {
-        if (!this.micText) this.micNote.setText(t('os.settings.micTestNothing'));
+        if (!this.micText && !this.micError) this.micNote.setText(t('os.settings.micTestNothing'));
         this.micTest.setActive(false);
       },
+      error: (code) => {
+        const why = micIssueFor(code);
+        if (!why) return;
+        this.micError = true;
+        this.micNote.setText(`${t(`calls.phone.micIssue.${why}`)} ${t('os.settings.micFallbackHint')}`);
+      },
     });
+    if (!ok) this.micNote.setText(t('calls.phone.micIssue.failed'));
     this.micTest.setActive(ok);
+  }
+
+  // ------------------------------------------------------------------ KI-Anrufer
+
+  private saveKey(text: string): void {
+    const key = text.trim();
+    if (!key) {
+      this.bridge.focus(this);
+      return;
+    }
+    this.ctx.host.s.ai.setKey(key);
+    this.bridge.setValue(this, '');
+    this.bridge.blur();
+    this.aiResult = t('os.settings.ai.saved');
+    this.ctx.host.s.sfx.confirm();
+    this.syncAi();
+  }
+
+  private clearKey(): void {
+    this.ctx.host.s.ai.clearKey();
+    this.aiResult = t('os.settings.ai.cleared');
+    this.ctx.host.s.sfx.back();
+    this.syncAi();
+  }
+
+  private async testAi(): Promise<void> {
+    const ai = this.ctx.host.s.ai;
+    if (!ai.hasKey || this.aiTesting) return;
+    this.aiTesting = new AbortController();
+    this.aiResult = t('os.settings.ai.testing');
+    this.syncAi();
+    const err = await ai.test(this.aiTesting.signal);
+    this.aiTesting = null;
+    this.aiResult = err ? t(`calls.phone.ai.${err}`) : t('os.settings.ai.ok');
+    this.syncAi();
+  }
+
+  /** Status, Hinweis zum Datenschutz, Verbrauch, letztes Testergebnis. */
+  private syncAi(): void {
+    const ai = this.ctx.host.s.ai;
+    const st = ai.status();
+    const lines = [
+      ai.hasKey ? t('os.settings.ai.keySet', { key: ai.maskedKey() }) : t('os.settings.ai.keyNone'),
+      t(`os.settings.ai.status.${st}`),
+      t('os.settings.ai.usage', { input: ai.total.input, output: ai.total.output, requests: ai.total.requests }),
+    ];
+    if (this.aiResult) lines.push(this.aiResult);
+    lines.push(t('os.settings.ai.privacy', { model: TUNING.ai.model }));
+    this.aiNote.setText(lines.join('\n'));
+    this.aiTest.setEnabled(ai.hasKey && !this.aiTesting);
+    this.aiClear.setEnabled(ai.hasKey);
+  }
+
+  private aiInputCss(): { x: number; y: number; w: number; h: number } | null {
+    const r = this.aiInput;
+    if (!r) return null;
+    const d = this.ctx.host.dpr();
+    const o = this.ctx.host.origin();
+    return { x: (o.x + r.x) / d, y: (o.y + r.y) / d, w: r.w / d, h: r.h / d };
+  }
+
+  /** Eingabefeld für den Schlüssel: nur auf der KI-Seite, wenn das Fenster vorne ist. */
+  private placeKeyInput(): void {
+    const win = this.ctx.win;
+    const r = this.aiInput;
+    const show = r !== null && this.tabs.index === PAGE.ai && win.active && !win.minimized && !this.ctx.os.overlayOpen;
+    if (!show || !r) {
+      if (this.bridge.ownedBy === this) this.bridge.place(this, null, this.ctx.host.dpr());
+      return;
+    }
+    if (this.bridge.ownedBy !== this) this.bridge.attach(this, this.keyOpts);
+    const o = this.ctx.host.origin();
+    const u = this.ctx.host.u();
+    this.bridge.place(this, { x: o.x + r.x + u, y: o.y + r.y + u, w: r.w - 2 * u, h: r.h - 2 * u }, this.ctx.host.dpr());
   }
 
   private relayout(): void {
@@ -312,7 +445,34 @@ class SettingsView implements AppView {
       this.syncActive();
     }
 
-    // Seite 4: Info.
+    // Seite 4: KI-Anrufer.
+    const aiPage = page === PAGE.ai;
+    for (const b of [this.aiSave, this.aiTest, this.aiClear]) b.setVisible(aiPage);
+    this.aiToggle.setVisible(aiPage);
+    this.aiNote.setVisible(aiPage);
+    this.aiG.clear();
+    this.aiInput = null;
+    if (aiPage) {
+      let ay = ch + 2 * gap;
+      this.aiToggle.layout(0, ay, w, ch);
+      ay += ch + gap;
+      const saveW = Math.min(w * 0.35, this.aiSave.preferredWidth() + 8 * u);
+      this.aiInput = { x: 0, y: ay, w: w - saveW - gap, h: ch };
+      const th = this.ctx.host.theme();
+      this.aiG.fillStyle(hex('ink0'), 1).fillRect(0, ay, this.aiInput.w, ch);
+      this.aiG.fillStyle(hex(th.windowDark), 1).fillRect(u, ay + u, this.aiInput.w - 2 * u, ch - 2 * u);
+      this.aiSave.layout(w - saveW, ay, saveW, ch);
+      ay += ch + gap;
+      const bw = (w - gap) / 2;
+      this.aiTest.layout(0, ay, bw, ch);
+      this.aiClear.layout(bw + gap, ay, w - bw - gap, ch);
+      ay += ch + gap;
+      const d = this.ctx.host.dpr();
+      this.aiNote.setStyle({ fontSize: `${Math.round(12 * d)}px`, color: PALETTE[this.ctx.host.theme().textDim], wordWrap: { width: w, useAdvancedWrap: true } }).setPosition(0, ay);
+      this.syncAi();
+    }
+
+    // Seite 5: Info.
     const info = page === PAGE.info;
     this.info.setVisible(info);
     if (info) this.info.layout(0, ch + gap, w, h - ch - gap);
@@ -324,12 +484,14 @@ class SettingsView implements AppView {
     this.wpButtons.forEach((b, i) => b.setActive(WALLPAPERS[i] === st.osWallpaper));
     this.themeButtons.forEach((b, i) => b.setActive(OS_THEME_IDS[i] === st.osTheme));
     this.voiceModes.forEach((b, i) => b.setActive(VOICE_MODES[i] === st.voiceMode));
-    const sttOk = SpeechInput.supported(window);
+    const issue = SpeechInput.diagnose(window);
+    const sttOk = issue === null;
     this.micModes.forEach((b, i) => b.setActive(MIC_MODES[i] === st.micMode).setEnabled(sttOk && st.speechInput));
-    this.micTest.setEnabled(sttOk && st.speechInput);
+    // Der Test bleibt bedienbar und nennt den Grund, wenn es nicht geht.
+    this.micTest.setEnabled(st.speechInput);
     this.voiceName.setEnabled(st.voiceMode === 'tts');
     this.voiceTest.setEnabled(st.voiceMode !== 'off');
-    if (!sttOk) this.micNote.setText(t('os.settings.micUnsupported'));
+    if (issue) this.micNote.setText(`${t(`calls.phone.micIssue.${issue}`)} ${t('os.settings.micFallbackHint')}`);
   }
 
   private syncLabels(): void {

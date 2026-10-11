@@ -1,6 +1,7 @@
 import type { AudioEngine } from '../audio/AudioEngine';
 import type { UiSfx } from '../audio/sfx';
 import type { VoiceOut } from '../audio/voice';
+import type { AiBrain } from '../systems/ai/brain';
 import type { DeviceTracker } from '../systems/input/device';
 import type { InputManager } from '../systems/input/InputManager';
 import type { SaveManager } from '../systems/save/SaveManager';
@@ -26,6 +27,8 @@ export interface Services {
   speech: SpeechInput;
   /** Spielstände, Statistik, Bestenliste (wird in der Boot-Szene geladen). */
   saves: SaveManager;
+  /** KI-Anrufer (Schlüssel nur lokal beim Spieler). */
+  ai: AiBrain;
 }
 
 let current: Services | null = null;

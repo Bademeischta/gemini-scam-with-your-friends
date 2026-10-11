@@ -26,6 +26,8 @@ export interface Settings {
   micMode: MicMode;
   /** Handy: Texteingabe in der Telefon-App eingeblendet (sonst nur Karten). */
   phoneTyping: boolean;
+  /** KI-Anrufer (Claude API mit eigenem Schlüssel); ohne Schlüssel antwortet die lokale Engine. */
+  aiCallers: boolean;
 }
 
 export const VOICE_MODES = ['tts', 'babble', 'off'] as const;
@@ -47,6 +49,7 @@ export const DEFAULT_SETTINGS: Settings = {
   speechInput: true,
   micMode: 'ptt',
   phoneTyping: false,
+  aiCallers: true,
 };
 
 const KEY = 'settings.v1';
@@ -90,6 +93,7 @@ export class SettingsStore {
     if (typeof raw.speechInput === 'boolean') s.speechInput = raw.speechInput;
     if ((MIC_MODES as readonly unknown[]).includes(raw.micMode)) s.micMode = raw.micMode as MicMode;
     if (typeof raw.phoneTyping === 'boolean') s.phoneTyping = raw.phoneTyping;
+    if (typeof raw.aiCallers === 'boolean') s.aiCallers = raw.aiCallers;
     return s;
   }
 }

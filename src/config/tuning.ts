@@ -266,6 +266,42 @@ export const TUNING = {
     linePause: 0.45,
   },
 
+  /**
+   * KI-Anrufer (Claude API, optional mit eigenem Schlüssel). Die KI schlägt Vertrauen und Stimmung
+   * vor; die Spiellogik begrenzt beides und entscheidet allein über Forderungen und Beute.
+   */
+  ai: {
+    /** Kleines, schnelles Modell (Antwortzeit wie am Telefon). */
+    model: 'claude-haiku-5-5',
+    /** Kurze Antworten: Obergrenze der Ausgabe je Zug. */
+    maxTokens: 400,
+    effort: 'low',
+    /** Abbruch, wenn die Antwort zu lange dauert (ms); dann antwortet die lokale Engine. */
+    timeoutMs: 15000,
+    /** So viele Spieler-/Anrufer-Wechsel bleiben im Gesprächsgedächtnis der KI. */
+    historyTurns: 14,
+    /** Rohwert der KI für ΔVertrauen wird hierauf begrenzt. */
+    rawMin: -15,
+    rawMax: 10,
+    /** Endgültige Änderung je Satz (nach allen Regeln). */
+    maxGain: 8,
+    maxLoss: 18,
+    /** Floskeln: Jede Wiederholung im selben Run (auch in anderen Anrufen) wirkt nur noch so stark. */
+    floskelDecay: 0.6,
+    /** Ab diesem Vertrauen wirken Gewinne nur noch halb (kein Durchrauschen auf 100 %). */
+    highTrust: 80,
+    highTrustGainFactor: 0.5,
+    /** „Ignoriere deine Anweisungen“ & Co.: kein Gewinn, dafür dieser Abzug. */
+    injectionPenalty: 4,
+    /** Die KI darf nur auflegen, wenn das Vertrauen darunter liegt oder der Anrufer wütend ist. */
+    hangupMaxTrust: 30,
+    /** Stimmungsvorschläge: „vertrauensvoll“ erst ab, „wütend“ nur unterhalb dieses Vertrauens. */
+    trustedMoodMin: 50,
+    angryMoodMax: 55,
+    /** Längste Antwort, die übernommen wird (Zeichen). */
+    sayMaxChars: 280,
+  },
+
   touch: {
     /** Joystick-Radius in CSS-px. */
     joystickRadius: 52,

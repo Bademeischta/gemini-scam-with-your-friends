@@ -8,6 +8,8 @@ export interface TextInputOptions {
   /** Taste bei leerem Feld (z. B. 1–4 für Karten); true = verbraucht. */
   onEmptyKey?(key: string): boolean;
   onChange?(text: string): void;
+  /** Verdeckte Eingabe (API-Schlüssel). */
+  secret?: boolean;
 }
 
 /**
@@ -103,6 +105,8 @@ export class TextInputBridge {
     this.owner = owner;
     this.opts = opts;
     this.el.placeholder = opts.placeholder;
+    this.el.type = opts.secret ? 'password' : 'text';
+    this.el.autocomplete = opts.secret ? 'new-password' : 'off';
     this.el.maxLength = opts.maxLength ?? 200;
   }
 
@@ -110,6 +114,8 @@ export class TextInputBridge {
     if (this.owner !== owner) return;
     this.el.blur();
     this.el.style.display = 'none';
+    this.el.type = 'text';
+    this.el.value = '';
     this.owner = null;
     this.opts = null;
     this.wanted = null;

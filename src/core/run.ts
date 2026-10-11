@@ -5,6 +5,7 @@ import { PLAUDER_FRIENDS } from '../data/os/plauder';
 import { DEFAULT_SCHEME_FOR, schemeById } from '../data/schemes';
 import { TEST_PARAMS } from '../debug/testParams';
 import { i18n, t } from '../i18n';
+import type { AiBrain } from '../systems/ai/brain';
 import { CallManager } from '../systems/calls/CallManager';
 import { LootLedger } from '../systems/calls/ledger';
 import { payoutFor } from '../systems/calls/payout';
@@ -114,6 +115,13 @@ export function setRunPersistence(p: RunPersistence | null): void {
   persistence = p;
 }
 
+/** KI-Anrufer für alle folgenden Arbeitstage (main.ts; ohne = immer lokale Engine). */
+let runAi: AiBrain | null = null;
+
+export function setRunAi(ai: AiBrain | null): void {
+  runAi = ai;
+}
+
 /** Schicht-Code eines Runs zum Weitergeben (PRG-05). */
 export function shiftCode(seed: number): string {
   return `MC-${(seed >>> 0).toString(36).toUpperCase().padStart(6, '0')}`;
@@ -191,6 +199,7 @@ export function beginDay(core: RunSave): Run {
   };
   const phone = new PhoneHub(calls, CALLERS, i18n, capture);
   phone.dossier.restore(core.dossier);
+  phone.setAi(runAi);
   const plauder = new Plauder(new Rng(seed ^ 0x91a0 ^ day), PLAUDER_FRIENDS, () => i18n.list('apps.plauder.spam'));
   const boss = new BossBrain(new Rng(seed ^ 0xb055 ^ day), day, BOSS_ROUTE, BOSS_SEAT);
   if (TEST_PARAMS?.bossIn != null) boss.patrolIn(TEST_PARAMS.bossIn);

@@ -8,7 +8,7 @@ import type { CallSession } from '../../../systems/calls/PhoneHub';
 import type { Card } from '../../../systems/conversation/cards';
 import { PHASES } from '../../../systems/conversation/engine';
 import type { Mood } from '../../../systems/conversation/types';
-import { SpeechInput } from '../../../systems/voice/SpeechInput';
+import { SpeechInput, micIssueFor, type MicIssue } from '../../../systems/voice/SpeechInput';
 import { PixelLabel } from '../../PixelLabel';
 import { ChatLog, OsCard } from '../callWidgets';
 import type { Rect } from '../focusNav';
@@ -17,6 +17,8 @@ import { BODY_FONT, controlHeight, fitLabel, OsButton, OsList, type ListItem } f
 import type { AppContext, AppDef, AppView } from './types';
 
 type Mode = 'idle' | 'ringing' | 'call' | 'ended';
+/** Anzeige am Sprechen-Knopf: bereit, hört zu, wertet aus, Fehler (dann Tastatur-Diktat). */
+type MicState = 'idle' | 'listening' | 'processing' | 'error';
 
 const CARD_ACTIONS = ['card1', 'card2', 'card3', 'card4'] as const;
 
@@ -73,7 +75,15 @@ class PhoneView implements AppView {
   private lastMood: Mood | null = null;
   private deltaTime = 0;
   private listening = false;
+  private micState: MicState = 'idle';
+  /** Grund, warum die Spracherkennung nicht geht (bleibt bis zum nächsten Anruf; dann Tastatur-Diktat). */
+  private micIssue: MicIssue | null = null;
   private interim = '';
+  /** Zeile über dem Verlauf: Mikrofon-Status, „überlegt …“, Hinweise zur KI. */
+  private micText = '';
+  private noticeText = '';
+  private noticeTime = 0;
+  private readonly offHub: () => void;
   private historyCount = -1;
   /** Neuer Anruf mit Tastatur: Eingabefeld fokussieren, sobald es steht. */
   private pendingFocus = false;
@@ -116,6 +126,12 @@ class PhoneView implements AppView {
     this.info = sc.add.text(0, 0, '', { fontFamily: BODY_FONT, color: PALETTE.paper, fontSize: '14px', align: 'center' }).setOrigin(0.5, 0);
     this.live = sc.add.text(0, 0, '', { fontFamily: BODY_FONT, color: PALETTE.mustard, fontSize: '13px', fontStyle: 'italic' });
     host.container.add([this.info, this.live]);
+    // KI fällt auf die lokale Engine zurück: kurz Bescheid geben, warum.
+    this.offHub = this.hub.on((e) => {
+      if (e.type !== 'aiFallback' || e.desk !== this.desk) return;
+      this.notice(t(`calls.phone.ai.${e.error}`));
+      if (e.session.engine === 'local') this.ctx.os.toast({ icon: 'phone', title: t('calls.phone.ai.fallbackTitle'), body: t(`calls.phone.ai.${e.error}`) });
+    });
     this.syncMode(true);
   }
 
@@ -135,6 +151,7 @@ class PhoneView implements AppView {
     if (this.mode === 'idle') this.syncHistory();
     if (this.mode === 'call' && s && s.hand !== this.hand) this.syncCards();
     this.handleActions();
+    this.syncLive(dt);
     this.placeInput();
     if (this.pendingFocus && this.bridge.ownedBy === this && this.bridge.visible) {
       this.pendingFocus = false;
@@ -183,12 +200,20 @@ class PhoneView implements AppView {
       typing: this.inputRect !== null,
       inputRect: this.inputRect ? { x: (o.x + this.inputRect.x) / d, y: (o.y + this.inputRect.y) / d, w: this.inputRect.w / d, h: this.inputRect.h / d } : null,
       listening: this.listening,
+      micState: this.micState,
+      engine: s?.engine ?? null,
+      thinking: s?.thinking ?? false,
+      aiNotice: s?.aiNotice ?? null,
+      tokens: s ? { input: s.usage.input, output: s.usage.output, requests: s.usage.requests } : null,
+      live: this.live.text,
+      micIssue: this.micIssue,
       interim: this.interim,
       history: this.history.entries.map((e) => e.id),
     };
   }
 
   destroy(): void {
+    this.offHub();
     this.stopListening(true);
     this.bridge.detach(this);
     for (const b of [this.reroll, this.schemeBtn, this.send, this.mic, this.holdBtn, this.speakerBtn, this.kbdBtn, this.hangup, this.answerBtn, this.declineBtn, this.doneBtn]) b.destroy();
@@ -230,6 +255,10 @@ class PhoneView implements AppView {
     this.mode = mode;
     this.session = session;
     if (newCall) {
+      this.noticeTime = 0;
+      if (session?.aiNotice) this.notice(t(`calls.phone.ai.${session.aiNotice}`));
+      this.micIssue = null;
+      this.micState = 'idle';
       this.chat.clear();
       this.hand = [];
       this.lastTrust = null;
@@ -276,18 +305,20 @@ class PhoneView implements AppView {
           : c?.scheme
             ? t('calls.phone.phaseScheme', { phase: t(`calls.phase.${c.phase}`), scheme: t(`schemes.${c.scheme.id}.name`), time: clock(c.time) })
             : t('calls.phone.phase', { phase: t(`calls.phase.${c?.phase ?? 'einstieg'}`), time: clock(c?.time ?? 0) });
-    fitLabel(this.phase, phaseText, Math.max(10, r.w - (this.phase.main.x - r.x)));
+    const engineTag = this.mode === 'call' && s.engine === 'ai' ? ` · ${t('calls.phone.ai.tag')}` : '';
+    fitLabel(this.phase, phaseText + engineTag, Math.max(10, r.w - (this.phase.main.x - r.x)));
     this.phase.setColor(th.textDim);
     this.delta.setPosition(Math.round(this.status.main.x + this.status.width + 3 * this.ctx.host.u()), this.status.main.y);
     this.holdBtn.setActive(c?.state === 'hold');
     this.speakerBtn.setActive(s.speaker).setIcon(s.speaker ? 'os-icon-speakerOn' : 'os-icon-speaker');
-    this.mic.setActive(this.listening).setIcon(this.listening ? 'os-icon-micOn' : 'os-icon-mic');
+    this.mic.setActive(this.listening).setIcon(this.listening ? 'os-icon-micOn' : 'os-icon-mic').setLabel(t(`calls.phone.micState.${this.micState}`));
     const active = this.mode === 'call' && c?.state === 'active';
-    for (const k of this.cards) k.setEnabled(active);
-    this.reroll.setEnabled(active);
+    for (const k of this.cards) k.setEnabled(active && !s.thinking);
+    this.reroll.setEnabled(active && !s.thinking);
     this.schemeBtn.setLabel(c?.scheme ? t(`schemes.${c.scheme.id}.name`) : t('calls.phone.scheme'));
     this.send.setEnabled(active);
-    this.mic.setEnabled(active && this.micAvailable());
+    // Immer bedienbar: Geht die Erkennung nicht, führt der Knopf zum Tastatur-Diktat.
+    this.mic.setEnabled(active);
     this.drawHeader();
   }
 
@@ -342,7 +373,7 @@ class PhoneView implements AppView {
   private playCard(i: number): void {
     const s = this.session;
     const card = s?.hand[i];
-    if (!s || !card || this.mode !== 'call' || s.conversation?.state !== 'active') return;
+    if (!s || !card || this.mode !== 'call' || s.conversation?.state !== 'active' || s.thinking) return;
     this.services.sfx.send();
     this.hub.say(this.desk, card.text, 'card', card);
   }
@@ -422,55 +453,102 @@ class PhoneView implements AppView {
     this.services.sfx.back();
   }
 
+  // ------------------------------------------------------------------ Hinweiszeile
+
+  private setMic(text: string): void {
+    this.micText = text;
+  }
+
+  /** Hinweis für ein paar Sekunden (KI-Status, Rückfall). */
+  private notice(text: string): void {
+    this.noticeText = text;
+    this.noticeTime = 7;
+  }
+
+  /** Mikrofon hat Vorrang, dann „überlegt …“, dann Hinweise. */
+  private syncLive(dt: number): void {
+    this.noticeTime = Math.max(0, this.noticeTime - dt);
+    const s = this.session;
+    let text = this.mode === 'call' ? this.micText : '';
+    if (!text && this.mode === 'call' && s?.thinking) text = t('calls.phone.thinking', { name: t(`callers.${s.caller.id}.short`) });
+    if (!text && this.noticeTime > 0 && this.mode === 'call') text = this.noticeText;
+    if (text !== this.live.text) this.live.setText(text);
+    this.live.setVisible(this.mode === 'call' && text !== '');
+  }
+
   // ------------------------------------------------------------------ Spracheingabe
 
-  private micAvailable(): boolean {
-    const st = this.services.settings.get();
-    return st.speechInput && SpeechInput.supported(window);
+  /** Grund, warum es gerade nicht geht (Einstellung aus, Browser kann es nicht, früherer Fehler). */
+  private micBlocked(): MicIssue | 'off' | null {
+    if (!this.services.settings.get().speechInput) return 'off';
+    return this.micIssue ?? SpeechInput.diagnose(window);
+  }
+
+  /** Touch: Antippen startet und beendet (Safari erlaubt das Mikrofon nur beim Loslassen, nicht beim Drücken). */
+  private get tapToTalk(): boolean {
+    const d = this.services.device;
+    return d.formFactor !== 'desktop' || d.kind === 'touch' || this.services.settings.get().micMode === 'auto';
   }
 
   private micClick(): void {
-    // Sprachaktivierung: Antippen startet bzw. beendet; Halten-zum-Sprechen läuft über Drücken/Loslassen.
-    if (this.services.settings.get().micMode === 'auto') {
-      if (this.listening) this.stopListening(false);
-      else this.startListening();
-    }
+    if (!this.tapToTalk) return;
+    if (this.listening) this.stopListening(false);
+    else this.startListening(true);
   }
 
   private micDown(): void {
-    if (this.services.settings.get().micMode === 'ptt') {
-      this.pttByKey = false;
-      this.startListening();
-    }
+    if (this.tapToTalk) return;
+    this.pttByKey = false;
+    this.startListening(true);
   }
 
   private micUp(): void {
-    if (this.services.settings.get().micMode === 'ptt' && this.listening && !this.pttByKey) this.stopListening(false);
+    if (!this.tapToTalk && this.listening && !this.pttByKey) this.stopListening(false);
   }
 
-  private startListening(): void {
-    if (this.listening || this.mode !== 'call' || !this.micAvailable() || this.session?.conversation?.state !== 'active') return;
+  /** `fromGesture`: direkt aus Klick/Tippen (dann darf der Rückfall das Textfeld samt Tastatur öffnen). */
+  private startListening(fromGesture = false): void {
+    if (this.listening || this.mode !== 'call' || this.session?.conversation?.state !== 'active') return;
+    const blocked = this.micBlocked();
+    if (blocked) {
+      this.typingFallback(blocked, fromGesture);
+      return;
+    }
     this.pttByKey = this.services.input.isDown('talk');
-    const ok = this.services.speech.start(this.services.settings.get().micMode, {
+    // Wer spricht, unterbricht den Anrufer (laufende Sprachausgabe stört die Erkennung auf dem iPhone).
+    this.services.voice.cancel();
+    const ok = this.services.speech.start(this.tapToTalk ? 'auto' : 'ptt', {
       interim: (text) => {
         this.interim = text;
-        this.live.setText(t('calls.phone.hearing', { text }));
+        this.setMic(t('calls.phone.hearing', { text }));
       },
       final: (text) => this.say(text, 'voice'),
       end: () => {
         this.listening = false;
         this.interim = '';
-        this.live.setText('');
-      },
-      error: (code) => {
-        if (code === 'not-allowed' || code === 'service-not-allowed') {
-          this.ctx.os.toast({ icon: 'mic', title: t('calls.phone.micDeniedTitle'), body: t('calls.phone.micDenied') });
+        if (this.micState !== 'error') {
+          this.micState = 'idle';
+          this.setMic('');
         }
       },
+      error: (code) => {
+        const issue = micIssueFor(code);
+        if (!issue) return;
+        this.micIssue = issue;
+        this.micState = 'error';
+        this.setMic(`${t(`calls.phone.micIssue.${issue}`)} ${t('calls.phone.micFallbackTap')}`);
+        // Auf dem Handy reicht die Hinweiszeile: Eine Benachrichtigung läge genau über dem Mikrofon-Knopf.
+        if (!this.ctx.os.compact) this.ctx.os.toast({ icon: 'mic', title: t('calls.phone.micDeniedTitle'), body: t(`calls.phone.micIssue.${issue}`) });
+      },
     });
-    if (!ok) return;
+    if (!ok) {
+      this.micIssue = 'failed';
+      this.typingFallback('failed', fromGesture);
+      return;
+    }
     this.listening = true;
-    this.live.setText(t('calls.phone.listening'));
+    this.micState = 'listening';
+    this.setMic(t('calls.phone.listening'));
     this.services.sfx.micOn();
   }
 
@@ -482,8 +560,30 @@ class PhoneView implements AppView {
     if (abort) {
       this.listening = false;
       this.interim = '';
-      this.live.setText('');
+      this.micState = this.micIssue ? 'error' : 'idle';
+      this.setMic('');
+    } else if (this.micState === 'listening') {
+      this.micState = 'processing';
+      this.setMic(t('calls.phone.processing'));
     }
+  }
+
+  /**
+   * Rückfall, wenn die Spracherkennung nicht geht: Grund nennen und das Textfeld öffnen, damit man
+   * mit dem Mikrofon der Bildschirmtastatur diktieren kann. Fokus nur aus einer Geste (sonst zeigt
+   * iOS keine Tastatur).
+   */
+  private typingFallback(issue: MicIssue | 'off', fromGesture: boolean): void {
+    this.micState = issue === 'off' ? 'idle' : 'error';
+    this.setMic(`${t(`calls.phone.micIssue.${issue}`)} ${t('calls.phone.micFallback')}`);
+    const st = this.services.settings;
+    if (this.ctx.os.compact && !st.get().phoneTyping) {
+      st.update({ phoneTyping: true });
+      this.relayout();
+    }
+    this.placeInput();
+    if (fromGesture) this.bridge.focus(this);
+    else this.pendingFocus = true;
   }
 
   // ------------------------------------------------------------------ Darstellung
@@ -593,8 +693,10 @@ class PhoneView implements AppView {
     }
     this.chat.layout(chatRect.x, chatRect.y, chatRect.w, Math.max(ch, chatRect.h));
     this.chat.setEmptyText('');
-    this.live.setStyle({ fontSize: `${Math.round(13 * d)}px`, wordWrap: { width: chatRect.w - 8 * u } });
-    this.live.setPosition(Math.round(chatRect.x + 4 * u), Math.round(chatRect.y + 2 * u));
+    // Deckender Hintergrund: Die Zeile liegt über dem Verlauf und muss lesbar bleiben.
+    this.live.setStyle({ fontSize: `${Math.round(13 * d)}px`, wordWrap: { width: chatRect.w - 12 * u }, backgroundColor: PALETTE[host.theme().windowDark] });
+    this.live.setPadding(Math.round(3 * u), Math.round(2 * u), Math.round(3 * u), Math.round(2 * u));
+    this.live.setPosition(Math.round(chatRect.x + 2 * u), Math.round(chatRect.y + 2 * u));
 
     if (mode === 'ended') {
       const s = this.session;

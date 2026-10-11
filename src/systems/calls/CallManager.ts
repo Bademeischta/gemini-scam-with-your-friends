@@ -150,7 +150,7 @@ export class CallManager {
     const s = this.desks[desk];
     if (s?.kind !== 'active') return null;
     const reply = fn(s.conversation);
-    if (reply.lines.length > 0 || reply.trustDelta !== 0) this.emit({ type: 'reply', desk, callId: s.callId, reply });
+    if (reply.lines.length > 0 || reply.trustDelta !== 0 || reply.learned || reply.moodChanged || reply.ended) this.emit({ type: 'reply', desk, callId: s.callId, reply });
     if (s.conversation.ended) this.finish(desk);
     return reply;
   }
