@@ -19,6 +19,7 @@
     "node": ">=20"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.133.0",
     "phaser": "^3.90.0"
   },
   "devDependencies": {

@@ -1,4 +1,5 @@
 import { TUNING } from '../../config/tuning';
+import { detectInjection, type AiVerdict } from '../ai/rules';
 import type { SchemeDef } from '../../data/schemes';
 import { Rng } from '../rng/rng';
 import type { CallerDef, Trait } from './caller';
@@ -71,6 +72,33 @@ export interface Reply {
   features?: Features;
   /** Vorlieben/Abneigungen, auf die der Anrufer in diesem Satz reagiert hat (Kundenkartei). */
   learned?: { likes: Topic[]; dislikes: Topic[] };
+}
+
+/**
+ * KI-Zug, Teil 1 (vor der Anfrage): Was die Spiellogik aus dem Satz macht, ohne etwas zu verändern.
+ * Die Entscheidungen (Forderung ja/nein, Widerspruch, Abschied) gehen als Regie an die KI.
+ */
+export interface AiPlan {
+  text: string;
+  source: InputSource;
+  features: Features;
+  /** Lokal beantworten (Schläfer, der weiterschläft; Bitte um Wiederholung beim Diktat). */
+  local: boolean;
+  /** Fast derselbe Satz wie vorhin in diesem Gespräch. */
+  repeat: boolean;
+  /** Manipulationsversuch („Ignoriere deine Anweisungen“). */
+  injection: boolean;
+  /** Neu genannte Rolle/Name und ein Widerspruch zu früher. */
+  role: Role | null;
+  name: string | null;
+  contradiction: { kind: 'role' | 'name'; before: string; now: string } | null;
+  /** Forderung und was die Spiellogik dazu entschieden hat. */
+  demand: { kind: DemandKind; decision: 'grant' | 'why' | 'gift' | 'early' } | null;
+  farewell: boolean;
+  /** Schlüsselwörter der gewählten Masche sind gefallen. */
+  pitchWords: boolean;
+  /** Der Anrufer schläft und wacht jetzt auf. */
+  wakes: boolean;
 }
 
 export interface LogEntry {
@@ -171,6 +199,8 @@ export class Conversation {
   private angryLow = 0;
   private sinceTrait = 0;
   private chatterTimer = 0;
+  /** Wartet auf die Antwort der KI: Stille zählt nicht (der Anrufer „überlegt“). */
+  waiting = false;
 
   constructor(caller: CallerDef, rng: Rng, variant?: CallVariant) {
     this.caller = caller;
@@ -348,6 +378,7 @@ export class Conversation {
       if (this.holdTime >= TUNING.calls.holdMaxSeconds * this.patienceScale()) return this.hangup('hold');
       return null;
     }
+    if (this.waiting) return null;
     let moodChanged = this.mood.decay(dt, this.trust) !== null;
     this.silence += dt;
     this.sinceTrait += dt;
@@ -399,6 +430,191 @@ export class Conversation {
     if (moodChanged && lines.length === 0) lines.push({ situation: `mood.${this.mood.mood}` });
     this.logCaller(lines);
     return this.reply(lines, 0, moodChanged);
+  }
+
+  // ------------------------------------------------------------------ KI-Anrufer
+
+  /** KI-Zug, Teil 1: Satz verstehen und Spielregeln anwenden, ohne den Zustand zu ändern. */
+  planAi(text: string, source: InputSource = 'typed'): AiPlan | null {
+    if (this.state !== 'active' || text.trim().length === 0) return null;
+    const f = understand(text, { callerNames: this.caller.names });
+    const plan: AiPlan = {
+      text,
+      source,
+      features: f,
+      local: false,
+      repeat: false,
+      injection: detectInjection(text),
+      role: null,
+      name: null,
+      contradiction: null,
+      demand: null,
+      farewell: (f.intents.farewell ?? 0) > 0,
+      pitchWords: this.scheme !== null && f.schemes.includes(this.scheme.id),
+      wakes: false,
+    };
+    if (this.asleep) {
+      const wakes = (f.intents.greet ?? 0) > 0 || f.shouting || f.nameMention || f.words >= 6;
+      if (!wakes) return { ...plan, local: true };
+      plan.wakes = true;
+    }
+    const lastLoot = this.loots[this.loots.length - 1];
+    const demandsNew = f.demands.length > 0 && f.demands[0] !== lastLoot?.kind;
+    if (lastLoot && !lastLoot.bait && f.askRepeat && !demandsNew && lastLoot.kind !== 'jawort') return { ...plan, local: true };
+
+    let similar = 0;
+    for (const prev of this.memory.said) similar = Math.max(similar, jaccard(prev, f.stems));
+    plan.repeat = f.stems.length > 0 && similar > TUNING.calls.similarSentenceJaccard;
+
+    for (const role of f.roleClaims) {
+      if (this.memory.role === null && plan.role === null) plan.role = role;
+      else if (this.memory.role !== null && this.memory.role !== role && !plan.contradiction) plan.contradiction = { kind: 'role', before: this.memory.role, now: role };
+    }
+    if (f.claimedName) {
+      if (this.memory.name === null) plan.name = f.claimedName;
+      else if (normalize(this.memory.name) !== normalize(f.claimedName) && !plan.contradiction) plan.contradiction = { kind: 'name', before: this.memory.name, now: f.claimedName };
+    }
+
+    // Forderung: Die Spiellogik entscheidet mit dem Vertrauen vor diesem Satz – die KI spielt es nur.
+    const demanding = f.demands.length > 0 || (f.intents.demand ?? 0) > 0;
+    if (demanding) {
+      const expected = this.nextDemand;
+      const kind: DemandKind = f.demands.find((d) => d === expected) ?? f.demands[0] ?? expected ?? 'nummer';
+      const sch = this.scheme;
+      const forScheme = sch !== null && kind === expected;
+      const pitchedNow = this.pitched || (plan.pitchWords && this.trust >= this.pitchTrust);
+      let decision: 'grant' | 'why' | 'gift' | 'early';
+      if (forScheme && !pitchedNow) decision = 'why';
+      else if (forScheme && sch.input === 'plauderbude' && !this.giftSent) decision = 'gift';
+      else if (this.trust >= this.thresholdFor(kind) && !(f.intents.insult ?? 0) && !plan.injection && !plan.contradiction) decision = 'grant';
+      else decision = 'early';
+      plan.demand = { kind, decision };
+    }
+    return plan;
+  }
+
+  /**
+   * KI-Zug, Teil 2: Vorschlag der KI begrenzt anwenden. Die KI bestimmt den Ton (Text, Stimmung,
+   * Grundwirkung), die Spiellogik bestimmt Grenzen, Abnutzung, Strafen, Forderungen und Beute.
+   * `floskel` = Faktor aus dem Floskel-Zähler (Abnutzung über den ganzen Run).
+   * Die Zeilen der KI selbst sind schon gestreamt; die Antwort enthält nur noch Zusätze (Diktat).
+   */
+  applyAi(plan: AiPlan, v: AiVerdict, floskel = 1): Reply {
+    if (this.state !== 'active') return this.reply([], 0, false);
+    const c = this.caller;
+    const f = plan.features;
+    const ai = TUNING.ai;
+    const fx = MOOD_FX[this.mood.mood];
+    this.turns++;
+    this.log.push({ t: this.time, who: 'player', text: plan.text, source: plan.source, trust: this.trust, mood: this.mood.mood });
+    this.patience = Math.min(1, this.patience + TUNING.calls.patienceRefill);
+    this.silence = 0;
+    this.prompts = 0;
+    if (plan.wakes) this.asleep = false;
+    this.memory.said.push(f.stems);
+    if (plan.role && this.memory.role === null) this.memory.role = plan.role;
+    if (plan.name && this.memory.name === null) this.memory.name = plan.name;
+    if ((f.intents.promise ?? 0) > 0) this.memory.promises++;
+
+    // Grundwirkung laut KI, dann Abnutzung und Charakter.
+    const raw = Math.max(ai.rawMin, Math.min(ai.rawMax, v.trustDelta));
+    let gain = Math.max(0, raw) * (plan.repeat ? TUNING.calls.similarSentenceFactor : 1) * floskel;
+    let loss = Math.max(0, -raw);
+    if (plan.injection) {
+      gain = 0;
+      loss += ai.injectionPenalty;
+    }
+    if (this.has('stoic')) {
+      gain *= 0.7;
+      loss *= 0.7;
+    }
+    if (this.has('baiter')) gain *= 1.3;
+    if (this.trust >= ai.highTrust) gain *= ai.highTrustGainFactor;
+    const sig: MoodSignals = {
+      ...NO_SIGNALS,
+      insult: f.intents.insult ?? 0,
+      threat: f.intents.threat ?? 0,
+      urgency: f.intents.urgency ?? 0,
+      laugh: f.intents.laugh ?? 0,
+      compliment: f.intents.compliment ?? 0,
+      empathy: f.intents.empathy ?? 0,
+      calm: f.intents.calm ?? 0,
+      apology: f.intents.apology ?? 0,
+      nonsense: Math.max(f.nonsense, plan.injection ? 0.6 : 0),
+      shouting: f.shouting,
+      repetition: plan.repeat ? 1 : 0,
+    };
+
+    // Widerspruch (Gedächtnis): Der Rest des Satzes zählt kaum noch.
+    if (plan.contradiction) {
+      gain *= 0.3;
+      loss += TUNING.calls.contradictionPenalty * (0.5 + c.temper.suspicion);
+      sig.contradiction = true;
+    }
+    // Passende Rolle zur Masche: glaubwürdiger.
+    if (plan.role && this.scheme?.roles.includes(plan.role)) gain += TUNING.calls.roleFitBonus;
+    // Pitch: Geschichte der Masche (zu früh erzählt kostet, Skeptiker reagieren sauer).
+    const sch = this.scheme;
+    if (sch && (plan.pitchWords || v.pitchHeard) && !this.pitched) {
+      const a = this.affinity;
+      if (this.trust < this.pitchTrust) loss += (a < 0 ? 6 : 4) * (0.6 + c.temper.suspicion);
+      else {
+        gain += (TUNING.calls.pitchGain + (a > 0 ? 3 : 0)) * this.wear('pitch');
+        this.pitched = true;
+      }
+    }
+    // Vorlieben für die Kundenkartei (die Wirkung steckt schon in der Bewertung der KI).
+    for (const topic of f.topics) {
+      if (c.likes.includes(topic)) this.learned.likes.push(topic);
+      else if (c.dislikes.includes(topic)) this.learned.dislikes.push(topic);
+    }
+
+    // Forderung: wie geplant.
+    let success: DemandKind | null = null;
+    if (plan.demand) {
+      this.memory.demandsTried++;
+      const { kind, decision } = plan.demand;
+      if (decision === 'grant') success = kind;
+      else if (decision === 'why') {
+        loss += 5 * (0.6 + c.temper.suspicion);
+        sig.earlyDemand = true;
+      } else if (decision === 'gift') loss += 1;
+      else {
+        this.memory.earlyDemands++;
+        const th = this.thresholdFor(kind);
+        const missing = Math.max(0, 1 - Math.max(0, this.trust) / th);
+        loss += (TUNING.calls.earlyDemandBase + TUNING.calls.earlyDemandScale * missing) * (0.6 + c.temper.suspicion) * Math.pow(1.3, this.memory.earlyDemands - 1);
+        sig.earlyDemand = true;
+      }
+    }
+
+    const delta = Math.max(-ai.maxLoss, Math.min(ai.maxGain, gain * fx.gain) - loss * fx.loss);
+    sig.dTrust = delta;
+    this.addTrust(delta);
+    this.updatePhase();
+
+    // Stimmung: eigene Regeln, dann der Vorschlag der KI, wenn er zum Vertrauen passt.
+    let moodChanged = this.mood.apply(sig, this.trust) !== null;
+    const want = v.mood;
+    const allowed =
+      (want !== 'vertrauensvoll' || this.trust >= ai.trustedMoodMin) && (want !== 'wuetend' || this.trust < ai.angryMoodMax || sig.insult > 0 || sig.threat > 0);
+    if (allowed && want !== this.mood.mood) moodChanged = this.mood.force(want) !== null || moodChanged;
+
+    this.log.push({ t: this.time, who: 'caller', text: v.say, trust: this.trust, mood: this.mood.mood });
+    const lines: LineRef[] = [];
+    if (success) {
+      lines.push(...this.grantLoot(success, true));
+      this.logCaller(lines);
+      return this.reply(lines, delta, moodChanged);
+    }
+    if (this.trust <= 0) return this.hangup('trust', lines, delta, true);
+    const mayHangUp = this.trust < ai.hangupMaxTrust || this.mood.mood === 'wuetend';
+    if (v.hangup && mayHangUp) return this.hangup(this.mood.mood === 'wuetend' ? 'angry' : 'trust', lines, delta, true);
+    if (plan.farewell) {
+      this.end(this.lootOutcome() ?? 'farewell');
+      return this.reply(lines, delta, moodChanged);
+    }
+    return this.reply(lines, delta, moodChanged);
   }
 
   // ------------------------------------------------------------------ Bewertung einer Eingabe
@@ -668,7 +884,7 @@ export class Conversation {
   // ------------------------------------------------------------------ Beute (CAL-15)
 
   /** Forderung erfüllt: Zusage, Diktat (bzw. „Ja“), Beute merken. */
-  private grantLoot(kind: DemandKind): LineRef[] {
+  private grantLoot(kind: DemandKind, spoken = false): LineRef[] {
     const sch = this.scheme && kind === this.nextDemand ? this.scheme : null;
     const baiter = this.has('baiter');
     const lines: LineRef[] = [];
@@ -679,7 +895,8 @@ export class Conversation {
     if (kind === 'jawort' && !baiter) {
       // Ja-Wort wird mitgeschnitten; bei der Abo-Masche zählt erst das letzte Ja als Beute.
       this.yeses++;
-      lines.push({ situation: this.yeses > 1 ? 'jawort.more' : 'demand.agree', params: { demand: kind } }, { situation: 'loot.jawort' });
+      if (!spoken) lines.push({ situation: this.yeses > 1 ? 'jawort.more' : 'demand.agree', params: { demand: kind } });
+      lines.push({ situation: 'loot.jawort' });
       if (sch && this.nextDemand === 'jawort') {
         this.phase = 'forderung';
         return lines;
@@ -687,7 +904,8 @@ export class Conversation {
       this.recordLoot({ kind, value: this.variant.loot.jawort, schemeId: sch?.id ?? null, heard: this.variant.loot.jawort });
       return lines;
     }
-    lines.push({ situation: baiter ? 'demand.bait' : 'demand.agree', params: { demand: kind } });
+    // Die Zusage hat bei KI-Anrufern schon die KI gesprochen; vorgelesen wird immer vom Spiel (echte Daten).
+    if (!spoken) lines.push({ situation: baiter ? 'demand.bait' : 'demand.agree', params: { demand: kind } });
     if (baiter) {
       // Köder: liest eine wertlose Nummer vor (gleiches Format, aber nirgends gültig).
       const fake = makeVariant(this.rng).loot[kind];
@@ -754,8 +972,9 @@ export class Conversation {
     this.trust = clamp(this.trust + d, 0, 100);
   }
 
-  private hangup(reason: HangupReason, lines: LineRef[] = [], delta = 0): Reply {
-    lines.push({ situation: `hangup.${reason}` });
+  private hangup(reason: HangupReason, lines: LineRef[] = [], delta = 0, spoken = false): Reply {
+    // Bei KI-Anrufern hat die KI das Auflegen schon selbst gesagt.
+    if (!spoken) lines.push({ situation: `hangup.${reason}` });
     this.reason = reason;
     this.logCaller(lines);
     this.end(this.lootOutcome() ?? 'hangup');

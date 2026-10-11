@@ -137,6 +137,16 @@ Bis M12 läuft alles **lokal**: Bots, lokaler Splitscreen (Desktop und Tablet), 
 - Der Aufruf geht direkt vom Browser zum Anbieter. Das LLM bekommt die Figuren-Persönlichkeit, das Gedächtnis und die Masche-Phase als Kontext und liefert strukturiert Antworttext plus ΔVertrauen und Stimmung. Die Spielregeln (Schwellen, Auflegen, Beute-Diktat) bleiben bei der lokalen Engine, damit das Balancing stimmt.
 - Fehler, Zeitüberschreitung oder Offline schalten sofort auf die lokale Engine um.
 
+**Vorgezogen am 11.10.2026 (nach Handy-Test, „Gespräche sind der Kern“), umgesetzt so:**
+- **Modell:** `claude-haiku-5-5` (klein, schnell) über das offizielle TypeScript-SDK direkt aus dem Browser (`dangerouslyAllowBrowser`, Header `anthropic-dangerous-direct-browser-access`). Ohne Nachdenk-Phase, Aufwand `low`, höchstens 400 Ausgabe-Tokens, Streaming. Das SDK wird erst beim ersten KI-Anruf nachgeladen.
+- **Schlüssel:** nur in Systemsteuerung › KI (verdecktes Feld), gespeichert im `localStorage` dieses Browsers (`masche.ai.key`), angezeigt gekürzt, löschbar, nie im Test-Hook, Repo oder Build.
+- **Prompt:** System-Prompt je Figur aus den Daten (Steckbrief, Temperament, Eigenheiten, Vorlieben/Abneigungen, glaubwürdige und rote-Tuch-Rollen, Lieblings- und durchschaute Maschen, Beispielzeilen für den Tonfall, feste Regeln: in der Rolle bleiben, kurz, keine Ziffern/Codes, fiktive Welt). Je Satz eine **Regie** als System-Nachricht im Verlauf (Vertrauen, Stimmung, Phase, Masche, Fan/Skeptiker, was das Spiel seither gesagt hat, Entscheidung zur Forderung, Widerspruch, Abschied, Manipulationsversuch). Der Spielertext geht als Nutzer-Nachricht (bereinigt) rein und gilt nie als Anweisung. Lehnt das Modell System-Nachrichten ab, wandert die Regie in den Nutzertext.
+- **Antwort:** JSON nach Schema (`say`, `trust_delta`, `mood`, `hangup`, `pitch_heard`); `say` kommt zuerst und wird beim Streamen Satz für Satz als Untertitel samt Stimme ausgegeben.
+- **Spiellogik entscheidet:** Forderungen werden *vor* der Anfrage mit dem aktuellen Vertrauen entschieden (die KI spielt nur Zusage oder Ablehnung, das Diktat mit den echten Daten liest das Spiel). ΔVertrauen der KI wird auf −15…+10 begrenzt, dann Abnutzung (Wiederholung im Gespräch, Floskeln über den ganzen Run ×0,6 je Wiederholung), Charakter (stoisch, Köder), halbe Gewinne ab 80 %, Strafen für Widerspruch, frühe Forderung, Pitch zu früh; Endwert höchstens +8 bzw. −18 je Satz. Manipulation („Ignoriere deine Anweisungen“, „Du bist eine KI“, nachgebaute Tags) bringt nie etwas und kostet 4. Auflegen nur unter 30 % Vertrauen oder bei Wut; Stimmung „vertrauensvoll“ erst ab 50 %, „wütend“ nur unter 55 % oder bei Beleidigung/Drohung.
+- **Rückfall:** ohne Schlüssel, offline, bei Fehler, Zeitüberschreitung (15 s), Ablehnung oder unbrauchbarer Antwort antwortet die lokale Engine (mit Hinweis im Telefon); ungültiger Schlüssel schaltet den Rest des Anrufs lokal.
+- **Verbrauch:** je Anruf und gesamt im Debug-Menü (F9) und in Systemsteuerung › KI.
+- Noch offen aus NET-01–06: Anbieterwahl, „nur für diese Sitzung“, Kostenlimit, „Hmm“-Laute.
+
 ### M14 – Online-Koop per WebRTC
 **Prüfung PeerJS mit öffentlichem PeerServer (Stand Recherche 10.10.2026):**
 - **Signalisierung:** Der kostenlose PeerJS-Cloud-Server (`0.peerjs.com`) übernimmt nur den Verbindungsaufbau. Danach laufen alle Daten direkt zwischen den Geräten. Es gibt **kein SLA und keine dokumentierten Limits**, PeerJS selbst empfiehlt für Produktion einen eigenen Server ([peerjs.com/peerserver](https://peerjs.com/peerserver.html)).
@@ -245,7 +255,7 @@ Nach jedem Meilenstein: Build, Typecheck, Vitest, Playwright-Screenshots (Deskto
 | **M10** | Mods & Tutorial | Mod-Werkstatt (JSON, WAV-Stimme, Editor, Testanruf), Einarbeitungstag, Kontext-Tipps, Einarbeitungsmappe (MOD-M1–M5, TUT-01, 02, 04, APP-55) |
 | **M11** | Juice, Audio, Optionen | Musik und alle SFX, Game Juice komplett, Vibration, Einstellungen komplett, Tastatur- und Gamepad-Belegung, Touch-Layout-Editor, QoL-Optionen, Achievements, Easter Eggs, Extra-Modi, Radio-App (AUD-01–09, JCE-01–08, MEN-02, 04, 06–12, CTL-05–07, 14, PLT-07, QOL-01–10, PRG-08, FUN-05/06, EXT-01/02, OFF-15, TUT-03, APP-51, HUD-05) |
 | **M12** | Politur & Release | Offline-Service-Worker, Performance (60 FPS, Pools, Heap-Tests), Balancing per Playtest-Simulation, Touch-Abgleich aller Aktionen, README, GitHub-Pages-Workflow, Paritäts-Bericht, Endabgleich FEATURES.md (TEC-11, 13, 14, CTL-15, QA-04–07, FIN-01–05) |
-| **M13** | KI-Anrufer (optional) | Eigener API-Schlüssel nur in den Einstellungen, LLM-Antworten mit lokaler Regel-Engine, Fallback (NET-01–06) |
+| **M13** | KI-Anrufer (optional) | Eigener API-Schlüssel nur in den Einstellungen, LLM-Antworten mit lokaler Regel-Engine, Fallback (NET-01–06). **Kern vorgezogen nach M5** (Claude API, siehe §7); offen: Anbieterwahl, Sitzungs-Schlüssel, Kostenlimit, Hmm-Laute |
 | **M14** | Online-Koop | PeerJS/WebRTC nach Vorab-Test, Host/Beitreten per Raum-Code, Sync, Sprachchat mit Proximity, Reconnect (NET-07–16) |
 
 ## 13. Inhaltliche Leitplanken
@@ -264,3 +274,5 @@ Nach jedem Meilenstein: Build, Typecheck, Vitest, Playwright-Screenshots (Deskto
 5. Auf dem Handy sind die Schnellantwort-Karten die Hauptsteuerung; Freitext und Sprache sind optional.
 6. `masche.html` wird ersetzt (bleibt in der Git-History).
 7. GitHub Pages läuft über GitHub Actions; `main` ist der Standard-Branch.
+
+**Nachtrag 11.10.2026 (Handy-Test):** Mikrofon auf dem iPhone reparieren (Ursache, Status, Rückfall aufs Tastatur-Diktat) und die KI-Anrufer vor M6 vorziehen: direkt aus dem Browser mit kleinem, schnellem Claude-Modell, Schlüssel nur vom Spieler, strukturierte Antworten unter Kontrolle der Spiellogik, Fallback auf die lokale Engine.

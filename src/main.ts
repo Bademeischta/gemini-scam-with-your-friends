@@ -5,7 +5,7 @@ import { VoiceOut } from './audio/voice';
 import { DEFAULT_BINDINGS } from './config/input-defaults';
 import { TUNING } from './config/tuning';
 import { createGame } from './core/createGame';
-import { setRunPersistence } from './core/run';
+import { setRunAi, setRunPersistence } from './core/run';
 import { setSavesReady, setServices, type Services } from './core/services';
 import { installTestHook } from './debug/testHook';
 import { applyDomTranslations, i18n } from './i18n';
@@ -20,6 +20,7 @@ import { ReviewScene } from './scenes/ReviewScene';
 import { StatsScene } from './scenes/StatsScene';
 import { TitleScene } from './scenes/TitleScene';
 import { DeviceTracker, detectFormFactor, detectInitialKind, readDeviceEnv } from './systems/input/device';
+import { AiBrain } from './systems/ai/brain';
 import { InputManager } from './systems/input/InputManager';
 import { enterFullscreen, fullscreenSupported, isStandalone } from './systems/platform/fullscreen';
 import { installBrowserGuards, isTextField } from './systems/platform/guards';
@@ -55,6 +56,9 @@ function attachDomInput(win: Window, input: InputManager): void {
   win.addEventListener('blur', () => input.releaseAll());
 }
 
+/** Speicherort des API-Schlüssels der KI-Anrufer (nur in diesem Browser). */
+const AI_KEY = 'ai.key';
+
 function boot(): void {
   const win = window;
   installBrowserGuards(win);
@@ -89,7 +93,19 @@ function boot(): void {
   const speech = new SpeechInput(win, 'de-DE');
   // Spielstände: IndexedDB (sonst localStorage); die Boot-Szene wartet, bis sie geladen sind.
   const saves = new SaveManager(new MemoryKv());
-  const s: Services = { viewport, input, device, pause, storage, settings, audio, sfx: createUiSfx(audio), voice, speech, saves };
+  // KI-Anrufer: Der API-Schlüssel liegt nur in diesem Browser (localStorage), nie im Repo oder Build.
+  const ai = new AiBrain({
+    keys: {
+      get: () => storage.read<string>(AI_KEY, ''),
+      set: (k) => storage.write(AI_KEY, k),
+      clear: () => storage.remove(AI_KEY),
+    },
+    enabled: () => settings.get().aiCallers,
+    online: () => navigator.onLine !== false,
+    text: i18n,
+  });
+  setRunAi(ai);
+  const s: Services = { viewport, input, device, pause, storage, settings, audio, sfx: createUiSfx(audio), voice, speech, saves, ai };
   setServices(s);
   setSavesReady(
     openBestKv(win, storage)

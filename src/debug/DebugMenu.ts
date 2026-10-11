@@ -1,10 +1,12 @@
 import type Phaser from 'phaser';
 import { currentRun, debugRun, hasRun } from '../core/run';
+import { services } from '../core/services';
 import { t } from '../i18n';
 
 /**
  * Debug-Menü (nur Dev- und Test-Build, F9): Tag direkt wählen, Geld setzen, Quota überspringen,
  * Tag beenden, alles freischalten – damit sich spätere Tage testen lassen, ohne alles durchzuspielen.
+ * Zeigt außerdem den Token-Verbrauch der KI-Anrufer (letzter Anruf und gesamt).
  * Ein einfaches DOM-Panel über dem Spiel; im Produktions-Build wird diese Datei nicht geladen.
  */
 export function installDebugMenu(game: Phaser.Game, doc: Document = document): void {
@@ -68,6 +70,12 @@ export function installDebugMenu(game: Phaser.Game, doc: Document = document): v
     return l;
   };
 
+  const tokens = doc.createElement('small');
+  tokens.id = 'debug-tokens';
+  tokens.style.maxWidth = '260px';
+  const tokensLabel = doc.createElement('strong');
+  tokensLabel.textContent = t('debug.tokens');
+
   panel.append(
     title,
     row(label('debug.day'), dayIn, button('debug-go', t('debug.go'), () => startDay(game, Number(dayIn.value)))),
@@ -75,13 +83,29 @@ export function installDebugMenu(game: Phaser.Game, doc: Document = document): v
     button('debug-skip', t('debug.skipQuota'), () => debugRun.skipQuota()),
     button('debug-end', t('debug.endDay'), () => debugRun.endDaySoon()),
     unlockBtn,
+    tokensLabel,
+    tokens,
     button('debug-close', t('debug.close'), () => setOpen(false)),
     hint,
   );
   doc.body.append(panel);
 
+  let timer: ReturnType<typeof setInterval> | null = null;
+  function syncTokens(): void {
+    const ai = services().ai;
+    const call = hasRun() ? currentRun().phone.latestAiSession()?.usage : undefined;
+    const tot = ai.total;
+    tokens.textContent =
+      tot.requests === 0
+        ? t('debug.tokensNone')
+        : t('debug.tokensLine', { cin: call?.input ?? 0, cout: call?.output ?? 0, creq: call?.requests ?? 0, tin: tot.input, tout: tot.output, treq: tot.requests, cache: tot.cacheRead });
+  }
+
   function setOpen(on: boolean): void {
     panel.style.display = on ? 'grid' : 'none';
+    if (timer) clearInterval(timer);
+    timer = on ? setInterval(syncTokens, 500) : null;
+    if (on) syncTokens();
     if (!on || !hasRun()) return;
     const r = currentRun();
     dayIn.value = String(r.shift.day);

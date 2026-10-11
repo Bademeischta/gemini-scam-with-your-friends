@@ -33,6 +33,41 @@ export interface SpeechHandlers {
   error?(code: string): void;
 }
 
+/**
+ * Warum die Spracheingabe nicht geht (für eine klare Meldung an den Spieler):
+ * - unsupported: Der Browser hat keine Spracherkennung (z. B. Firefox, manche WebViews).
+ * - insecure: Seite nicht über HTTPS geladen – Mikrofon gesperrt.
+ * - denied: Mikrofon-Zugriff verweigert (Browser- oder System-Einstellung).
+ * - service: Erkennungsdienst nicht erlaubt (iPhone: „Siri & Diktat“ aus, oder Web-App vom Home-Bildschirm).
+ * - noMic: kein Mikrofon bzw. von einer anderen App belegt.
+ * - network: Erkennung braucht eine Internetverbindung (Chrome, Safari schicken Audio an einen Dienst).
+ * - language: Deutsch wird nicht unterstützt.
+ * - failed: Start ging aus einem anderen Grund schief.
+ */
+export const MIC_ISSUES = ['unsupported', 'insecure', 'denied', 'service', 'noMic', 'network', 'language', 'failed'] as const;
+export type MicIssue = (typeof MIC_ISSUES)[number];
+
+/** Fehlercode der Web-Speech-API → Grund; null = harmlos (nichts gehört, abgebrochen). */
+export function micIssueFor(code: string): MicIssue | null {
+  switch (code) {
+    case 'not-allowed':
+      return 'denied';
+    case 'service-not-allowed':
+      return 'service';
+    case 'audio-capture':
+      return 'noMic';
+    case 'network':
+      return 'network';
+    case 'language-not-supported':
+      return 'language';
+    case 'no-speech':
+    case 'aborted':
+      return null;
+    default:
+      return 'failed';
+  }
+}
+
 function ctorOf(win: Window): RecognitionCtor | null {
   const w = win as Window & { SpeechRecognition?: RecognitionCtor; webkitSpeechRecognition?: RecognitionCtor };
   return w.SpeechRecognition ?? w.webkitSpeechRecognition ?? null;
@@ -57,11 +92,22 @@ export class SpeechInput {
     return ctorOf(win) !== null;
   }
 
+  /** Grund, warum es gar nicht erst geht (null = einen Versuch wert). */
+  static diagnose(win: Window): MicIssue | null {
+    if (win.isSecureContext === false) return 'insecure';
+    if (!ctorOf(win)) return 'unsupported';
+    return null;
+  }
+
   get listening(): boolean {
     return this.rec !== null;
   }
 
-  /** Zuhören beginnen. Liefert false, wenn es nicht geht. */
+  /**
+   * Zuhören beginnen. Liefert false, wenn es nicht geht. Muss direkt aus einer Nutzer-Geste kommen
+   * (Safari erlaubt das Mikrofon nur beim Loslassen bzw. Klick, nicht beim Aufsetzen des Fingers).
+   * `ptt` hört durchgehend bis zum Loslassen, `auto` endet nach einer Sprechpause.
+   */
   start(mode: MicMode, handlers: SpeechHandlers): boolean {
     const Ctor = ctorOf(this.win);
     if (!Ctor) return false;

@@ -1,8 +1,11 @@
 import { TUNING } from '../../config/tuning';
+import { addUsage, emptyTotals, timeoutSignal, type AiBrain, type AiStatus, type UsageTotals } from '../ai/brain';
+import { SentenceSplitter } from '../ai/rules';
+import type { AiFailure, AiMessage } from '../ai/transport';
 import type { CallerDef } from '../conversation/caller';
 import { CardDeck, type Card } from '../conversation/cards';
 import type { SchemeDef } from '../../data/schemes';
-import type { InputSource, Loot, RemoteEvent, Reply } from '../conversation/engine';
+import type { AiPlan, Conversation, InputSource, Loot, RemoteEvent, Reply } from '../conversation/engine';
 import { LinePicker, type LineSource } from '../conversation/lines';
 import { Rng } from '../rng/rng';
 import type { CallEvent, CallManager, CallRecord } from './CallManager';
@@ -30,6 +33,21 @@ export class CallSession {
   speaker = false;
   /** Der Spieler hat aufgelegt (Anrufer wird mitten im Satz abgeschnitten). */
   hungUp = false;
+  /** Wer antwortet: KI-Anrufer oder lokale Engine (bei Fehlern fällt der Anruf zurück). */
+  engine: 'ai' | 'local' = 'local';
+  /** Warum gerade die lokale Engine antwortet (Hinweis in der Telefon-App). */
+  aiNotice: AiStatus | AiFailure | null = null;
+  /** Die KI überlegt gerade (Eingaben warten, Karten sind gesperrt). */
+  thinking = false;
+  /** Token-Verbrauch dieses Anrufs. */
+  readonly usage: UsageTotals = emptyTotals();
+  /** Verlauf mit der KI (Spieler, Regie, Antwort). */
+  readonly aiHistory: AiMessage[] = [];
+  /** Vom Spiel gesprochene Anrufer-Zeilen seit der letzten KI-Antwort (für die Regie). */
+  aiEvents: string[] = [];
+  /** Eingabe, die während des Überlegens kam (wird danach gesagt). */
+  pending: { text: string; source: InputSource; card?: Card } | null = null;
+  abort: AbortController | null = null;
   private readonly queue: TranscriptLine[] = [];
   private current: TranscriptLine | null = null;
   private wait = 0;
@@ -72,11 +90,17 @@ export class CallSession {
     for (const ref of reply.lines) {
       const text = this.picker.text(ref);
       if (!text) continue;
-      const line: TranscriptLine = { id: this.nextId++, who: 'caller', text, shown: 0 };
-      this.transcript.push(line);
-      this.queue.push(line);
+      this.addCallerText(text);
+      if (this.engine === 'ai') this.aiEvents.push(text);
     }
     if (reply.loot) this.hub.capture(this, reply.loot);
+  }
+
+  /** Zeile des Anrufers einreihen (Untertitel, Stimme). */
+  addCallerText(text: string): void {
+    const line: TranscriptLine = { id: this.nextId++, who: 'caller', text, shown: 0 };
+    this.transcript.push(line);
+    this.queue.push(line);
   }
 
   addPlayer(text: string, source: InputSource, dTrust: number): void {
@@ -175,7 +199,8 @@ export type PhoneEvent =
   | { type: 'line'; desk: number; session: CallSession; line: TranscriptLine }
   | { type: 'ended'; desk: number; session: CallSession; record: CallRecord }
   | { type: 'capture'; desk: number; capture: Capture }
-  | { type: 'scheme'; desk: number; scheme: SchemeDef | null };
+  | { type: 'scheme'; desk: number; scheme: SchemeDef | null }
+  | { type: 'aiFallback'; desk: number; session: CallSession; error: AiFailure };
 
 /**
  * Verbindet den CallManager mit der Telefon-App: hält je Platz die laufende (bzw. zuletzt beendete)
@@ -189,6 +214,8 @@ export class PhoneHub {
   private readonly chosen = new Map<number, SchemeDef | null>();
   /** Was man über die Anrufer herausgefunden hat (Kundenkartei). */
   readonly dossier = new Dossier();
+  /** KI-Anrufer (optional, mit Schlüssel des Spielers); null = immer lokale Engine. */
+  private ai: AiBrain | null = null;
 
   constructor(
     readonly calls: CallManager,
@@ -208,25 +235,116 @@ export class PhoneHub {
     return this.sessions.get(desk) ?? null;
   }
 
+  /** Jüngste Sitzung mit KI-Verbrauch (Debug-Menü). */
+  latestAiSession(): CallSession | null {
+    let best: CallSession | null = null;
+    for (const s of this.sessions.values()) if (s.usage.requests > 0 && (!best || s.callId > best.callId)) best = s;
+    return best;
+  }
+
   /** Abheben am Platz; Karten werden gleich ausgeteilt. */
   answer(desk: number): CallSession | null {
     this.calls.answer(desk);
     return this.session(desk);
   }
 
+  setAi(ai: AiBrain | null): void {
+    this.ai = ai;
+  }
+
+  get aiBrain(): AiBrain | null {
+    return this.ai;
+  }
+
   say(desk: number, text: string, source: InputSource, card?: Card): Reply | null {
     const s = this.sessions.get(desk);
     const c = this.calls.conversation(desk);
     if (!s || !c || c.state !== 'active') return null;
+    // Während die KI überlegt: die (letzte) Eingabe merken und danach sagen.
+    if (s.thinking) {
+      s.pending = { text, source, ...(card ? { card } : {}) };
+      return null;
+    }
     const before = c.trust;
     // Spielerzeile vor der Antwort eintragen (Reihenfolge im Verlauf).
     s.addPlayer(text, source, 0);
     const playerLine = s.transcript[s.transcript.length - 1]!;
     if (card) s.markUsed(card);
-    const reply = this.calls.say(desk, text, source);
+    // Floskeln zählen auch für die lokale Engine nicht doppelt – nur KI-Züge nutzen den Zähler.
+    if (this.ai && s.engine === 'ai') {
+      const plan = c.planAi(text, source);
+      if (plan && !plan.local) {
+        void this.aiTurn(s, c, plan, playerLine, before);
+        return null;
+      }
+    }
+    return this.sayLocal(s, text, source, playerLine, before);
+  }
+
+  private sayLocal(s: CallSession, text: string, source: InputSource, playerLine: TranscriptLine, before: number): Reply | null {
+    const reply = this.calls.say(s.desk, text, source);
     if (reply) playerLine.dTrust = Math.round(reply.trust - before);
     if (s.active) s.deal();
     return reply;
+  }
+
+  /** Ein Zug mit dem KI-Anrufer: streamen (Satz für Satz), dann begrenzt anwenden; bei Fehlern lokal. */
+  private async aiTurn(s: CallSession, c: Conversation, plan: AiPlan, playerLine: TranscriptLine, before: number): Promise<void> {
+    const ai = this.ai!;
+    s.thinking = true;
+    c.waiting = true;
+    s.abort = new AbortController();
+    const limit = timeoutSignal(s.abort.signal, TUNING.ai.timeoutMs);
+    const splitter = new SentenceSplitter();
+    let streamed = '';
+    const floskel = ai.floskeln.peek(plan.text);
+    const events = s.aiEvents;
+    s.aiEvents = [];
+    const res = await ai.turn({
+      caller: s.caller,
+      conversation: c,
+      plan,
+      history: s.aiHistory,
+      events,
+      floskel,
+      signal: limit.signal,
+      onSay: (text) => {
+        streamed = text;
+        if (s.active && !s.hungUp) for (const sentence of splitter.push(text)) s.addCallerText(sentence);
+      },
+    });
+    limit.cancel();
+    s.abort = null;
+    s.thinking = false;
+    c.waiting = false;
+    addUsage(s.usage, res.usage);
+    addUsage(ai.total, res.usage);
+    // Inzwischen aufgelegt (oder neuer Anruf): nur der Verbrauch zählt.
+    if (!s.active || c.state === 'ended' || this.sessions.get(s.desk) !== s) return;
+    if (!res.ok) {
+      // Rückfall: Dieser Satz geht an die lokale Engine; bei Schlüssel-Problemen der Rest des Anrufs auch.
+      s.aiNotice = res.error;
+      if (res.error === 'auth' || res.error === 'permission' || res.error === 'refusal') s.engine = 'local';
+      this.emit({ type: 'aiFallback', desk: s.desk, session: s, error: res.error });
+      if (c.state === 'active') this.sayLocal(s, plan.text, plan.source, playerLine, before);
+      this.sayPending(s);
+      return;
+    }
+    // Rest des gestreamten Textes (bzw. alles, falls nichts gestreamt wurde).
+    const rest = streamed ? splitter.flush(streamed) : [res.verdict.say];
+    for (const sentence of rest) s.addCallerText(sentence);
+    const factor = ai.floskeln.use(plan.text);
+    const reply = this.calls.act(s.desk, (conv) => conv.applyAi(plan, res.verdict, factor));
+    if (reply) playerLine.dTrust = Math.round(reply.trust - before);
+    s.aiHistory.push(...res.messages);
+    if (s.active) s.deal();
+    this.sayPending(s);
+  }
+
+  private sayPending(s: CallSession): void {
+    const p = s.pending;
+    s.pending = null;
+    if (p && s.active) this.say(s.desk, p.text, p.source, p.card);
   }
 
   hold(desk: number, on: boolean): void {
@@ -236,6 +354,7 @@ export class PhoneHub {
   hangUp(desk: number): void {
     const s = this.sessions.get(desk);
     if (s?.active) s.hungUp = true;
+    s?.abort?.abort();
     this.calls.hangUp(desk);
   }
 
@@ -313,6 +432,9 @@ export class PhoneHub {
       case 'answered': {
         const caller = this.callers.find((c) => c.id === e.conversation.caller.id) ?? e.conversation.caller;
         const s = new CallSession(e.desk, e.callId, caller, this, this.src, new Rng(e.callId * 7919 + 17));
+        const status = this.ai?.status() ?? 'off';
+        s.engine = status === 'ready' ? 'ai' : 'local';
+        s.aiNotice = status === 'ready' || status === 'off' ? null : status;
         this.sessions.set(e.desk, s);
         const pre = this.chosen.get(e.desk);
         if (pre) e.conversation.setScheme(pre);

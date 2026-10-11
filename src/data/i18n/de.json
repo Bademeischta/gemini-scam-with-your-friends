@@ -314,7 +314,8 @@
         "look": "Aussehen",
         "sound": "Ton",
         "voice": "Sprache",
-        "info": "Info"
+        "info": "Info",
+        "ai": "KI"
       },
       "wallpaper": "Hintergrund",
       "theme": "Farbschema",
@@ -357,7 +358,28 @@
       "micTestListening": "Sprich jetzt …",
       "micTestResult": "Erkannt: „{text}“",
       "micTestNothing": "Nichts gehört. Mikrofon erlaubt?",
-      "micUnsupported": "Dieser Browser kann keine Spracheingabe. Karten und Tippen gehen immer."
+      "micFallbackHint": "Im Telefon öffnet „Sprechen“ dann das Textfeld – dort mit dem Mikrofon der Tastatur diktieren.",
+      "ai": {
+        "toggle": "KI-Anrufer (Claude)",
+        "placeholder": "API-Schlüssel einfügen …",
+        "save": "Speichern",
+        "test": "Verbindung testen",
+        "clear": "Schlüssel löschen",
+        "saved": "Schlüssel gespeichert.",
+        "cleared": "Schlüssel gelöscht.",
+        "testing": "Teste die Verbindung …",
+        "ok": "Verbindung klappt. Die Anrufer antworten jetzt mit KI.",
+        "keySet": "Schlüssel: {key}",
+        "keyNone": "Kein Schlüssel hinterlegt – die Anrufer nutzen die lokale Engine.",
+        "status": {
+          "ready": "Status: KI-Anrufer aktiv.",
+          "off": "Status: aus – lokale Engine.",
+          "noKey": "Status: ohne Schlüssel – lokale Engine.",
+          "offline": "Status: offline – lokale Engine."
+        },
+        "usage": "Verbrauch seit Spielstart: {input} Tokens rein, {output} raus · Anfragen: {requests}.",
+        "privacy": "Modell {model}. Der Schlüssel bleibt nur in diesem Browser und geht direkt an api.anthropic.com – nie ins Spiel, Repo oder an andere Server. Die Kosten trägt dein Konto."
+      }
     },
     "toast": {
       "bossMail": {
@@ -586,10 +608,46 @@
       "listening": "Ich höre zu …",
       "hearing": "Ich höre: {text}",
       "micDeniedTitle": "Kein Mikrofon",
-      "micDenied": "Der Browser hat das Mikrofon nicht erlaubt. Karten und Tippen gehen immer.",
       "summary": "Dauer {time} · Vertrauen am Ende {trust} %",
       "phaseScheme": "{phase} · {scheme} · {time}",
-      "scheme": "Masche"
+      "scheme": "Masche",
+      "processing": "Verstehe …",
+      "micState": {
+        "idle": "Sprechen",
+        "listening": "Hört zu",
+        "processing": "Verarbeitet",
+        "error": "Mikro: Fehler"
+      },
+      "micIssue": {
+        "off": "Spracheingabe ist in der Systemsteuerung aus.",
+        "unsupported": "Dieser Browser hat keine Spracherkennung.",
+        "insecure": "Mikrofon nur über eine sichere Verbindung (https).",
+        "denied": "Mikrofon nicht erlaubt (Browser- oder Systemeinstellung).",
+        "service": "Spracherkennung gesperrt. iPhone: „Siri & Diktat“ einschalten; als Home-Bildschirm-App oft gesperrt – dann im Browser spielen.",
+        "noMic": "Kein Mikrofon gefunden oder es ist gerade belegt.",
+        "network": "Spracherkennung braucht Internet.",
+        "language": "Spracherkennung kann kein Deutsch.",
+        "failed": "Spracherkennung ließ sich nicht starten."
+      },
+      "micFallback": "Tippe ins Feld und nutze das Mikrofon der Tastatur zum Diktieren.",
+      "micFallbackTap": "Nochmal auf „Sprechen“ tippen öffnet das Textfeld zum Diktieren.",
+      "thinking": "{name} überlegt …",
+      "ai": {
+        "tag": "KI",
+        "fallbackTitle": "KI-Anrufer pausiert",
+        "noKey": "Lokale Engine: kein KI-Schlüssel (Systemsteuerung, Reiter KI).",
+        "offline": "Lokale Engine: offline.",
+        "auth": "KI-Schlüssel ungültig – lokale Engine übernimmt.",
+        "permission": "KI-Schlüssel ohne Berechtigung – lokale Engine übernimmt.",
+        "rate": "KI ausgelastet (zu viele Anfragen) – dieser Satz lokal.",
+        "overloaded": "KI-Dienst überlastet – dieser Satz lokal.",
+        "network": "Keine Verbindung zur KI – dieser Satz lokal.",
+        "timeout": "KI antwortet zu langsam – dieser Satz lokal.",
+        "refusal": "Die KI wollte hier nicht antworten – lokale Engine übernimmt.",
+        "badRequest": "KI-Anfrage abgelehnt – dieser Satz lokal.",
+        "aborted": "KI-Anfrage abgebrochen.",
+        "other": "KI-Antwort unbrauchbar – dieser Satz lokal."
+      }
     },
     "phase": {
       "einstieg": "Einstieg",

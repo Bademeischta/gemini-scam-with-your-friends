@@ -124,7 +124,8 @@ test.describe('Arbeitstag und Run', () => {
     // HUD im Büro (HUD-01).
     await expect.poll(async () => (await hook<{ day: number; quota: number } | null>(page, 'hud'))?.quota).toBe(600);
     await shot(page, info, 'day-hud');
-    await expectHook(page, 'scene', 'Review');
+    // Der kurze Tag läuft in Spielzeit; unter Parallel-Last (Software-Rendering) dauert das länger.
+    await expect.poll(() => hook(page, 'scene'), { timeout: 60_000 }).toBe('Review');
     await expect.poll(async () => (await review(page))?.phase, { timeout: 40_000 }).toBe('verdict');
     expect((await review(page))!.passed).toBe(false);
     await shot(page, info, 'day-fired');
@@ -207,7 +208,7 @@ test.describe('Arbeitstag und Run', () => {
     await enterOfficeByTouch(page);
     await expect.poll(async () => (await hook<{ day: number } | null>(page, 'hud'))?.day).toBe(1);
     await shot(page, info, 'day-hud');
-    await expectHook(page, 'scene', 'Review');
+    await expect.poll(() => hook(page, 'scene'), { timeout: 60_000 }).toBe('Review');
     const vp = page.viewportSize()!;
     // Rechts tippen und halten: Die Figur läuft nach rechts.
     const x0 = (await review(page))!.playerX;
