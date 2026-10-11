@@ -214,9 +214,17 @@ export async function padAxis(page: Page, axis: number, value: number): Promise<
 
 export type Dir = 'up' | 'down' | 'left' | 'right';
 
+/** Geschätzter Nachlauf je Impuls (px): Latenz zwischen Taste-runter und Taste-hoch im Testbrowser plus Abbremsen. */
+export interface WalkEstimate {
+  extra: number;
+}
+
 /**
  * Läuft geregelt zu einem Zielpunkt: kurze Eingabe-Impulse in Richtung der größten Abweichung,
- * danach neu messen. Robust auch bei niedriger Bildrate (Software-Rendering in CI).
+ * danach neu messen. Der Nachlauf je Impuls (Befehls-Latenz des Testbrowsers, Abbremsen) wird
+ * gemessen und von der nächsten Impulslänge abgezogen – sonst überschießen kurze Restwege immer
+ * wieder (ein 150-ms-Impuls läuft im Headless-Browser rund doppelt so weit wie gerechnet).
+ * Robust auch bei niedriger Bildrate (Software-Rendering in CI).
  */
 export async function approach(
   page: Page,
@@ -226,7 +234,9 @@ export async function approach(
   // aber klar unter dem Interaktionsradius (18 px).
   tol = 9,
   maxIter = 40,
+  est: WalkEstimate = { extra: 0 },
 ): Promise<OfficeState> {
+  const speed = 72;
   for (let i = 0; i < maxIter; i++) {
     const s = await office(page);
     const dx = target.x - s.x;
@@ -235,10 +245,14 @@ export async function approach(
     const vertical = Math.abs(dy) > tol && (Math.abs(dy) >= Math.abs(dx) || Math.abs(dx) <= tol);
     const d = vertical ? dy : dx;
     const dir: Dir = vertical ? (d < 0 ? 'up' : 'down') : d < 0 ? 'left' : 'right';
-    // 72 px/s Laufgeschwindigkeit; knapp die ganze Strecke pro Impuls (Beschleunigung kostet etwas).
-    const ms = Math.max(60, Math.min(900, (Math.abs(d) / 72) * 1000 * 0.95));
+    // Knapp die Reststrecke abzüglich des gemessenen Nachlaufs; mindestens ein kurzes Antippen.
+    const ms = Math.max(20, Math.min(900, ((Math.abs(d) - est.extra) / speed) * 1000 * 0.95));
     await pulse(dir, ms);
     await page.waitForTimeout(90);
+    const after = await office(page);
+    const moved = Math.abs(vertical ? after.y - s.y : after.x - s.x);
+    // Nur echte Bewegung zählt (an einer Wand bleibt man stehen); gleitender Mittelwert.
+    if (moved > 1) est.extra = Math.max(0, est.extra * 0.5 + (moved - (ms / 1000) * speed) * 0.5);
   }
   return office(page);
 }
@@ -246,7 +260,8 @@ export async function approach(
 /** Wegpunkte nacheinander anlaufen. */
 export async function walkPath(page: Page, points: { x: number; y: number }[], pulse: (dir: Dir, ms: number) => Promise<void>): Promise<OfficeState> {
   let s = await office(page);
-  for (const p of points) s = await approach(page, p, pulse);
+  const est: WalkEstimate = { extra: 0 };
+  for (const p of points) s = await approach(page, p, pulse, 9, 40, est);
   return s;
 }
 
