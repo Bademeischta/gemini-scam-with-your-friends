@@ -537,7 +537,8 @@ class PhoneView implements AppView {
         this.micIssue = issue;
         this.micState = 'error';
         this.setMic(`${t(`calls.phone.micIssue.${issue}`)} ${t('calls.phone.micFallbackTap')}`);
-        this.ctx.os.toast({ icon: 'mic', title: t('calls.phone.micDeniedTitle'), body: t(`calls.phone.micIssue.${issue}`) });
+        // Auf dem Handy reicht die Hinweiszeile: Eine Benachrichtigung läge genau über dem Mikrofon-Knopf.
+        if (!this.ctx.os.compact) this.ctx.os.toast({ icon: 'mic', title: t('calls.phone.micDeniedTitle'), body: t(`calls.phone.micIssue.${issue}`) });
       },
     });
     if (!ok) {
