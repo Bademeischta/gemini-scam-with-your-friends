@@ -53,7 +53,9 @@ class SettingsView implements AppView {
   private readonly aiSave: OsButton;
   private readonly aiTest: OsButton;
   private readonly aiClear: OsButton;
-  private readonly aiNote: Phaser.GameObjects.Text;
+  /** Status, Verbrauch je Anbieter, Hinweise (scrollbar, damit es auch auf dem Handy reinpasst). */
+  private readonly aiNote: OsTextView;
+  private aiNoteText = '';
   private readonly aiG: Phaser.GameObjects.Graphics;
   private aiInput: Rect | null = null;
   private aiResult = '';
@@ -179,8 +181,8 @@ class SettingsView implements AppView {
     this.aiTest = new OsButton(host, `${id}:aiTest`, { label: t('os.settings.ai.test'), onClick: () => void this.testAi() });
     this.aiClear = new OsButton(host, `${id}:aiClear`, { label: t('os.settings.ai.clear'), onClick: () => this.clearKey() });
     this.aiG = host.scene.add.graphics();
-    this.aiNote = note();
-    host.container.add([this.aiG, this.aiNote]);
+    host.container.add(this.aiG);
+    this.aiNote = new OsTextView(host, `${id}:aiNote`, '');
     this.syncActive();
     this.syncLabels();
   }
@@ -217,7 +219,7 @@ class SettingsView implements AppView {
       aiStatus: this.ctx.host.s.ai.status(),
       aiKey: this.ctx.host.s.ai.hasKey(),
       aiKeys: AI_PROVIDERS.filter((p) => this.ctx.host.s.ai.hasKey(p)),
-      aiNote: this.aiNote.text,
+      aiNote: this.aiNoteText,
       aiInputRect: this.aiInputCss(),
     };
   }
@@ -426,7 +428,11 @@ class SettingsView implements AppView {
     if (this.aiResult) lines.push(this.aiResult);
     lines.push(t(providerDef(p).free ? 'os.settings.ai.free' : 'os.settings.ai.paid'));
     lines.push(t('os.settings.ai.privacy'));
-    this.aiNote.setText(lines.join('\n'));
+    const text = lines.join('\n');
+    if (text !== this.aiNoteText) {
+      this.aiNoteText = text;
+      this.aiNote.setContent(text);
+    }
     this.aiTest.setEnabled(ai.hasKey() && !this.aiTesting);
     this.aiClear.setEnabled(ai.hasKey());
   }
@@ -558,39 +564,42 @@ class SettingsView implements AppView {
     this.aiInput = null;
     if (aiPage) {
       const top = ch + 2 * gap;
-      // Schalter nebeneinander, wenn Platz ist; Zeilen schrumpfen bei wenig Höhe (Platz für den Verbrauch).
-      const sideBySide = w >= 200 * u;
+      // Breit und niedrig (Handy quer): Bedienung links, Hinweise rechts; sonst untereinander.
+      const split = w > 2 * (h - top);
+      const cw = split ? Math.round(w * 0.56) : w;
+      // Schalter nebeneinander, wenn Platz ist; Zeilen schrumpfen bei wenig Höhe (Platz für die Hinweise).
+      const sideBySide = cw >= 200 * u;
       const rows = sideBySide ? 5 : 6;
-      const rowH = Math.max(12 * u, Math.min(ch, Math.floor((h - top - rows * gap - 40 * u) / rows)));
+      const rowH = Math.max(12 * u, Math.min(ch, Math.floor((h - top - rows * gap - (split ? 0 : 40 * u)) / rows)));
       let ay = top;
       if (sideBySide) {
-        const tw = (w - gap) / 2;
+        const tw = (cw - gap) / 2;
         this.aiToggle.layout(0, ay, tw, rowH);
-        this.aiChain.layout(tw + gap, ay, w - tw - gap, rowH);
+        this.aiChain.layout(tw + gap, ay, cw - tw - gap, rowH);
       } else {
-        this.aiToggle.layout(0, ay, w, rowH);
+        this.aiToggle.layout(0, ay, cw, rowH);
         ay += rowH + gap;
-        this.aiChain.layout(0, ay, w, rowH);
+        this.aiChain.layout(0, ay, cw, rowH);
       }
       ay += rowH + gap;
-      const pw = (w - 2 * u * (this.aiProviders.length - 1)) / this.aiProviders.length;
+      const pw = (cw - 2 * u * (this.aiProviders.length - 1)) / this.aiProviders.length;
       this.aiProviders.forEach((b, i) => b.layout(i * (pw + 2 * u), ay, pw, rowH));
       ay += rowH + gap;
-      this.aiModel.layout(0, ay, w, rowH);
+      this.aiModel.layout(0, ay, cw, rowH);
       ay += rowH + gap;
-      const saveW = Math.min(w * 0.35, this.aiSave.preferredWidth() + 8 * u);
-      this.aiInput = { x: 0, y: ay, w: w - saveW - gap, h: rowH };
+      const saveW = Math.min(cw * 0.35, this.aiSave.preferredWidth() + 8 * u);
+      this.aiInput = { x: 0, y: ay, w: cw - saveW - gap, h: rowH };
       const th = this.ctx.host.theme();
       this.aiG.fillStyle(hex('ink0'), 1).fillRect(0, ay, this.aiInput.w, rowH);
       this.aiG.fillStyle(hex(th.windowDark), 1).fillRect(u, ay + u, this.aiInput.w - 2 * u, rowH - 2 * u);
-      this.aiSave.layout(w - saveW, ay, saveW, rowH);
+      this.aiSave.layout(cw - saveW, ay, saveW, rowH);
       ay += rowH + gap;
-      const bw = (w - gap) / 2;
+      const bw = (cw - gap) / 2;
       this.aiTest.layout(0, ay, bw, rowH);
-      this.aiClear.layout(bw + gap, ay, w - bw - gap, rowH);
+      this.aiClear.layout(bw + gap, ay, cw - bw - gap, rowH);
       ay += rowH + gap;
-      const d = this.ctx.host.dpr();
-      this.aiNote.setStyle({ fontSize: `${Math.round(11 * d)}px`, color: PALETTE[this.ctx.host.theme().textDim], wordWrap: { width: w, useAdvancedWrap: true } }).setPosition(0, ay);
+      if (split) this.aiNote.layout(cw + gap, top, w - cw - gap, h - top);
+      else this.aiNote.layout(0, ay, w, Math.max(20 * u, h - ay));
       this.syncAi();
     }
 
