@@ -1,0 +1,141 @@
+import type Phaser from 'phaser';
+import { currentRun, hasRun } from '../core/run';
+import type { Services } from '../core/services';
+import { i18n } from '../i18n';
+import { isFullscreen } from '../systems/platform/fullscreen';
+
+/**
+ * Nur im E2E-Build (VITE_E2E=1): liest Spielzustand für Playwright aus.
+ * Kein Schreibzugriff – Tests steuern das Spiel ausschließlich über echte Eingaben.
+ */
+interface Rect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+export interface TestHook {
+  ready: boolean;
+  scene(): string | undefined;
+  titleState(): string | undefined;
+  menuFocus(): string | undefined;
+  /** Menü-Buttons in CSS-Pixeln (für gezieltes Antippen in Tests). */
+  menuRects(): { id: string; x: number; y: number; w: number; h: number }[];
+  hintMode(): string;
+  /** Zustand der Spielerfigur im Büro. */
+  office(): { x: number; y: number; facing: string; seated: number | null; desktop: boolean; focus: string | null; prompt: string | null; zoom: number } | undefined;
+  /** Zustand von MogelOS (Fenster, Fokus, Klickziele in CSS-Pixeln) oder null, wenn nicht am PC. */
+  os(): unknown;
+  /** Touch-Steuerelemente in CSS-Pixeln. */
+  touchRects(): { stickZone: Rect; stickRest: { x: number; y: number }; action: Rect; pause: Rect } | undefined;
+  /** Alle aktiven Szenen (oberste zuletzt). */
+  scenes(): string[];
+  inputKind(): string;
+  formFactor(): string;
+  viewport(): Services['viewport']['state'];
+  canvas(): { width: number; height: number; cssWidth: string; cssHeight: string };
+  paused(): boolean;
+  pauseReasons(): string[];
+  audioState(): string;
+  fullscreen(): boolean;
+  rotateHintVisible(): boolean;
+  locale(): string;
+  /** Anrufe aller Plätze, Verlauf, Notizen und Klingel-Pfeile im Büro. */
+  calls(): unknown;
+  /** Sprachausgabe: verfügbar und zuletzt gesprochene Texte. */
+  voice(): { supported: boolean; usable: boolean; spoken: string[] };
+  /** Arbeitstag: HUD, Chef, Bewertung, Bericht, Statistik-Szene, Run-Zustand, Spielstände. */
+  hud(): unknown;
+  titleNotice(): string;
+  boss(): unknown;
+  review(): unknown;
+  report(): unknown;
+  stats(): unknown;
+  run(): unknown;
+  saves(): unknown;
+  errors: string[];
+}
+
+declare global {
+  interface Window {
+    __MASCHE__?: TestHook;
+  }
+}
+
+export function installTestHook(game: Phaser.Game, s: Services): void {
+  const hook: TestHook = {
+    ready: false,
+    scene: () => game.scene.getScenes(true)[0]?.scene.key,
+    titleState: () => game.registry.get('titleState') as string | undefined,
+    menuFocus: () => game.registry.get('menuFocus') as string | undefined,
+    menuRects: () => (game.registry.get('menuRects') as { id: string; x: number; y: number; w: number; h: number }[] | undefined) ?? [],
+    hintMode: () => s.device.hintMode,
+    office: () => game.registry.get('office') as ReturnType<TestHook['office']>,
+    os: () => (game.registry.get('os') as unknown) ?? null,
+    touchRects: () => game.registry.get('touchRects') as ReturnType<TestHook['touchRects']>,
+    scenes: () => game.scene.getScenes(true).map((sc) => sc.scene.key),
+    inputKind: () => s.device.kind,
+    formFactor: () => s.device.formFactor,
+    viewport: () => s.viewport.state,
+    canvas: () => ({ width: game.canvas.width, height: game.canvas.height, cssWidth: game.canvas.style.width, cssHeight: game.canvas.style.height }),
+    paused: () => s.pause.paused,
+    pauseReasons: () => [...s.pause.activeReasons],
+    audioState: () => s.audio.state,
+    fullscreen: () => isFullscreen(),
+    rotateHintVisible: () => !(document.getElementById('rotate-hint')?.hidden ?? true),
+    locale: () => i18n.locale,
+    calls: () => {
+      const run = currentRun();
+      return {
+        views: run.calls.views(),
+        history: run.calls.history.map((r) => ({ desk: r.desk, callerId: r.callerId, outcome: r.outcome, trust: r.trust })),
+        notes: run.notes.notes.map((n) => ({ text: n.text, from: n.from })),
+        loot: run.ledger.items.map((i) => ({ callerId: i.callerId, schemeId: i.schemeId, kind: i.kind, value: i.value, amount: i.amount, input: i.input, status: i.status, attempts: i.attempts, bait: i.bait ?? false })),
+        team: run.shift.team,
+        personal: run.shift.personal,
+        schemes: run.calls.views().map((_, i) => run.phone.scheme(i)?.id ?? null),
+        dossier: Object.fromEntries(
+          run.phone.dossier.ids().map((id) => {
+            const e = run.phone.dossier.get(id)!;
+            return [id, { calls: e.calls, likes: [...e.likes], dislikes: [...e.dislikes], fans: [...e.fans], skeptics: [...e.skeptics], best: e.best, wins: e.wins }];
+          }),
+        ),
+        plauder: run.plauder.chats.map((c) => ({ handle: c.handle, unread: c.unread, messages: c.messages.length })),
+        arrows: (game.registry.get('ringArrows') as number | undefined) ?? 0,
+      };
+    },
+    hud: () => game.registry.get('hud') ?? null,
+    titleNotice: () => (game.registry.get('titleNotice') as string | undefined) ?? '',
+    boss: () => game.registry.get('boss') ?? null,
+    review: () => game.registry.get('review') ?? null,
+    report: () => game.registry.get('report') ?? null,
+    stats: () => game.registry.get('stats') ?? null,
+    run: () => {
+      if (!hasRun()) return null;
+      const r = currentRun();
+      return {
+        day: r.shift.day,
+        personal: r.shift.personal,
+        team: r.shift.team,
+        quota: r.shift.quota,
+        timeLeft: r.shift.timeLeft,
+        clockedIn: r.clockedIn,
+        clockedOut: r.clockedOut,
+        mails: r.mail.mails.map((m) => ({ from: m.from, read: m.read })),
+        unlockedApps: ['plauder', 'voucher', 'ferngucker', 'kartei', 'identomat'].filter((a) => r.unlocks.app(a)),
+        days: r.core.days.length,
+      };
+    },
+    saves: () => ({ backend: s.saves.backend, run: s.saves.run ? { day: s.saves.run.day, personal: s.saves.run.personal, days: s.saves.run.days.length } : null, stats: s.saves.stats, leaderboard: s.saves.leaderboard }),
+    voice: () => ({ supported: s.voice.supported, usable: s.voice.usable, spoken: [...s.voice.spoken] }),
+    errors: [],
+  };
+  window.addEventListener('error', (e) => hook.errors.push(String(e.message)));
+  window.__MASCHE__ = hook;
+  const markReady = (): void => {
+    if (game.scene.isActive('Title')) hook.ready = true;
+    else requestAnimationFrame(markReady);
+  };
+  requestAnimationFrame(markReady);
+}

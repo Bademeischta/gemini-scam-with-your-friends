@@ -1,0 +1,974 @@
+{
+  "calls": {
+    "roles": {
+      "bank": {
+        "label": "Bank",
+        "from": "von der Bank"
+      },
+      "amt": {
+        "label": "Amt",
+        "from": "vom Amt"
+      },
+      "technik": {
+        "label": "Technik-Support",
+        "from": "vom Technik-Support"
+      },
+      "familie": {
+        "label": "Familie",
+        "from": "aus der Familie"
+      },
+      "gewinn": {
+        "label": "Gewinnspiel",
+        "from": "vom Gewinnspiel"
+      },
+      "polizei": {
+        "label": "Polizei",
+        "from": "von der Polizei"
+      },
+      "arzt": {
+        "label": "Arztpraxis",
+        "from": "aus der Arztpraxis"
+      },
+      "lieferung": {
+        "label": "Paketdienst",
+        "from": "vom Paketdienst"
+      },
+      "krypto": {
+        "label": "Krypto-Firma",
+        "from": "von einer Krypto-Firma"
+      },
+      "raumfahrt": {
+        "label": "Kontrollzentrum",
+        "from": "vom Kontrollzentrum"
+      },
+      "kirche": {
+        "label": "Kirchengemeinde",
+        "from": "von der Kirchengemeinde"
+      },
+      "presse": {
+        "label": "Zeitung",
+        "from": "von der Zeitung"
+      }
+    },
+    "topics": {
+      "katzen": "Katzen",
+      "hunde": "Hunde",
+      "garten": "Garten",
+      "familie": "Familie",
+      "sterne": "Sterne",
+      "omen": "Omen",
+      "raumfahrt": "Raumfahrt",
+      "protokoll": "Protokoll",
+      "krypto": "Krypto",
+      "geld": "Geld",
+      "mode": "Mode",
+      "socialmedia": "Soziale Medien",
+      "fitness": "Fitness",
+      "essen": "Essen",
+      "kuehe": "Kühe",
+      "technik": "Technik",
+      "spiele": "Spiele",
+      "kirche": "Kirche",
+      "reisen": "Reisen",
+      "luxus": "Luxus",
+      "verschwoerung": "Verschwörungen",
+      "erfindungen": "Erfindungen",
+      "wissenschaft": "Wissenschaft",
+      "grammatik": "Grammatik",
+      "klatsch": "Klatsch",
+      "schlaf": "Schlaf",
+      "beschwerde": "Beschwerden",
+      "musik": "Musik",
+      "wetter": "Wetter",
+      "kaffee": "Kaffee",
+      "kuchen": "Kuchen",
+      "polizei": "Polizei",
+      "magie": "Magie",
+      "autos": "Autos",
+      "fussball": "Fußball",
+      "buecher": "Bücher"
+    },
+    "demands": {
+      "nummer": "Bürgernummer",
+      "code": "Guck-Code",
+      "gutschein": "Gutschein-Code",
+      "geld": "Taler",
+      "daten": "Hausnummer",
+      "klick": "Klick",
+      "jawort": "Ja-Wort"
+    },
+    "moods": {
+      "vertrauensvoll": "Vertrauensvoll",
+      "neutral": "Neutral",
+      "misstrauisch": "Misstrauisch",
+      "verwirrt": "Verwirrt",
+      "amuesiert": "Amüsiert",
+      "genervt": "Genervt",
+      "wuetend": "Wütend",
+      "aengstlich": "Ängstlich",
+      "gelangweilt": "Gelangweilt"
+    },
+    "lines": {
+      "answer": {
+        "0": "Hallo? Wer stört – äh, wer spricht da bitte?",
+        "1": "Ja, bitte? Ich hab gerade die Hände voll Kartoffelsalat, also fassen Sie sich kurz.",
+        "2": "Schwindelheim, guten Tag! Sie sprechen mit dem Telefon. Und mit mir.",
+        "3": "Hallöchen! Wenn Sie vom Glücksrad-Verein sind: Ich hab gewonnen, oder?",
+        "4": "Hm? Ach, das Telefon! Ich dachte schon, das klingelt nur noch an Geburtstagen.",
+        "5": "Ja, hier ist besetzt – äh, ich meine, hier ist jemand. Was gibt’s?",
+        "6": "Guten Tag. Falls Sie mir eine Heizdecke verkaufen wollen: Ich habe schon drei.",
+        "7": "Hallo, hallo? Moment, ich halte den Hörer verkehrt herum … So. Hallo?"
+      },
+      "noise": {
+        "tv": {
+          "0": "[Im Hintergrund läuft laut ein Fernsehkrimi.] Pst! Gleich wird verraten, wer’s war!",
+          "1": "Entschuldigung, der Fernseher. Da läuft eine Kochshow, die brüllen sich ständig an.",
+          "2": "[Fernsehapplaus im Hintergrund.] Nein, der Applaus ist nicht für Sie. Leider.",
+          "3": "Moment, ich mach leiser … Ach, die Fernbedienung ist schon wieder im Sofa verschwunden.",
+          "4": "[Eine Fernsehstimme ruft: „Und jetzt das Wetter!“] Das hör ich mir aber noch an, ja?",
+          "5": "Der Fernseher? Der läuft nur, damit die Zimmerpflanze ein bisschen Gesellschaft hat."
+        },
+        "hund": {
+          "0": "[Im Hintergrund bellt ein Dackel.] Ruhig, Bello! Das ist nur das Telefon!",
+          "1": "Verzeihung, der Hund hält Sie für den Briefträger. Er hält alle für den Briefträger.",
+          "2": "[Lautes Kläffen.] Nein, Struppi, das ist kein Leckerli, das ist ein Anruf!",
+          "3": "Der Hund bellt nur, weil er auch mal telefonieren will. Er hat sehr viel zu erzählen.",
+          "4": "[Ein Hund jault mit.] Er singt immer, wenn das Telefon klingelt. Wir arbeiten daran.",
+          "5": "Warten Sie, der Hund hat meinen Pantoffel … Aus! Gib her! … So, wo waren wir?"
+        },
+        "baustelle": {
+          "0": "[Ein Presslufthammer rattert.] WIE BITTE? Nebenan wird seit drei Jahren gebaut!",
+          "1": "Entschuldigung, die Baustelle! Die bauen da einen Kreisverkehr. Für Enten, glaube ich.",
+          "2": "[Es kracht und poltert.] Keine Sorge, das war nur die Baustelle. Hoffe ich.",
+          "3": "Sprechen Sie lauter, draußen bohren die gerade ein Loch bis nach Kleinkrakeelen!",
+          "4": "[Ein Bagger piept rückwärts.] Der piept schon den ganzen Morgen. Ich piepe bald mit.",
+          "5": "Hören Sie das Hämmern? Das ist die Baustelle. Oder mein Herz. Nein, doch die Baustelle."
+        },
+        "kaffee": {
+          "0": "[Eine Kaffeemaschine röchelt.] Moment, die Maschine macht gleich ihr Todesgeräusch.",
+          "1": "Hören Sie das Blubbern? Das ist mein Kaffee. Er ist fast fertig. Ich auch.",
+          "2": "[Es zischt und gurgelt.] Nein, das ist kein Drache. Nur die Kaffeemaschine.",
+          "3": "Einen Augenblick, ich gieße mir nur schnell Kaffee ein … Ah. Jetzt bin ich ganz Ohr.",
+          "4": "Die Kaffeemaschine ist älter als mein Sofa und klingt auch so. Aber sie gibt nicht auf.",
+          "5": "[Lautes Schlürfen.] Verzeihung. Erster Kaffee des Tages. Na gut, der vierte."
+        },
+        "wind": {
+          "0": "[Wind pfeift in den Hörer.] Ich steh auf dem Balkon, hier oben weht’s wie verrückt!",
+          "1": "Sie klingen ganz rauschig – ach nein, das ist der Wind bei mir. Hui!",
+          "2": "[Es braust.] Moment, mein Hut will gerade nach Mumpitzhausen fliegen!",
+          "3": "Ich bin draußen, hier stürmt es. Halten Sie sich lieber fest, falls es durchs Telefon kommt.",
+          "4": "[Ein Fensterladen klappert.] Nein, ich klopfe nicht. Das ist das Wetter.",
+          "5": "Der Wind hat gerade meine Wäsche weggepustet. Meine Socken sind jetzt auf Reisen."
+        },
+        "radio": {
+          "0": "[Ein Radio dudelt Blasmusik.] Ach, das ist mein Lied! Na gut, reden Sie trotzdem.",
+          "1": "Entschuldigung, das Radio. Der Moderator redet mehr als ich, und das will was heißen.",
+          "2": "[Ein Sprecher meldet: „Stau auf der Schwindelheimer Ringstraße!“] Gut, dass ich zu Hause bin.",
+          "3": "Ich mach mal das Radio leiser … Oh, Verkehrsfunk. Den hör ich noch zu Ende.",
+          "4": "[Ein Sender rauscht.] Mein Radio empfängt nur einen Sender, und der spielt nur Polka.",
+          "5": "Hören Sie das? Die spielen gerade das Lied, das einem nie wieder aus dem Kopf geht. Dumm-di-dumm …"
+        },
+        "kinder": {
+          "0": "[Kinder kreischen im Hintergrund.] Nicht mit dem Kuchen werfen! Entschuldigung, wer ist da?",
+          "1": "Moment! Wer hat die Gummistiefel in den Kühlschrank gestellt? … Na toll. Was wollten Sie?",
+          "2": "[Ein Kind ruft: „Wer ist dran? Darf ich auch mal?“] Nein, Schatz, das ist ein Erwachsenengespräch.",
+          "3": "Verzeihen Sie den Lärm, die Kinder spielen Feuerwehr. Mit echtem Gartenschlauch. Im Wohnzimmer.",
+          "4": "[Es scheppert rhythmisch.] Die Kleinen haben den Kochtopf zum Schlagzeug erklärt. Ich höre kaum was.",
+          "5": "Kinder, leise, ich telefoniere! … Nein, nicht ihr! Der Papagei! Ach, ihr alle!"
+        }
+      },
+      "react": {
+        "greet": {
+          "pos": {
+            "0": "Ach, wie nett, ein freundliches Hallo! Das hört man ja kaum noch.",
+            "1": "Guten Tag auch Ihnen! Sie klingen schon mal sympathisch.",
+            "2": "Na, das ist doch eine schöne Begrüßung. Da geht mir gleich das Herz auf.",
+            "3": "Hallo zurück! Endlich mal jemand, der grüßt, bevor er was will.",
+            "4": "Ihnen auch einen wunderschönen Tag! Was kann ich für Sie tun?",
+            "5": "So höflich! Moment, ich setz mich hin, das will ich in Ruhe genießen."
+          },
+          "neg": {
+            "0": "Ja, ja, hallo. Kommen Sie zur Sache, mein Essen wird kalt.",
+            "1": "Hallo? So begrüßt man doch keinen Menschen. Das klang ja wie ein Staubsauger.",
+            "2": "Wir sagen uns jetzt schon zum dritten Mal Hallo. Ich werde langsam heiser.",
+            "3": "Na, herzlich war das nicht. Eher so lauwarm, wie Tee von gestern.",
+            "4": "Grüßen Sie mich nicht so überschwänglich, das macht mich nervös.",
+            "5": "Ein Hallo, mehr nicht? In Schwindelheim grüßt man mit ganzen Sätzen!"
+          }
+        },
+        "introduce": {
+          "pos": {
+            "0": "Freut mich sehr! Schön, wenn man weiß, mit wem man spricht.",
+            "1": "Ah, angenehm! Ich schreib mir Ihren Namen gleich in den Kalender. Neben den Zahnarzt.",
+            "2": "Wie schön, dass Sie sich ordentlich vorstellen. Das macht heute kaum noch einer.",
+            "3": "Sehr erfreut! Sie klingen ganz wie jemand, dem man ein Stück Kuchen anbietet.",
+            "4": "Na, dann kennen wir uns ja jetzt. Fast wie alte Freunde, nur ohne Fotoalbum.",
+            "5": "Angenehm, angenehm! Genau so hab ich mir Sie vorgestellt. Also, ungefähr."
+          },
+          "neg": {
+            "0": "Ihr Name sagt mir gar nichts. Und das sage ich Ihnen ganz ehrlich.",
+            "1": "So, so. Und das soll ich Ihnen einfach so glauben?",
+            "2": "Komischer Name. So hieß mal ein Fischhändler bei uns, und der war auch nicht ehrlich.",
+            "3": "Das klingt wie ein Name, den man sich drei Sekunden vorher ausgedacht hat.",
+            "4": "Ich hab nicht gefragt, wer Sie sind. Ich hab gefragt, warum Sie anrufen. Also, im Kopf.",
+            "5": "Hmpf. Den Namen hab ich noch nie gehört, und ich kenne das halbe Telefonbuch auswendig."
+          }
+        },
+        "smalltalk": {
+          "pos": {
+            "0": "Ach, Sie plaudern gern? Ich auch! Da haben wir ja was gemeinsam.",
+            "1": "Stimmt, stimmt. Das hab ich neulich auch zu meiner Nachbarin gesagt, und die hat genickt.",
+            "2": "Herrlich, so ein kleiner Schwatz am Telefon. Das ist ja besser als Fernsehen.",
+            "3": "Ja, nicht wahr? Man redet viel zu selten über die kleinen Dinge im Leben.",
+            "4": "Sie haben ganz recht. Wissen Sie, Sie erinnern mich an meinen Lieblingsbäcker.",
+            "5": "Erzählen Sie ruhig weiter, ich hab heute nichts mehr vor außer Blumen gießen."
+          },
+          "neg": {
+            "0": "Ich hab keine Zeit für Geplauder. Was wollen Sie denn nun?",
+            "1": "Das Wetter, die Nachbarn, bla bla. Kommen Sie zum Punkt!",
+            "2": "Wenn ich plaudern will, rufe ich meinen Friseur an. Der schneidet wenigstens nebenbei was.",
+            "3": "Hm. Und deswegen rufen Sie an? Das hätten Sie auch auf eine Postkarte schreiben können.",
+            "4": "Interessiert mich nicht die Bohne. Ehrlich gesagt nicht mal eine halbe Bohne.",
+            "5": "Sie reden um den heißen Brei herum. Und der Brei wird langsam kalt."
+          }
+        },
+        "compliment": {
+          "pos": {
+            "0": "Ach, Sie Charmeur! Jetzt werd ich ja ganz rot.",
+            "1": "Das hat mir lange keiner mehr gesagt. Darf ich das aufschreiben?",
+            "2": "Hach, Sie wissen, wie man jemandem den Tag versüßt!",
+            "3": "Na, Sie gefallen mir! Guten Geschmack haben Sie, das muss man sagen.",
+            "4": "Oh, danke! Das erzähl ich nachher gleich dem Spiegel.",
+            "5": "Hören Sie auf, hören Sie auf! … Nein, doch nicht. Machen Sie ruhig weiter."
+          },
+          "neg": {
+            "0": "Schmeicheln Sie mir nicht. Was wollen Sie wirklich?",
+            "1": "Sie kennen mich doch gar nicht. Woher wollen Sie das wissen?",
+            "2": "So viel Honig ums Maul, da kriegt man ja Zahnschmerzen.",
+            "3": "Komplimente von Fremden am Telefon? Da läutet bei mir sofort die Alarmglocke.",
+            "4": "Das sagen Sie bestimmt jedem. Sogar dem Anrufbeantworter.",
+            "5": "Mit Süßholzraspeln kommen Sie bei mir nicht weit. Ich bin dagegen allergisch."
+          }
+        },
+        "empathy": {
+          "pos": {
+            "0": "Ach, das ist lieb, dass Sie fragen. Mir geht’s wirklich nicht immer gut.",
+            "1": "Sie verstehen mich! Endlich mal jemand, der richtig zuhört.",
+            "2": "Das tut gut zu hören. Wissen Sie, manchmal fühlt man sich ganz schön allein.",
+            "3": "Danke. Sie haben ein gutes Herz, das hört man sogar durchs Telefon.",
+            "4": "Sie sind ja eine Seele von Mensch. Da wird mir ganz warm ums Herz, wie nach einer Wärmflasche.",
+            "5": "Sie haben recht, das war wirklich eine schwere Woche. Der Toaster ist auch noch kaputtgegangen."
+          },
+          "neg": {
+            "0": "Ich brauche kein Mitleid. Schon gar nicht von Fremden am Telefon.",
+            "1": "Tun Sie nicht so, als wüssten Sie, wie es mir geht.",
+            "2": "Sparen Sie sich die Krokodilstränen, die hör ich bis hierher tropfen.",
+            "3": "Mir geht’s prima, danke. Wer hat Ihnen was anderes erzählt?",
+            "4": "Mitgefühl? Das klingt bei Ihnen wie auswendig gelernt.",
+            "5": "Jetzt werden Sie mal nicht gefühlig. Dafür kennen wir uns viel zu kurz."
+          }
+        },
+        "urgency": {
+          "pos": {
+            "0": "Oh je, so eilig? Dann sollten wir wohl keine Zeit verlieren!",
+            "1": "Wirklich? Jetzt sofort? Na gut, ich beeil mich ja schon!",
+            "2": "Ach du liebe Zeit, das klingt ja dringend! Was muss ich tun?",
+            "3": "Wenn das so pressiert, dann lass ich den Kuchen eben im Ofen.",
+            "4": "Gut, gut, Sie haben mich überzeugt. Ich bin ganz aufgeregt!",
+            "5": "Huch, jetzt hab ich Herzklopfen. Schnell, sagen Sie, wie es weitergeht!"
+          },
+          "neg": {
+            "0": "Nicht so hektisch! Ich lasse mich nicht hetzen.",
+            "1": "Wer drängelt, hat meistens was zu verbergen. Das weiß jedes Kind.",
+            "2": "Langsam, langsam. Bei mir geht nichts schneller als im Schneckentempo.",
+            "3": "Wenn es so eilig ist, warum rufen Sie dann erst jetzt an?",
+            "4": "Sie drängeln ja wie an der Kasse beim Sommerschlussverkauf. Das mag ich gar nicht.",
+            "5": "Ruhig Blut! Die Welt geht nicht unter, nur weil Sie es eilig haben."
+          }
+        },
+        "threat": {
+          "pos": {
+            "0": "Oh nein, das will ich natürlich nicht! Was soll ich denn machen?",
+            "1": "Um Himmels willen! So schlimm? Ich krieg ja ganz weiche Knie.",
+            "2": "Ach du Schreck! Na gut, na gut, ich mach ja mit.",
+            "3": "Das klingt aber gar nicht gut. Bitte keinen Ärger, ich hab schon genug davon!",
+            "4": "Hilfe! Ich hab doch noch nie was falsch gemacht. Außer einmal beim Einparken.",
+            "5": "Oje, oje. Dann sagen Sie mir schnell, wie ich da wieder rauskomme."
+          },
+          "neg": {
+            "0": "Drohen Sie mir etwa? Da sind Sie bei mir an der falschen Adresse!",
+            "1": "So nicht, mein Freund! Mit Drohungen kommen Sie hier keinen Schritt weiter.",
+            "2": "Ha! Mir hat schon ganz anderes gedroht. Zum Beispiel mein Wecker.",
+            "3": "Wenn Sie so weitermachen, lege ich gleich auf. Und das ist eine Drohung!",
+            "4": "Machen Sie mir keine Angst. Das schafft nicht mal meine Steuererklärung.",
+            "5": "Sie wollen mir drohen? Ich hab drei Gartenzwerge und einen sehr lauten Rauchmelder!"
+          }
+        },
+        "calm": {
+          "pos": {
+            "0": "Ach, Sie haben recht. Ich atme jetzt mal tief durch.",
+            "1": "Danke, das beruhigt mich. Sie haben so eine angenehme Stimme.",
+            "2": "Gut, gut. Wenn Sie sagen, alles ist in Ordnung, dann glaube ich Ihnen das.",
+            "3": "Puh. Jetzt geht’s mir schon besser. Fast wie nach einem Kamillentee.",
+            "4": "Stimmt ja, kein Grund zur Aufregung. Ich hab mich wieder im Griff.",
+            "5": "Sie sind ja die Ruhe selbst. Das färbt richtig ab."
+          },
+          "neg": {
+            "0": "Sagen Sie mir nicht, dass ich mich beruhigen soll! Ich BIN ruhig!",
+            "1": "Beruhigen? Ich bin die Ruhe in Person, Sie Unruhestifter!",
+            "2": "Dieses Gesäusel macht mich nur noch nervöser.",
+            "3": "Alles gut, sagen Sie? Das sagen die Leute immer, kurz bevor gar nichts gut ist.",
+            "4": "Reden Sie nicht mit mir wie mit einem scheuen Pferd.",
+            "5": "Ich lasse mich nicht einlullen. Ich bin hellwach und misstrauisch."
+          }
+        },
+        "explain": {
+          "pos": {
+            "0": "Ach so! Jetzt verstehe ich. Das hätten Sie gleich sagen sollen.",
+            "1": "Aha, aha. Das klingt ja ganz vernünftig.",
+            "2": "Wie gut Sie das erklären! Da könnte sich mancher Lehrer was abschneiden.",
+            "3": "Ach, so funktioniert das! Wieder was gelernt. Ich schreib’s mir auf.",
+            "4": "Na, wenn das so ist, dann ergibt das ja alles Sinn. Irgendwie.",
+            "5": "Verstehe, verstehe. Also, fast alles. Aber das Wichtigste schon."
+          },
+          "neg": {
+            "0": "Das versteh ich nicht. Und ich glaub, Sie verstehen es auch nicht.",
+            "1": "Das klingt wie die Gebrauchsanweisung für einen Toaster. Rückwärts gelesen.",
+            "2": "Häh? Das ergibt ja überhaupt keinen Sinn.",
+            "3": "Sie reden wie ein Formular. Geht das auch auf Deutsch?",
+            "4": "Moment, Moment, das ist mir zu kompliziert. Und zu verdächtig.",
+            "5": "Je mehr Sie erklären, desto weniger glaube ich Ihnen."
+          }
+        },
+        "confirm": {
+          "pos": {
+            "0": "Genau! Sehen Sie, wir sind uns einig.",
+            "1": "Na bitte, Sie sehen das genauso wie ich. Das gefällt mir.",
+            "2": "Wunderbar, dann sind wir ja auf einer Wellenlänge.",
+            "3": "Ja, nicht wahr? Endlich mal jemand mit Verstand.",
+            "4": "Schön, dass Sie mir zustimmen. Das passiert mir nicht oft.",
+            "5": "Sehr gut! Ich mag Leute, die einfach mal Ja sagen."
+          },
+          "neg": {
+            "0": "Sie sagen ja zu allem. Das ist mir nicht geheuer.",
+            "1": "Ja, ja, ja. Haben Sie überhaupt zugehört?",
+            "2": "Einfach Ja sagen kann jeder. Ein Papagei zum Beispiel.",
+            "3": "So schnell einverstanden? Da stimmt doch was nicht.",
+            "4": "Ihr Ja klingt aber eher nach einem Vielleicht mit Schnupfen.",
+            "5": "Nicken hört man am Telefon übrigens nicht. Und Ihr Ja war auch nicht viel lauter."
+          }
+        },
+        "deny": {
+          "pos": {
+            "0": "Na gut, dann eben nicht. Ich mag ehrliche Antworten.",
+            "1": "Ein klares Nein, das gefällt mir. Kein Herumgeeiere.",
+            "2": "Ach so, nein. Na, dann hab ich das wohl falsch verstanden.",
+            "3": "Gut, dass Sie das sagen. Ich hab mir schon Sorgen gemacht.",
+            "4": "Nein ist auch eine Antwort. Eine sehr ordentliche sogar.",
+            "5": "Richtig so! Man muss nicht zu allem Ja und Amen sagen."
+          },
+          "neg": {
+            "0": "Nein? Wieso nein? Was ist denn das für eine Antwort?",
+            "1": "Sie sagen ständig Nein. Sind Sie ein Anruf oder ein Türsteher?",
+            "2": "Nein, nein, nein. Mit Ihnen kann man ja gar nicht reden.",
+            "3": "So ein Dickkopf! Sie sind ja störrischer als der Esel vom Nachbarhof.",
+            "4": "Nein? Dann weiß ich auch nicht, warum wir überhaupt telefonieren.",
+            "5": "Gegen alles sein ist einfach. Sagen Sie doch mal, wofür Sie sind!"
+          }
+        },
+        "insult": {
+          "pos": {
+            "0": "Ha! Frech sind Sie ja. Aber das gefällt mir irgendwie.",
+            "1": "Na, Sie haben ja Haare auf den Zähnen! Das mag ich.",
+            "2": "Was für eine Frechheit! Ich lach mich schlapp.",
+            "3": "So hat mich seit der Schulzeit keiner mehr genannt. Herrlich nostalgisch!",
+            "4": "Pah! Das war fast so gut wie die Sprüche von meinem Schwager.",
+            "5": "Sie haben Schneid, das muss man Ihnen lassen. Frech, aber mit Schneid."
+          },
+          "neg": {
+            "0": "Wie bitte? Also, das muss ich mir nicht bieten lassen!",
+            "1": "Unverschämtheit! Hat Ihnen niemand Manieren beigebracht?",
+            "2": "So redet man nicht mit mir. Nicht am Telefon und auch sonst nirgends!",
+            "3": "Das war jetzt aber unter der Gürtellinie. Und zwar ganz weit drunter.",
+            "4": "Na hören Sie mal! Ich bin empört. Zutiefst empört. Fast schon dreifach empört.",
+            "5": "Das schreib ich mir auf. In mein Büchlein der unfreundlichen Menschen."
+          }
+        },
+        "apology": {
+          "pos": {
+            "0": "Schon gut, schon gut. Entschuldigung angenommen.",
+            "1": "Na, das ist ja nett, dass Sie sich entschuldigen. Das ist heute selten.",
+            "2": "Ach, Schwamm drüber. Jeder hat mal einen schlechten Tag.",
+            "3": "Eine ehrliche Entschuldigung! Da kann ich ja gar nicht mehr böse sein.",
+            "4": "Na gut, ich verzeihe Ihnen. Aber nur, weil Sie so zerknirscht klingen.",
+            "5": "Angenommen. Ich hab Sie schon wieder halb lieb."
+          },
+          "neg": {
+            "0": "Entschuldigung? Dafür ist es jetzt ein bisschen spät.",
+            "1": "Mit einem „Tut mir leid“ ist das nicht getan.",
+            "2": "Sie entschuldigen sich öfter, als ich niese. Und ich habe Heuschnupfen.",
+            "3": "Das klingt aber nicht sehr ehrlich. Eher wie vom Zettel abgelesen.",
+            "4": "Entschuldigungen sammle ich nicht. Ich bin doch kein Museum.",
+            "5": "Erst Unsinn reden und dann „Verzeihung“ sagen? So läuft das bei mir nicht."
+          }
+        },
+        "laugh": {
+          "pos": {
+            "0": "Hahaha! Sie sind ja eine Marke! Den muss ich mir merken.",
+            "1": "Hihi, Sie sind lustig! So viel gelacht hab ich seit Wochen nicht.",
+            "2": "Ha! Gut! Sehr gut! Ich krieg gleich Schluckauf vor Lachen.",
+            "3": "Oh, Sie haben Humor. Das mag ich. Leute mit Humor sind ehrlich, sagt man.",
+            "4": "Hö hö hö! Jetzt hab ich mich am Tee verschluckt. Ihretwegen!",
+            "5": "Den muss ich der Nachbarin erzählen. Die lacht nie, aber das hier schafft sie."
+          },
+          "neg": {
+            "0": "Was gibt’s da zu lachen? Ich find das gar nicht komisch.",
+            "1": "Lachen Sie mich etwa aus?",
+            "2": "Haha. Sehr witzig. Wirklich. Ich lache innerlich. Ganz tief innen.",
+            "3": "Ihr Humor ist mir zu hoch. Oder zu tief, so genau weiß ich das nicht.",
+            "4": "Wenn Sie Witze erzählen wollen, bewerben Sie sich doch beim Zirkus.",
+            "5": "Dieses Gekicher macht mich ganz kirre. Was ist denn so lustig?"
+          }
+        },
+        "thanks": {
+          "pos": {
+            "0": "Bitte, bitte, gern geschehen! Sie sind ja ein höflicher Mensch.",
+            "1": "Ach, nichts zu danken. Dafür ist man doch da.",
+            "2": "Wie nett! Für Höflichkeit hab ich immer ein offenes Ohr.",
+            "3": "Danke zurück! Jetzt haben wir uns gegenseitig bedankt. Wie im Benimmkurs.",
+            "4": "Gern doch! So einen dankbaren Menschen hatte ich lange nicht am Apparat.",
+            "5": "Na, das ging runter wie Öl. Bedanken Sie sich ruhig öfter."
+          },
+          "neg": {
+            "0": "Wofür bedanken Sie sich denn? Ich hab doch gar nichts gemacht.",
+            "1": "Danke, danke … Sie danken mir ja für Dinge, die noch gar nicht passiert sind!",
+            "2": "Bedanken Sie sich nicht zu früh. Noch hab ich nichts versprochen.",
+            "3": "So viel Dankbarkeit macht mich misstrauisch.",
+            "4": "Ihr Danke klingt wie ein Staubsaugervertreter an der Haustür.",
+            "5": "Danke wofür? Fürs Abheben? Das war ein Reflex."
+          }
+        },
+        "promise": {
+          "pos": {
+            "0": "Versprochen? Na, dann verlasse ich mich auf Sie!",
+            "1": "Oh, das klingt ja wunderbar. Sie halten Ihr Wort, das hör ich.",
+            "2": "Ein Versprechen ist ein Versprechen. Ich nehme Sie beim Wort!",
+            "3": "Wirklich? Das würden Sie für mich tun? Wie lieb!",
+            "4": "Gut, dann schreib ich mir das auf. Mit Datum und Uhrzeit.",
+            "5": "Herrlich! Darauf freue ich mich jetzt schon wie auf Weihnachten."
+          },
+          "neg": {
+            "0": "Versprechen kann man viel, wenn der Tag lang ist.",
+            "1": "Das hat mein Schwager auch versprochen, und der schuldet mir bis heute einen Rasenmäher.",
+            "2": "Goldene Berge, was? Die hat man mir schon öfter versprochen.",
+            "3": "Klingt zu schön, um wahr zu sein. Also ist es wohl nicht wahr.",
+            "4": "Versprechen Sie lieber nichts, was Sie nicht halten können.",
+            "5": "Ich glaub Ihnen kein Wort. Und das nächste auch nicht."
+          }
+        },
+        "nonsense": {
+          "0": "Wie bitte? Ich hab kein Wort verstanden.",
+          "1": "Hä? Reden Sie mit mir oder mit Ihrer Katze?",
+          "2": "Das klang wie ein Zungenbrecher mit Schluckauf. Noch mal, bitte?",
+          "3": "Entschuldigung, ich glaube, die Leitung ist kaputt. Oder Ihr Satz.",
+          "4": "Ist das eine Fremdsprache? Ich kann nur Deutsch und ein bisschen Pantomime.",
+          "5": "Moment, ich setz mal die Brille auf … Nein, ich verstehe es immer noch nicht."
+        },
+        "nonsenseAmused": {
+          "0": "Hihi, was reden Sie denn da? Klingt lustig!",
+          "1": "Haha, das war ja Kauderwelsch erster Klasse! Noch mal!",
+          "2": "Ich versteh kein Wort, aber es klingt herrlich. Wie ein Gedicht von einem Toaster.",
+          "3": "Sie sind ja ein Spaßvogel! Sagen Sie das noch mal, ich will’s aufnehmen.",
+          "4": "Was war das denn? Ich lach mich kaputt!",
+          "5": "Ha! Sprechen Sie etwa Mumpitzhausisch? Da hab ich mal Urlaub gemacht!"
+        },
+        "shouting": {
+          "0": "Nicht so laut! Ich bin doch nicht taub!",
+          "1": "AUA! Mein Ohr! Müssen Sie so brüllen?",
+          "2": "Schreien Sie nicht so, die Gläser im Schrank klirren schon!",
+          "3": "Psst! Die Nachbarn denken sonst, ich streite mit dem Telefon.",
+          "4": "Leiser, bitte! Ich halte den Hörer schon einen Meter weit weg.",
+          "5": "Mein Trommelfell schlägt gerade Purzelbäume! Geht das auch in Zimmerlautstärke?"
+        },
+        "question": {
+          "0": "Gute Frage. Wirklich, sehr gute Frage. Nächste Frage?",
+          "1": "Hm, das weiß ich auch nicht so genau. Was meinen Sie denn?",
+          "2": "Ach, fragen Sie mich doch so was nicht. Ich bin doch kein Lexikon.",
+          "3": "Tja, wenn ich das wüsste. Meine Nachbarin wüsste es bestimmt, die weiß alles.",
+          "4": "Das ist eine lange Geschichte. Und die Hälfte davon hab ich vergessen.",
+          "5": "Wie meinen Sie das? Fragen Sie einfacher, ich bin noch nicht ganz wach."
+        },
+        "monologue": {
+          "0": "Puh, Sie reden ja wie ein Wasserfall! Darf ich auch mal was sagen?",
+          "1": "Halt, halt! Sie haben mich schon vor drei Sätzen abgehängt.",
+          "2": "Atmen Sie zwischendurch auch mal? Ich mach mir langsam Sorgen.",
+          "3": "Moment, ich hole mir einen Stuhl. Und ein Butterbrot. Das dauert ja noch.",
+          "4": "Sie reden so viel, ich hab inzwischen den ganzen Abwasch erledigt.",
+          "5": "Das war ja ein ganzer Roman. Krieg ich auch eine Zusammenfassung?"
+        },
+        "repeat": {
+          "0": "Das haben Sie doch schon gesagt.",
+          "1": "Ja, ja, ich hab’s beim ersten Mal verstanden.",
+          "2": "Sie wiederholen sich. Hat da bei Ihnen eine Schallplatte einen Sprung?",
+          "3": "Schon wieder? Das kenn ich doch. Haben Sie auch was Neues?",
+          "4": "Sie klingen wie ein Papagei. Ein sehr eintöniger Papagei.",
+          "5": "Noch einmal, und ich kann’s mitsprechen."
+        },
+        "echo": {
+          "0": "„{echo}“? Was ist denn das?",
+          "1": "„{echo}“? Das Wort hab ich ja noch nie gehört. Kann man das essen?",
+          "2": "Moment, „{echo}“? Muss ich das kennen?",
+          "3": "„{echo}“ … „{echo}“ … Nein, sagt mir nichts. Ist das ansteckend?",
+          "4": "Sagten Sie „{echo}“? Das klingt ja wie ein Zauberspruch.",
+          "5": "Ich schreib mir mal „{echo}“ auf und schlag es nachher nach. Wenn ich das Lexikon finde."
+        },
+        "neutral": {
+          "0": "Aha.",
+          "1": "Hm, so, so.",
+          "2": "Ja … und weiter?",
+          "3": "Verstehe. Glaube ich.",
+          "4": "Interessant. Erzählen Sie ruhig weiter.",
+          "5": "Hm-hm. Ich bin ganz Ohr. Also, ein halbes."
+        },
+        "name": {
+          "0": "Oh, Sie kennen meinen Namen! Wie schön, dass Sie sich den gemerkt haben.",
+          "1": "Ja, genau, so heiße ich! Das hört man gern.",
+          "2": "Wie nett, dass Sie mich mit Namen ansprechen. Das macht heute kaum noch jemand.",
+          "3": "Ach, Sie sagen meinen Namen so schön. Viel schöner als mein Zahnarzt.",
+          "4": "Richtig! Sie haben aufgepasst, das gefällt mir.",
+          "5": "Hach, mein Name klingt aus Ihrem Mund ja richtig vornehm."
+        }
+      },
+      "role": {
+        "pos": {
+          "0": "Ach, Sie sind {roleFrom}? Na, dann ist ja alles in Ordnung.",
+          "1": "Jemand {roleFrom}! Das ist ja eine Ehre. Was kann ich für Sie tun?",
+          "2": "Oh, {roleFrom}! Sie klingen auch genau so. Sehr seriös.",
+          "3": "Ein Anruf {roleFrom}, wie aufregend! Ich stell schnell den Kaffee ab.",
+          "4": "Ah, {roleFrom}. Ich hab mir schon gedacht, dass da mal jemand anruft.",
+          "5": "Na, wenn Sie {roleFrom} sind, dann vertraue ich Ihnen natürlich."
+        },
+        "neg": {
+          "0": "Ausgerechnet {roleFrom}? Mit denen hatte ich schon genug Ärger.",
+          "1": "Sie wollen {roleFrom} sein? Das glaub ich erst, wenn ich es schriftlich habe.",
+          "2": "Ach, {roleFrom}. Da ruft ja jeden Tag einer an, und jeder will was.",
+          "3": "Jemand {roleFrom}? Die rufen doch sonst nie an. Wieso ausgerechnet jetzt?",
+          "4": "Ein Anruf {roleFrom}? So glaubwürdig wie ein Pinguin in der Wüste.",
+          "5": "Leute {roleFrom} mag ich nicht besonders. Nichts für ungut."
+        }
+      },
+      "contradiction": {
+        "role": {
+          "0": "Moment mal! Eben waren Sie doch noch {roleFrom}, jetzt sind Sie {newRoleFrom}?!",
+          "1": "Erst {roleFrom}, dann {newRoleFrom}? Wechseln Sie jede Minute den Beruf?",
+          "2": "Halt! Vorhin sagten Sie {roleFrom}. Und plötzlich {newRoleFrom}. Was denn nun?",
+          "3": "Sie sind also {roleFrom} und {newRoleFrom} gleichzeitig? Tragen Sie zwei Hüte?",
+          "4": "Komisch. Vor einer Minute noch {roleFrom}, jetzt {newRoleFrom}. Das schreib ich mir auf!",
+          "5": "Wie praktisch: {roleFrom} und auch noch {newRoleFrom}. Fehlt nur noch der Zirkus."
+        },
+        "name": {
+          "0": "Eben hießen Sie noch {name}, und jetzt {newName}?",
+          "1": "Moment! Sie haben sich doch als {name} vorgestellt. Wer ist denn {newName}?",
+          "2": "{newName}? Vorhin waren Sie aber {name}. Haben Sie zwischendurch geheiratet?",
+          "3": "Erst {name}, dann {newName} – wie viele Namen haben Sie denn?",
+          "4": "Jetzt bin ich verwirrt. Sind Sie {name} oder {newName}? Oder beide im Wechsel?",
+          "5": "Merkwürdig. Angerufen hat {name}, und jetzt redet plötzlich {newName} weiter?"
+        }
+      },
+      "topic": {
+        "like": {
+          "0": "Oh, {topic}! Da könnte ich stundenlang drüber reden.",
+          "1": "{topic}? Mein Lieblingsthema! Sie haben ja Geschmack.",
+          "2": "Ach, Sie interessieren sich auch für {topic}? Da sind wir ja Seelenverwandte!",
+          "3": "Über {topic} rede ich immer gern. Wo soll ich anfangen?",
+          "4": "Hach, {topic} … Da geht mir das Herz auf. Erzählen Sie mehr!",
+          "5": "Sie sprechen von {topic}? Na endlich mal ein vernünftiges Thema!"
+        },
+        "dislike": {
+          "0": "{topic}? Hören Sie mir bloß damit auf.",
+          "1": "Ach nein, nicht {topic}. Darüber rede ich nicht.",
+          "2": "Bei {topic} krieg ich Ausschlag. Wechseln Sie lieber das Thema.",
+          "3": "Ausgerechnet {topic}? Da legen andere schon auf. Ich überlege es mir noch.",
+          "4": "Mit {topic} hab ich nichts am Hut. Und ich hab viele Hüte.",
+          "5": "Schon wieder {topic}! Warum reden heute alle über so was?"
+        }
+      },
+      "demand": {
+        "early": {
+          "0": "„{demand}“? Wir kennen uns doch erst seit zwei Minuten!",
+          "1": "Langsam! So was gebe ich doch nicht einfach jedem am Telefon.",
+          "2": "Nanu, so schnell? Erst mal möchte ich wissen, mit wem ich überhaupt rede.",
+          "3": "„{demand}“? Ohne mich vorher wenigstens zum Kaffee einzuladen? Das geht mir zu schnell.",
+          "4": "Da werd ich hellhörig. Wer gleich so was will, führt was im Schilde.",
+          "5": "Sie wollen „{demand}“? Da müssen Sie aber früher aufstehen!"
+        },
+        "agree": {
+          "0": "Na gut, wenn das so ist … Dann helfe ich Ihnen gern.",
+          "1": "Sie klingen ehrlich. Also schön, „{demand}“ – Moment, ich schau nach.",
+          "2": "Ach, warum eigentlich nicht. Sie waren ja so nett zu mir.",
+          "3": "Na schön, Sie haben mich überzeugt. Einen Augenblick, ich hol die Brille.",
+          "4": "Also gut. Aber nur, weil Sie es sind!",
+          "5": "Ich hab ein gutes Gefühl bei Ihnen. Gut, „{demand}“ sollen Sie haben."
+        },
+        "bait": {
+          "0": "Aber natürlich! Ich such’s Ihnen sofort raus. Ganz, ganz langsam.",
+          "1": "Oh, gern! Ich muss nur den Schrank finden, in dem der Zettel liegt. Ich hab vierzehn Schränke.",
+          "2": "Klar doch, „{demand}“, kein Problem! Das liegt hier irgendwo … unter der Katze.",
+          "3": "Selbstverständlich! Darf ich es vorher noch dreimal vorlesen? Zum Üben?",
+          "4": "Na sicher, Sie kriegen alles! Ich such nur erst meine Lesebrille. Und dann die zweite Lesebrille.",
+          "5": "Aber gern! Ich hol schnell den Ordner „Streng geheim“. Der steht neben dem Ordner „Witze“."
+        }
+      },
+      "loot": {
+        "nummer": {
+          "0": "Also, meine Bürgernummer ist … {loot}. Haben Sie’s?",
+          "1": "Moment, hier steht’s: {loot}. Soll ich’s noch mal sagen?",
+          "2": "Die Nummer lautet {loot}. Ich hab sie extra an den Kühlschrank geklebt.",
+          "3": "Gut, aufgepasst: {loot}. Und jetzt nicht weitersagen!",
+          "4": "{loot}. So, jetzt kennen Sie mich fast besser als mein Friseur.",
+          "5": "Bürgernummer, Bürgernummer … ah, da: {loot}. Steht auf meinem Lieblingsformular."
+        },
+        "code": {
+          "0": "Der Guck-Code? Der ist gerade gekommen: {loot}.",
+          "1": "Hier blinkt was auf dem Bildschirm … {loot}. Ist es das?",
+          "2": "Also, der Code lautet {loot}. Komische Zahlen, aber bitte.",
+          "3": "Warten Sie, ich setz die Brille auf … {loot}. Genau.",
+          "4": "Ah, das Ding hat gepiept. Der Guck-Code ist {loot}.",
+          "5": "{loot}. Wofür auch immer man den braucht. Ich frag ja nicht."
+        },
+        "gutschein": {
+          "0": "Der Gutschein-Code steht hinten auf der Karte: {loot}.",
+          "1": "So, ich hab das Silberzeug abgerubbelt. Da steht {loot}.",
+          "2": "Gutschein, Gutschein … hier! {loot}. Viel Spaß damit!",
+          "3": "Ich lese vor: {loot}. Puh, die Buchstaben sind ja winzig.",
+          "4": "Also: {loot}. Eigentlich wollte ich den meinem Neffen schenken.",
+          "5": "{loot}. Jetzt hab ich Rubbelreste unter den Fingernägeln, aber bitte."
+        },
+        "geld": {
+          "0": "Na gut, ich schicke Ihnen {loot} Taler. Aber gut drauf aufpassen!",
+          "1": "{loot} Taler sind unterwegs. Mein Sparschwein weint ein bisschen.",
+          "2": "Also, {loot} Taler. Mehr hab ich gerade nicht im Sparstrumpf.",
+          "3": "Ich hab die {loot} Taler losgeschickt. Oder wie das heißt. Jedenfalls sind sie weg.",
+          "4": "Hier, {loot} Taler. Damit wird bestimmt alles wieder gut, oder?",
+          "5": "Abgezählt und abgeschickt: {loot} Taler. Ich hoffe, die kommen heil an."
+        },
+        "daten": {
+          "0": "Meine Hausnummer? Die {loot}. Das Haus mit dem Gartenzwerg.",
+          "1": "Hausnummer {loot}. Klingeln Sie zweimal, die Klingel ist schwerhörig.",
+          "2": "Ich wohne in der Nummer {loot}. Gleich neben der Laterne, die immer flackert.",
+          "3": "Also, die {loot}. Steht groß an der Tür, kann man gar nicht übersehen.",
+          "4": "Die Hausnummer ist {loot}. Warum wollen Sie das eigentlich – ach, egal.",
+          "5": "Nummer {loot}. Früher war’s mal eine andere, aber dann wurde umnummeriert."
+        },
+        "klick": {
+          "0": "So, ich hab geklickt.",
+          "1": "Klick! Erledigt. Jetzt blinkt hier was ganz Buntes.",
+          "2": "Ich hab draufgedrückt. Dreimal, sicherheitshalber.",
+          "3": "Geklickt! Ist jetzt was passiert? Bei mir dreht sich ein kleines Rädchen.",
+          "4": "So, der Knopf ist gedrückt. Ich fühl mich ganz modern.",
+          "5": "Klick gemacht. Hoffentlich war das der richtige Knopf und nicht der Toaster."
+        },
+        "jawort": {
+          "0": "Ja. Also … ja!",
+          "1": "Ja, ich bin einverstanden. Ganz offiziell.",
+          "2": "Na gut: Ja! So, jetzt hab ich’s gesagt.",
+          "3": "Jawohl! Ja, ja, ja. Reicht das?",
+          "4": "Ja. Laut und deutlich: JA!",
+          "5": "Ja, ich will. Äh, ich meine: Ja, in Ordnung."
+        },
+        "bait": {
+          "0": "Eins, zwei, drei, vier … Moment, das ist meine Schuhgröße.",
+          "1": "Die Nummer ist: Banane, Banane, Gurke. Ach nee, das ist mein Einkaufszettel.",
+          "2": "Haben Sie was zu schreiben? Gut: sieben, sieben, sieben … und dann noch ganz viele Siebenen.",
+          "3": "Der Code lautet: Kuckuck-Zwölf-Pustekuchen. Doch, ehrlich, so steht’s hier.",
+          "4": "Ich lese vor: null, null, null, null … ach, das ist ja die Rückseite der Fernbedienung.",
+          "5": "Meine Hausnummer ist zweieinhalb. Wir wohnen im halben Haus."
+        }
+      },
+      "end": {
+        "success": {
+          "0": "So, das war’s dann. Schönen Tag noch!",
+          "1": "Na, dann ist ja alles erledigt. Rufen Sie gern wieder an!",
+          "2": "Hat mich sehr gefreut. Bleiben Sie gesund und tschüss!",
+          "3": "Schön, dass ich helfen konnte. Auf Wiederhören!",
+          "4": "Wunderbar. Jetzt mach ich mir erst mal einen Tee. Tschüss!",
+          "5": "Das war das netteste Telefonat der ganzen Woche. Bis bald!"
+        },
+        "farewell": {
+          "0": "Auf Wiederhören! Und passen Sie auf sich auf.",
+          "1": "Ach, schon vorbei? Na dann, tschüss!",
+          "2": "Tschüss! Und grüßen Sie Ihre Familie, auch wenn ich sie nicht kenne.",
+          "3": "Gut, auf Wiederhören. Ich leg jetzt auf. Jetzt. Jetzt aber wirklich.",
+          "4": "Machen Sie’s gut! Und einen schönen Tag noch.",
+          "5": "Na, dann. Bis zum nächsten Mal, wer auch immer Sie sind."
+        }
+      },
+      "hangup": {
+        "trust": {
+          "0": "Wissen Sie was? Ich glaube Ihnen kein Wort. Auf Wiederhören!",
+          "1": "Jetzt reicht’s! Ich lege auf, und zwar sofort.",
+          "2": "Mit Ihnen bin ich fertig. Suchen Sie sich jemand anderen zum Flunkern!",
+          "3": "Sie wollen mich doch auf den Arm nehmen. Nicht mit mir! Tschüss!",
+          "4": "Ich hab ein ganz mieses Gefühl bei Ihnen. Ende des Gesprächs!",
+          "5": "Netter Versuch. Aber ich bin doch nicht von gestern. Klack!"
+        },
+        "angry": {
+          "0": "Unerhört! Rufen Sie hier nie wieder an!",
+          "1": "So eine Frechheit! Ich lege jetzt auf, und zwar mit Schwung!",
+          "2": "Mir platzt gleich der Kragen! Tschüss!",
+          "3": "Das muss ich mir nicht anhören. Auf Nimmerwiederhören!",
+          "4": "Jetzt hab ich aber die Nase voll! Und zwar gestrichen voll!",
+          "5": "Raus aus meiner Leitung! Husch, husch!"
+        },
+        "patience": {
+          "0": "Hallo? … Na, dann eben nicht. Tschüss!",
+          "1": "Wenn Sie nichts sagen, kann ich auch auflegen.",
+          "2": "Ich warte nicht ewig. Mein Tee wird kalt. Auf Wiederhören!",
+          "3": "Telefonstreiche? Nicht mit mir! Klack.",
+          "4": "So, das war’s. Stille kann ich auch ohne Telefon haben.",
+          "5": "Ich glaube, Sie sind eingeschlafen. Ich leg dann mal auf. Gute Nacht!"
+        },
+        "hold": {
+          "0": "Ich hänge hier seit Ewigkeiten in der Warteschleife. Jetzt reicht’s!",
+          "1": "Diese Musik! Noch einmal das Gedudel, und ich werde verrückt. Tschüss!",
+          "2": "Wenn Sie mich so lange warten lassen, ist es wohl nicht so wichtig. Auf Wiederhören!",
+          "3": "In der Warteschleife hab ich einen ganzen Schal gestrickt. Mir reicht’s!",
+          "4": "Hallo? Immer noch Musik? Na, dann reden Sie doch mit der Musik weiter!",
+          "5": "Warteschleife? Ich bin doch kein Paket! Klack!"
+        },
+        "contradiction": {
+          "0": "Sie erzählen mir ja jedes Mal was anderes. Nein danke, tschüss!",
+          "1": "Erst so, dann so – Sie wissen ja selbst nicht, wer Sie sind. Ich lege auf!",
+          "2": "Lügen haben kurze Beine, und Ihre sind ganz schön kurz. Auf Wiederhören!",
+          "3": "Zu viele Widersprüche! Da krieg ich ja Knoten im Kopf. Tschüss!",
+          "4": "Sie verheddern sich ja schlimmer als meine Lichterkette. Ende!",
+          "5": "Ich hab mitgeschrieben, und nichts passt zusammen. Ich lege jetzt auf!"
+        }
+      },
+      "hold": {
+        "start": {
+          "0": "Warteschleife? Na gut, aber nicht zu lange!",
+          "1": "Ich soll warten? Gut, dann hole ich mir schnell einen Keks.",
+          "2": "Na schön, ich warte. Aber ich zähle mit!",
+          "3": "Halten Sie mich bitte nicht ewig hin, ja?",
+          "4": "Ah, Wartemusik. Hoffentlich nicht wieder dieses Flötengedudel.",
+          "5": "Gut, ich bleib dran. Ich hab ja sonst nichts zu tun. Außer allem."
+        },
+        "back": {
+          "0": "Ah, da sind Sie ja wieder!",
+          "1": "Na, das ging ja schnell. Wo waren wir?",
+          "2": "Schön, dass Sie zurück sind. Die Musik war gar nicht so übel.",
+          "3": "Wieder da? Gut, ich hab Sie fast schon vermisst.",
+          "4": "Oh, Sie sind wieder dran. Ich hab gerade mitgesummt.",
+          "5": "So, da sind wir wieder. Ich hab in der Zeit meinen Keks gegessen."
+        },
+        "backLong": {
+          "0": "Na endlich! Ich dachte schon, Sie hätten mich vergessen.",
+          "1": "Wissen Sie, wie lange ich gewartet habe? Ich kann die Melodie jetzt rückwärts pfeifen!",
+          "2": "Da sind Sie ja! Inzwischen ist mein Tee kalt und mein Toast auch.",
+          "3": "Ich bin in der Warteschleife fast eingeschlafen. Und fast verhungert.",
+          "4": "So lange lässt man niemanden warten! Nicht mal im Wartezimmer.",
+          "5": "Endlich! In der Zeit hätte ich nach Kleinkrakeelen laufen können. Und zurück."
+        }
+      },
+      "silence": {
+        "1": {
+          "0": "Hallo? Sind Sie noch dran?",
+          "1": "Hallo? Hören Sie mich?",
+          "2": "Ist da noch jemand? Oder ist die Leitung eingeschlafen?",
+          "3": "Hm? Sie sagen ja gar nichts mehr.",
+          "4": "Hallöchen? Klopf, klopf?",
+          "5": "Ich hör nur Rauschen. Sind Sie im Tunnel?"
+        },
+        "2": {
+          "0": "Hallo?! Jetzt sagen Sie doch endlich was!",
+          "1": "Ich spreche hier mit der Wand, oder was?",
+          "2": "Wenn Sie nicht gleich was sagen, leg ich auf!",
+          "3": "Haaallo! Ich zähle bis drei. Eins … zwei …",
+          "4": "Das ist jetzt aber wirklich unhöflich. Reden Sie mit mir!",
+          "5": "Ich hab Besseres zu tun, als Ihrem Schweigen zuzuhören!"
+        }
+      },
+      "mood": {
+        "vertrauensvoll": {
+          "0": "Wissen Sie was? Ich hab ein richtig gutes Gefühl bei Ihnen.",
+          "1": "Sie sind mir sympathisch. So jemandem kann man vertrauen.",
+          "2": "Ach, mit Ihnen redet es sich wie mit einem alten Bekannten.",
+          "3": "Ich glaube, Sie meinen es wirklich gut mit mir.",
+          "4": "Komisch, ich kenne Sie kaum, aber ich mag Sie.",
+          "5": "Bei Ihnen fühl ich mich gut aufgehoben. Wie unter einer warmen Decke."
+        },
+        "neutral": {
+          "0": "Na gut. Mal sehen, was Sie noch so zu sagen haben.",
+          "1": "Hm. Ich weiß noch nicht so recht, was ich von Ihnen halten soll.",
+          "2": "Gut, gut. Weder Fisch noch Fleisch bisher.",
+          "3": "Also, ich höre Ihnen zu. Mehr verspreche ich nicht.",
+          "4": "So weit, so normal. Ich warte noch auf den Knaller.",
+          "5": "Ich bin ganz ruhig und sachlich. Noch."
+        },
+        "misstrauisch": {
+          "0": "Irgendwas stimmt hier nicht. Ich spür das im kleinen Zeh.",
+          "1": "Moment mal … Sie kommen mir langsam komisch vor.",
+          "2": "Hm. Ich weiß nicht, ob ich Ihnen trauen kann.",
+          "3": "Mein Bauchgefühl sagt Nein. Und mein Bauch irrt sich selten.",
+          "4": "Jetzt werd ich aber hellhörig. Und zwar ganz hell.",
+          "5": "Da kommt mir ein Verdacht. Ein ziemlich großer sogar."
+        },
+        "verwirrt": {
+          "0": "Jetzt bin ich ganz durcheinander. Wo waren wir noch mal?",
+          "1": "Ich verstehe gar nichts mehr. Ist heute Dienstag?",
+          "2": "Moment, Moment … mir schwirrt der Kopf.",
+          "3": "Wie bitte? Jetzt hab ich völlig den Faden verloren.",
+          "4": "Ich glaube, ich hab mich gerade selbst verwirrt. Oder waren Sie das?",
+          "5": "Das ist mir alles zu viel auf einmal. Ich muss mich erst mal sortieren."
+        },
+        "amuesiert": {
+          "0": "Hihi, mit Ihnen hat man ja richtig Spaß!",
+          "1": "Also, das amüsiert mich jetzt aber königlich.",
+          "2": "Ha! Sie bringen mich noch zum Lachen.",
+          "3": "Was für ein lustiges Telefonat. Das erzähl ich weiter!",
+          "4": "Hehe, Sie gefallen mir. So einen Spaß hatte ich lange nicht.",
+          "5": "Ich muss so grinsen, meine Backen tun schon weh."
+        },
+        "genervt": {
+          "0": "Langsam geht mir das auf die Nerven.",
+          "1": "Seufz. Wie lange dauert das denn noch?",
+          "2": "Sie strapazieren meine Geduld. Und die war heute schon dünn.",
+          "3": "Ich verdrehe gerade die Augen. Das hören Sie nicht, aber es ist so.",
+          "4": "Na toll. Genau das, was ich heute noch gebraucht habe.",
+          "5": "Ich werde langsam ungemütlich. Nur, damit Sie’s wissen."
+        },
+        "wuetend": {
+          "0": "Jetzt werde ich aber richtig sauer!",
+          "1": "Mir kocht gleich das Blut! Passen Sie bloß auf!",
+          "2": "Das macht mich so wütend, ich könnte in die Tischkante beißen!",
+          "3": "Grrr! Ich bin kurz davor zu explodieren!",
+          "4": "Na warte! Jetzt reicht’s mir aber gewaltig!",
+          "5": "Ich bin so wütend, dass mein Kaffee von allein kocht!"
+        },
+        "aengstlich": {
+          "0": "Oh je, jetzt krieg ich aber Angst.",
+          "1": "Mir ist ganz mulmig zumute. Ist wirklich alles in Ordnung?",
+          "2": "Ach du Schreck, das klingt ja schlimm!",
+          "3": "Meine Knie zittern. Und meine Stimme auch, hören Sie?",
+          "4": "Ich trau mich ja gar nicht mehr, was zu sagen.",
+          "5": "Hilfe, ich bin ganz nervös. Soll ich mich unterm Tisch verstecken?"
+        },
+        "gelangweilt": {
+          "0": "Gähn. Ist das jetzt spannend, oder kommt das noch?",
+          "1": "Hm. Ja. Sehr interessant. Wirklich.",
+          "2": "Ich zähle gerade die Fliegen an der Decke. Es sind drei.",
+          "3": "Wissen Sie, was spannender ist? Farbe beim Trocknen zuzusehen.",
+          "4": "Mir fallen gleich die Augen zu.",
+          "5": "Mhm. Ich male nebenbei Kringel auf den Notizblock. Schon zwölf Stück."
+        }
+      },
+      "trait": {
+        "sleep": {
+          "0": "Mhm … ja … ich hör Ihnen zu … gaaanz … genau …",
+          "1": "Ich mach nur kurz die Augen zu. Erzählen Sie ruhig … weiter …",
+          "2": "Gähn … Verzeihung, ich bin heut so müde … so … müde …",
+          "3": "Das ist ja … interessant … Moment, ich leg mich nur kurz …",
+          "4": "Ihre Stimme ist so beruhigend … wie ein Hörspiel … mit Kissen …",
+          "5": "Ja, ja … ganz meiner Meinung … Schäfchen … eins … zwei …"
+        },
+        "snore": {
+          "0": "Chrrrr … pfüüüh … Chrrrr …",
+          "1": "[Lautes Schnarchen.] … Nein, Mama, ich will noch nicht aufstehen …",
+          "2": "Zzz … noch fünf Minuten … zzz …",
+          "3": "Chrr … mmh … Pfannkuchen … mit Sahne … chrrr …",
+          "4": "[Schnarcht im Takt der Wanduhr.] Chrrr … tick … chrrr … tack …",
+          "5": "Mmh … Sie sind gefeuert, Herr Wecker … chrrr …"
+        },
+        "wake": {
+          "0": "Hm? Was? Ich war wach!",
+          "1": "Huch! Ich hab nicht geschlafen, ich hab nur gründlich nachgedacht.",
+          "2": "Wie bitte? Ich war ganz Ohr! Also … ein müdes Ohr.",
+          "3": "Ah! Was ist? Brennt’s? Ach, Sie sind’s.",
+          "4": "Bin wach, bin wach! Wovon haben wir gerade gesprochen?",
+          "5": "Ich hab nur die Augen ausgeruht. Die Ohren waren die ganze Zeit dabei!"
+        },
+        "chatter": {
+          "0": "Wissen Sie, was ich gehört habe? Die Nachbarin hat sich einen dritten Gartenzwerg gekauft. Einen dritten!",
+          "1": "Apropos nichts: Beim Bäcker gibt’s jetzt Brötchen mit Loch. Na, wenn das mal gut geht.",
+          "2": "Übrigens, der Briefträger kommt neuerdings rückwärts. Keiner weiß, warum.",
+          "3": "Haben Sie schon gehört? In Kleinkrakeelen haben sie ein Huhn zum Ortsvorsteher gewählt!",
+          "4": "Wo Sie gerade nichts sagen: Mein Schwager hat sich einen Hut gekauft. Grün! Mit Feder!",
+          "5": "Ich erzähl einfach mal weiter: Die Laterne vorm Haus flackert im Takt. Ich glaube, die tanzt."
+        },
+        "chattyLikes": {
+          "0": "Ach, Sie reden ja auch gern! Endlich jemand auf meiner Wellenlänge.",
+          "1": "Herrlich, Sie sind ja eine richtige Plaudertasche! Genau wie ich!",
+          "2": "So viel auf einmal! Ich bin begeistert. Erzählen Sie weiter!",
+          "3": "Sie reden fast so viel wie ich. Ein größeres Kompliment kann ich nicht machen.",
+          "4": "Toll, endlich muss ich mal nicht alles allein erzählen!",
+          "5": "Weiter, weiter! Ich hab Kaffee, Zeit und beide Ohren frei."
+        },
+        "strike": {
+          "0": "Moment, ich hab ein Angebot für Sie: den Wunderkiesel-Taler! Steigt garantiert. Irgendwann.",
+          "1": "Kaufen Sie doch lieber bei mir: die Pfennigfuchs-Münze, nur heute zum Sonderpreis!",
+          "2": "Sie wollen was von mir? Ich will was von Ihnen: Investieren Sie in meine Mondkartoffel-Aktie!",
+          "3": "Ich bin übrigens viel erfolgreicher als Sie. Ich hab drei Jachten. Zwei davon in der Badewanne.",
+          "4": "Meine Münze, der Hosentaschen-Taler, ist heute schon um 400 % gestiegen. Wollen Sie auch welche?",
+          "5": "Ich mach Ihnen einen Spezialpreis: zehn Luftschloss-Anteile für nur fünf Taler!"
+        },
+        "strikeThreat": {
+          "0": "Passen Sie bloß auf! Mein Anwalt hat einen sehr, sehr langen Kugelschreiber!",
+          "1": "Noch ein Wort, und ich hole meine große Schwester. Die hat den schwarzen Gürtel im Beschweren.",
+          "2": "Ich ruf gleich die Polizei. Oder wenigstens den Hausmeister, der ist strenger.",
+          "3": "Sie Pfeifenkopf! Ich verklage Sie bis nach Mumpitzhausen und zurück!",
+          "4": "Wissen Sie, wen ich kenne? Den Bürgermeister von Schwindelheim! Na gut, seinen Dackel.",
+          "5": "Ich hab Ihre Stimme aufgenommen. Die spiele ich meinem Anwalt vor. Rückwärts!"
+        },
+        "grammar": {
+          "0": "Verzeihung, aber das heißt „wegen des“, nicht „wegen dem“. Fahren Sie fort.",
+          "1": "Ihr Satz hatte kein Verb. Ich hab gewartet, aber es kam keins.",
+          "2": "Moment! Da fehlt ein Komma. So etwas spüre ich in den Fingerspitzen.",
+          "3": "Achtung, Großschreibung! Ein Substantiv ist doch kein Kleinkram.",
+          "4": "Das war grammatikalisch, sagen wir, abenteuerlich. Noch einmal, bitte, mit Gefühl.",
+          "5": "Hab ich da „seid“ statt „seit“ gehört? Am Telefon? Erstaunliche Leistung."
+        },
+        "grammarOk": {
+          "0": "Ein vollständiger Satz mit Subjekt, Prädikat und Objekt! Ich bin gerührt.",
+          "1": "Tadellos formuliert. Da hätte mein alter Deutschlehrer vor Freude geweint.",
+          "2": "Sehr schön! Komma, Punkt, alles am rechten Fleck.",
+          "3": "Endlich jemand, der den Dativ respektiert. Bravo!",
+          "4": "Ein Satz wie aus dem Lehrbuch. Dafür gibt es eine Eins mit Sternchen.",
+          "5": "Wunderbar ausgedrückt. Sie dürfen weitersprechen."
+        },
+        "omen": {
+          "0": "Diese Zahl! Die bringt Unglück, das weiß doch jeder. Schnell auf Holz klopfen!",
+          "1": "Oh nein, genau diese Zahl hab ich heute Nacht geträumt. Mit einer schwarzen Katze daneben!",
+          "2": "Die Zahl? Das ist ein Zeichen! Ich weiß nur noch nicht, wofür.",
+          "3": "Hören Sie auf, solche Zahlen zu sagen! Gerade ist mir fast ein Spiegel runtergefallen.",
+          "4": "Ui, eine gerade Zahl an einem ungeraden Tag. Das verheißt nichts Gutes.",
+          "5": "Diese Zahl bringt Glück! Zumindest, wenn man dabei auf einem Bein steht."
+        },
+        "explode": {
+          "0": "WAS?! Wie können Sie so was sagen?! Ich bin zutiefst verletzt!",
+          "1": "Das war’s! Ich bin beleidigt! Ich will eine Entschuldigung, und zwar sofort!",
+          "2": "Also das … das ist ja … UNERHÖRT! Ich brauch erst mal ein Taschentuch!",
+          "3": "Wie gemein! Das schreib ich in mein Tagebuch. Mit drei Ausrufezeichen!",
+          "4": "Haben Sie mich gerade angeschrien?! Mein Puls ist auf hundertachtzig!",
+          "5": "Ich explodiere gleich! Bumm! Hören Sie das? Das war ich, innerlich!"
+        },
+        "complain": {
+          "0": "Und überhaupt: Wieso klingelt das Telefon immer genau dann, wenn ich mich gerade hinsetze?",
+          "1": "Dieses Wetter heute! Viel zu wettrig. Da sollte sich mal jemand drum kümmern.",
+          "2": "Wissen Sie, was mich stört? Dass die Nachbarn so laut leise sind.",
+          "3": "Ich möchte mich übrigens beschweren. Worüber, sag ich Ihnen gleich.",
+          "4": "Ihre Leitung knistert. Das ist eine Zumutung! Ich verlange Ihren Vorgesetzten!",
+          "5": "Und noch was: In meinem Joghurt war heute zu wenig Erdbeere. Das muss auch mal gesagt werden!"
+        },
+        "protocolOk": {
+          "0": "Name und Funktion korrekt angegeben. Vorbildlich! So gehört sich das.",
+          "1": "Ordnungsgemäße Vorstellung. Ich vermerke das wohlwollend.",
+          "2": "Endlich jemand, der weiß, wie man sich anständig vorstellt!",
+          "3": "Bestätige: Name erfasst, Funktion erfasst. Wir können fortfahren.",
+          "4": "Tadellos! Erst der Name, dann das Anliegen. Genau die richtige Reihenfolge.",
+          "5": "Sehr gut. Mit einer sauberen Vorstellung fängt jedes gute Gespräch an."
+        }
+      }
+    }
+  }
+}

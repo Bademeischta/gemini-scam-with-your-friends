@@ -1,0 +1,35 @@
+{
+  "name": "masche-und-co",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Masche & Co. – Das Callcenter-Chaos mit Freunden (Browser-Spiel, PWA)",
+  "type": "module",
+  "scripts": {
+    "icons": "tsx scripts/gen-icons.ts",
+    "dev": "npm run icons && vite",
+    "typecheck": "tsc --noEmit",
+    "build": "npm run icons && tsc --noEmit && vite build",
+    "build:e2e": "npm run icons && vite build --mode e2e --outDir dist-e2e",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "e2e": "playwright test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "phaser": "^3.90.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.0",
+    "@types/node": "^26.6.5",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4",
+    "vite-plugin-pwa": "^2.0.0",
+    "vitest": "^5.0.3",
+    "workbox-build": "^7.4.1",
+    "workbox-window": "^7.4.1"
+  }
+}
