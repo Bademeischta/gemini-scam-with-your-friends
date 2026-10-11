@@ -11,8 +11,9 @@ export function collectErrors(page: Page): string[] {
   return errors;
 }
 
-export async function openGame(page: Page): Promise<void> {
-  await page.goto('./');
+/** Spiel öffnen; `query` z. B. '?ring=hildegard&seed=7' (Test-Parameter, siehe src/debug/testParams.ts). */
+export async function openGame(page: Page, query = ''): Promise<void> {
+  await page.goto(`./${query}`);
   await page.waitForFunction(() => window.__MASCHE__?.ready === true, undefined, { timeout: 20_000 });
 }
 
@@ -79,6 +80,17 @@ export async function enterOfficeByKeyboard(page: Page): Promise<void> {
   await page.keyboard.press('Enter');
   await expectHook(page, 'scene', 'Office');
   await expect.poll(async () => (await office(page))?.zoom ?? 0).toBeGreaterThan(0);
+}
+
+/** Vom Titel ins Büro (Touch: Titel antippen, „Schicht beginnen“ antippen). */
+export async function enterOfficeByTouch(page: Page): Promise<void> {
+  if (await hook<boolean>(page, 'rotateHintVisible')) await page.locator('#rotate-continue').tap();
+  await page.touchscreen.tap(20, 200);
+  await expectHook(page, 'titleState', 'menu');
+  const startBtn = await menuCenter(page, 'start');
+  await page.touchscreen.tap(startBtn.x, startBtn.y);
+  await expectHook(page, 'scene', 'Office');
+  await expect.poll(async () => (await hook<{ action: { w: number } } | undefined>(page, 'touchRects'))?.action.w ?? 0).toBeGreaterThan(50);
 }
 
 /**
@@ -380,13 +392,7 @@ export async function osWindow(page: Page, app: string): Promise<OsWindowState |
 /** Vom Titel an Platz 7 setzen (Desktop: Tastatur, Touch: Joystick + Kontext-Button); wartet, bis MogelOS bereit ist. */
 export async function sitAtDesk(page: Page, touch: boolean, alreadyInOffice = false): Promise<void> {
   if (touch) {
-    if (await hook<boolean>(page, 'rotateHintVisible')) await page.locator('#rotate-continue').tap();
-    await page.touchscreen.tap(20, 200);
-    await expectHook(page, 'titleState', 'menu');
-    const startBtn = await menuCenter(page, 'start');
-    await page.touchscreen.tap(startBtn.x, startBtn.y);
-    await expectHook(page, 'scene', 'Office');
-    await expect.poll(async () => (await hook<{ action: { w: number } } | undefined>(page, 'touchRects'))?.action.w ?? 0).toBeGreaterThan(50);
+    if (!alreadyInOffice) await enterOfficeByTouch(page);
     const rects = await hook<{ stickRest: { x: number; y: number }; action: { x: number; y: number; w: number; h: number } }>(page, 'touchRects');
     await touchWalkPath(page, DESK7_PATH, rects.stickRest);
     await expect.poll(async () => (await office(page)).focus).toBe('desk7');

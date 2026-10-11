@@ -1,10 +1,13 @@
 import Phaser from 'phaser';
+import { CallVoice } from '../audio/callVoice';
+import { HoldMusic } from '../audio/holdMusic';
 import { TUNING } from '../config/tuning';
 import { currentRun } from '../core/run';
 import { i18n, t } from '../i18n';
 import type { ViewportState } from '../systems/viewport/viewportMath';
 import { CrtTransition } from '../ui/os/CrtTransition';
 import { MogelOS } from '../ui/os/MogelOS';
+import { TextInputBridge } from '../ui/os/TextInputBridge';
 import { BaseScene } from './BaseScene';
 
 export interface DesktopData {
@@ -24,6 +27,8 @@ export class DesktopScene extends BaseScene {
   protected override readonly pausable = true;
   private os!: MogelOS;
   private crt!: CrtTransition;
+  private voice!: CallVoice;
+  private holdMusic!: HoldMusic;
   private opts!: DesktopData;
   private leaving = false;
   /** Tastatur/Gamepad erst ab dem zweiten Frame (der Tastendruck zum Hinsetzen zählt nicht). */
@@ -51,11 +56,18 @@ export class DesktopScene extends BaseScene {
       s: this.s,
       shift: () => run.shift,
       vfs: run.vfs,
+      desk: this.opts.desk,
+      phone: run.phone,
+      notes: run.notes,
       onLeave: () => this.leave(),
       onPause: () => this.opts.onPause(),
     });
+    this.voice = new CallVoice(this.s, run.phone, this.opts.desk);
+    this.holdMusic = new HoldMusic(this.s.audio);
     this.crt = new CrtTransition(this, 20_000, TUNING.os.crtSeconds);
     this.crt.play('on', () => this.opts.onScreen(true));
+    // Zurück an einen Platz mit laufendem (oder gerade beendetem) Gespräch: gleich das Telefon zeigen.
+    if (run.phone.session(this.opts.desk)) this.os.open('phone');
     this.s.sfx.crtOn();
     run.desktopVisits++;
     if (run.desktopVisits === 1) {
@@ -66,7 +78,11 @@ export class DesktopScene extends BaseScene {
     }
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.registry.set('os', null);
+      this.voice.destroy();
+      this.holdMusic.update(false);
+      this.s.speech.abort();
       this.os.destroy();
+      TextInputBridge.get().setSuspended(false);
     });
   }
 
@@ -80,7 +96,14 @@ export class DesktopScene extends BaseScene {
     // Während der Pause gehen Klicks nicht an den Desktop unter dem Pausenmenü.
     this.input.enabled = !paused && !this.leaving;
     const accept = this.armed && !this.crt.running && !this.leaving;
-    if (!paused) this.os.update(dt, accept);
+    // Das DOM-Eingabefeld läge sonst über Pausenmenü und Röhren-Effekt.
+    TextInputBridge.get().setSuspended(paused || this.crt.running || this.leaving);
+    if (!paused) {
+      this.os.update(dt, accept);
+      this.voice.update(dt);
+    }
+    const call = currentRun().calls.conversation(this.opts.desk);
+    this.holdMusic.update(!paused && call?.state === 'hold');
     this.crt.update(paused ? 0 : dt, this.scale.width, this.scale.height);
     this.armed = true;
     this.registry.set('os', this.os.snapshot(accept && !paused));
@@ -90,6 +113,9 @@ export class DesktopScene extends BaseScene {
   private leave(): void {
     if (this.leaving) return;
     this.leaving = true;
+    this.voice.stop();
+    this.holdMusic.update(false);
+    this.s.speech.abort();
     this.opts.onScreen(false);
     this.s.sfx.crtOff();
     this.crt.play('off', () => this.opts.onLeave());

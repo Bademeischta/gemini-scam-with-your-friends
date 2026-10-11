@@ -183,8 +183,13 @@ test.describe('MogelOS', () => {
     await openGame(page);
     await sitAtDesk(page, false);
     await page.keyboard.press('ArrowDown');
-    await expect.poll(async () => (await osState(page)).focus).toBe('icon:files');
+    await expect.poll(async () => (await osState(page)).focus).toBe('icon:phone');
     expect((await osState(page)).ring).toBe(true);
+    // Telefon und Notizen stehen vorne; zwei Schritte weiter liegt „Dateien“.
+    await page.keyboard.press('ArrowDown');
+    await expect.poll(async () => (await osState(page)).focus).toBe('icon:notes');
+    await page.keyboard.press('ArrowDown');
+    await expect.poll(async () => (await osState(page)).focus).toBe('icon:files');
     await page.keyboard.press('Enter');
     await expect.poll(async () => (await osWindow(page, 'files'))?.active).toBe(true);
     await expect.poll(async () => (await osState(page)).focus).toBe('files:tab:0');
@@ -230,9 +235,10 @@ test.describe('MogelOS', () => {
     await page.keyboard.press('Enter');
     await expectHook(page, 'scene', 'Office');
     await sitAtDesk(page, false, true);
-    await page.keyboard.press('ArrowDown');
-    await page.keyboard.press('ArrowDown');
-    await expect.poll(async () => (await osState(page)).focus).toBe('icon:trash');
+    for (const id of ['phone', 'notes', 'files', 'trash']) {
+      await page.keyboard.press('ArrowDown');
+      await expect.poll(async () => (await osState(page)).focus).toBe(`icon:${id}`);
+    }
     await page.keyboard.press('Enter');
     await expect.poll(async () => ((await osWindow(page, 'trash'))?.state?.['files'] as string[] | undefined)?.length).toBe(4);
     expect((await osState(page)).windows).toHaveLength(1);
@@ -255,10 +261,11 @@ test.describe('MogelOS', () => {
     await padButton(page, 0);
     await waitOsReady(page);
     await padButton(page, 13); // runter: Fokus erscheint auf dem ersten Symbol
-    await expect.poll(async () => (await osState(page)).focus).toBe('icon:files');
-    await padButton(page, 13);
-    await padButton(page, 13);
-    await expect.poll(async () => (await osState(page)).focus).toBe('icon:calc');
+    await expect.poll(async () => (await osState(page)).focus).toBe('icon:phone');
+    for (const id of ['notes', 'files', 'trash', 'calc']) {
+      await padButton(page, 13);
+      await expect.poll(async () => (await osState(page)).focus).toBe(`icon:${id}`);
+    }
     await padButton(page, 0);
     await expect.poll(async () => (await osState(page)).focus).toBe('calc:key:7');
     await padButton(page, 15); // rechts

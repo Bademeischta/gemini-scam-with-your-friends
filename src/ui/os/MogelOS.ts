@@ -5,8 +5,11 @@ import { WALLPAPERS, OS_THEME_IDS, type OsThemeId, type Wallpaper } from '../../
 import { buildOsIcon, buildWallpaper, buildWeatherIcon, OS_ICONS, type WeatherIcon } from '../../gfx/osArt';
 import { gridTexture } from '../../gfx/phaserTextures';
 import { t } from '../../i18n';
+import { callerById } from '../../data/callers';
+import type { PhoneHub } from '../../systems/calls/PhoneHub';
 import type { ShiftState } from '../../systems/day/ShiftState';
 import { NavRepeat } from '../../systems/input/NavRepeat';
+import type { Notebook } from '../../systems/os/notebook';
 import type { VirtualFs } from '../../systems/os/vfs';
 import { haptic } from '../../systems/platform/haptics';
 import { safeRect, pixelScale, type ViewportState } from '../../systems/viewport/viewportMath';
@@ -14,6 +17,7 @@ import { icon as touchIcon } from '../touch/touchArt';
 import { APPS, appById } from './apps';
 import { emptyTrash } from './apps/trash';
 import type { AppDef, AppView, ContextItem, OsApi, OsEnv, ToastOptions } from './apps/types';
+import { CallPopup } from './CallPopup';
 import { DesktopIcon } from './DesktopIcon';
 import { FocusManager } from './FocusManager';
 import type { NavDir, Rect } from './focusNav';
@@ -26,7 +30,7 @@ import { OS_THEMES, type OsTheme } from './theme';
 import { Toasts } from './Toasts';
 import { gesture } from './widgets';
 
-const DEPTH = { wallpaper: 0, background: 5, icons: 10, windows: 100, taskbar: 5000, start: 6000, ctx: 7000, toasts: 8000, focus: 9000 } as const;
+const DEPTH = { wallpaper: 0, background: 5, icons: 10, windows: 100, call: 4500, taskbar: 5000, start: 6000, ctx: 7000, toasts: 8000, focus: 9000 } as const;
 const WEATHER_ICONS: readonly WeatherIcon[] = ['sun', 'cloud', 'rain', 'storm', 'fog', 'rocket'];
 
 interface WinEntry {
@@ -41,6 +45,10 @@ export interface MogelOSOptions {
   s: Services;
   shift: () => ShiftState;
   vfs: VirtualFs;
+  /** Platz, an dem der Spieler sitzt, mit Telefon und Notizblock. */
+  desk: number;
+  phone: PhoneHub;
+  notes: Notebook;
   /** Aufstehen angefordert (Taskleiste, Tab, B). */
   onLeave: () => void;
   onPause: () => void;
@@ -72,6 +80,7 @@ export class MogelOS implements OsApi {
   private readonly icons: DesktopIcon[] = [];
   private readonly taskbar: Taskbar;
   private readonly toasts: Toasts;
+  private readonly popup: CallPopup;
   private windows: WinEntry[] = [];
   private startMenu: PopupMenu | null = null;
   private ctxMenu: PopupMenu | null = null;
@@ -106,6 +115,9 @@ export class MogelOS implements OsApi {
       day: () => o.shift().day,
       setWallpaper: (id) => this.setWallpaper(id),
       setTheme: (id) => this.setTheme(id),
+      desk: o.desk,
+      phone: o.phone,
+      notes: o.notes,
     };
     this.unit = pixelScale(this.vp, TUNING.display.uiArtScale);
     const nr = (): NavRepeat => new NavRepeat(TUNING.input.navRepeatDelay, TUNING.input.navRepeatInterval);
@@ -143,6 +155,20 @@ export class MogelOS implements OsApi {
       onPause: () => o.onPause(),
     });
     this.toasts = new Toasts(this.base, DEPTH.toasts);
+    this.popup = new CallPopup(this.base, DEPTH.call, { onAnswer: () => this.answerCall(), onDecline: () => this.declineCall() });
+    // Beute aus Gesprächen an diesem Platz landet im Notizblock – kurz Bescheid geben.
+    this.offs.push(
+      o.phone.on((e) => {
+        if (e.type !== 'capture' || e.desk !== o.desk) return;
+        this.s.sfx.note();
+        this.toast({
+          icon: 'notes',
+          title: t('os.notes.toastTitle'),
+          body: t('os.notes.captured', { demand: t(`calls.demands.${e.capture.loot.kind}`), value: e.capture.loot.value }),
+          onClick: () => this.open('notes'),
+        });
+      }),
+    );
 
     // Wischen zwischen Apps (Handy-Modus) und Ende von Schieberegler-Gesten.
     const onDown = (p: Phaser.Input.Pointer): void => {
@@ -260,6 +286,35 @@ export class MogelOS implements OsApi {
     return this.startMenu !== null || this.ctxMenu !== null;
   }
 
+  /** Klingelnden Anruf am eigenen Platz annehmen (Popup, E/A, Wischen) und das Telefon zeigen. */
+  answerCall(): void {
+    if (!this.o.phone.answer(this.o.desk)) return;
+    this.s.sfx.pickUp();
+    haptic(this.s.settings.get().vibration, 30);
+    this.popup.hide();
+    this.open('phone');
+  }
+
+  private declineCall(): void {
+    this.o.phone.decline(this.o.desk);
+    this.s.sfx.hangUp();
+    this.popup.hide();
+  }
+
+  /** Popup ein-/ausblenden je nach Klingeln am eigenen Platz. */
+  private syncPopup(dt: number): void {
+    const v = this.o.phone.calls.view(this.o.desk);
+    if (v.kind === 'ringing') {
+      const def = callerById(v.callerId);
+      if (def && this.popup.shownCallId !== v.callId) {
+        this.popup.show(def, v.callId);
+        haptic(this.s.settings.get().vibration, 60);
+        if (this.ringVisible && !this.overlayOpen) this.focus.focus('call:answer');
+      }
+      this.popup.update(dt, v.left / TUNING.calls.ringSeconds);
+    } else this.popup.hide();
+  }
+
   private get ringVisible(): boolean {
     const k = this.s.device.kind;
     return k === 'keyboard' || k === 'gamepad';
@@ -301,11 +356,13 @@ export class MogelOS implements OsApi {
     const margin = 4 * u;
     // Unten rechts (Handy: über dem Dock), damit sie keine Desktop-Symbole verdecken.
     this.toasts.layout({ x: this.area.x + margin, y: this.area.y + margin, w: this.area.w - 2 * margin, h: this.area.h - 2 * margin }, 'bottom');
+    this.popup.layout(this.area);
     this.syncTaskbar();
   }
 
   /** Pro Frame (nur wenn nicht pausiert und kein Übergang läuft). */
   update(dt: number, acceptInput: boolean): void {
+    this.syncPopup(dt);
     if (acceptInput) this.handleInput(dt);
     for (const e of this.windows) e.view.update?.(dt);
     this.taskbar.update(this.o.shift(), dt);
@@ -342,6 +399,7 @@ export class MogelOS implements OsApi {
         state: e.view.state?.() ?? null,
       })),
       toasts: this.toasts.snapshot(),
+      popup: this.popup.snapshot(),
       toastRects: this.toasts.rects().map(css),
       taskbar: this.taskbar.statusTexts(),
       taskbarRects: Object.fromEntries(Object.entries(this.taskbar.rects()).map(([k, r]) => [k, css(r)])),
@@ -361,6 +419,7 @@ export class MogelOS implements OsApi {
     for (const ic of this.icons) ic.destroy();
     this.taskbar.destroy();
     this.toasts.destroy();
+    this.popup.destroy();
   }
 
   // ------------------------------------------------------------------ Eingabe
@@ -372,6 +431,17 @@ export class MogelOS implements OsApi {
     const top = this.activeEntry();
     if (!this.overlayOpen && top?.view.onTyped && typed.length > 0) enterUsed = top.view.onTyped(typed) && typed.includes('Enter');
 
+    // Klingeln: E/A nimmt an, Entf/LT lehnt ab – egal, wo der Fokus gerade ist.
+    if (this.popup.visible && !this.overlayOpen) {
+      if (inp.justPressed('interact')) {
+        this.answerCall();
+        return;
+      }
+      if (inp.justPressed('hangup')) {
+        this.declineCall();
+        return;
+      }
+    }
     if (this.overlayOpen) {
       if (inp.justPressed('uiBack') || inp.justPressed('pause') || inp.justPressed('leave')) this.closeOverlays();
     } else if (inp.justPressed('pause')) {
@@ -405,8 +475,8 @@ export class MogelOS implements OsApi {
     else if (this.startMenu) this.focus.restrict((sc) => sc === 'start');
     else if (active) {
       const scope = `win:${active.win.id}`;
-      this.focus.restrict((sc) => sc === scope || sc === 'taskbar');
-    } else this.focus.restrict((sc) => sc === 'desktop' || sc === 'taskbar');
+      this.focus.restrict((sc) => sc === scope || sc === 'taskbar' || sc === 'call');
+    } else this.focus.restrict((sc) => sc === 'desktop' || sc === 'taskbar' || sc === 'call');
   }
 
   private focusDefault(): void {
@@ -628,6 +698,7 @@ export class MogelOS implements OsApi {
     }
     this.taskbar.redraw();
     this.toasts.redraw();
+    this.popup.redraw();
     this.icons.forEach((ic) => ic.setSelected(ic === this.selectedIcon));
   }
 

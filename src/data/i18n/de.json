@@ -100,6 +100,14 @@
   },
   "os": {
     "apps": {
+      "phone": {
+        "title": "Telefon",
+        "short": "Telefon"
+      },
+      "notes": {
+        "title": "Notizblock",
+        "short": "Notizen"
+      },
       "files": {
         "title": "Dateien",
         "short": "Dateien"
@@ -247,8 +255,9 @@
     },
     "settings": {
       "tabs": {
-        "look": "Darstellung",
+        "look": "Aussehen",
         "sound": "Ton",
+        "voice": "Sprache",
         "info": "Info"
       },
       "wallpaper": "Hintergrund",
@@ -269,13 +278,108 @@
       "masterValue": "Gesamtlautstärke: {value} %",
       "uiValue": "Effekte & Oberfläche: {value} %",
       "vibration": "Vibration",
-      "infoText": "MogelOS 3.11 „Schummel-Edition“\nLizenz: gefunden\nArbeitsspeicher: 640 KB (reicht für jeden)\nFestplatte: 2 GB, davon 1,9 GB Ausreden\n\nSpielversion: {version}\n\nMogelOS wird Ihnen präsentiert von der Hausmeisterei der Masche & Co. Fragen bitte schriftlich, Antworten nie."
+      "infoText": "MogelOS 3.11 „Schummel-Edition“\nLizenz: gefunden\nArbeitsspeicher: 640 KB (reicht für jeden)\nFestplatte: 2 GB, davon 1,9 GB Ausreden\n\nSpielversion: {version}\n\nMogelOS wird Ihnen präsentiert von der Hausmeisterei der Masche & Co. Fragen bitte schriftlich, Antworten nie.",
+      "voiceMode": "Anruferstimmen",
+      "voiceModes": {
+        "tts": "Sprechen",
+        "babble": "Brabbeln",
+        "off": "Stumm"
+      },
+      "voiceName": "Stimme: {name}",
+      "voiceAuto": "automatisch",
+      "voiceNone": "Keine deutsche Systemstimme gefunden – Anrufer brabbeln stattdessen.",
+      "voiceValue": "Stimmen: {value} %",
+      "voiceTest": "Stimme testen",
+      "voiceSample": "Hallo? Hier spricht Hildegard Sonnenschein. Mausi lässt grüßen!",
+      "speechInput": "Spracheingabe (Mikrofon)",
+      "micMode": "Mikrofon",
+      "micModes": {
+        "ptt": "Gedrückt halten",
+        "auto": "Antippen"
+      },
+      "micTest": "Mikrofon testen",
+      "micTestListening": "Sprich jetzt …",
+      "micTestResult": "Erkannt: „{text}“",
+      "micTestNothing": "Nichts gehört. Mikrofon erlaubt?",
+      "micUnsupported": "Dieser Browser kann keine Spracheingabe. Karten und Tippen gehen immer."
     },
     "toast": {
       "bossMail": {
         "title": "Chef-Mail: Direktor Brülling",
         "body": "Heutige Quota: {quota}. Keine Ausreden, keine Pausen, kein Lächeln am Telefon ohne Grund."
       }
+    },
+    "notes": {
+      "placeholder": "Notiz schreiben …",
+      "delete": "Löschen",
+      "empty": "Nichts ausgewählt. Beute aus Gesprächen landet hier von selbst.",
+      "captured": "{demand}: {value}",
+      "toastTitle": "Notiert!"
+    }
+  },
+  "calls": {
+    "popup": {
+      "title": "Eingehender Anruf",
+      "answer": "Annehmen",
+      "decline": "Ablehnen",
+      "hint": {
+        "desktop": "E: annehmen · Entf: ablehnen",
+        "gamepad": "A: annehmen · LT: ablehnen",
+        "touch": "Hochwischen: annehmen"
+      }
+    },
+    "phone": {
+      "reroll": "Andere Karten",
+      "mic": "Sprechen",
+      "hold": "Halten",
+      "speaker": "Lautspr.",
+      "keyboard": "Tippen",
+      "hangup": "Auflegen",
+      "done": "Fertig",
+      "placeholder": "Tippen … (1–4: Karte)",
+      "status": "{mood} · {trust} %",
+      "phase": "Phase: {phase} · {time}",
+      "onHold": "In der Warteschleife …",
+      "noCalls": "Noch keine Anrufe. Warte, bis es klingelt – oder geh an ein klingelndes Telefon.",
+      "listening": "Ich höre zu …",
+      "hearing": "Ich höre: {text}",
+      "micDeniedTitle": "Kein Mikrofon",
+      "micDenied": "Der Browser hat das Mikrofon nicht erlaubt. Karten und Tippen gehen immer.",
+      "summary": "Dauer {time} · Vertrauen am Ende {trust} %"
+    },
+    "phase": {
+      "einstieg": "Einstieg",
+      "vertrauen": "Vertrauen",
+      "forderung": "Forderung",
+      "ende": "Abschluss"
+    },
+    "outcome": {
+      "success": "Geschafft! Die Beute ist notiert.",
+      "successLoot": "Geschafft! {demand}: {value} – steht im Notizblock.",
+      "bait": "Reingelegt! Das war ein Köder. Die Daten taugen nichts.",
+      "hangup": "Aufgelegt.",
+      "farewell": "Freundlich verabschiedet.",
+      "playerHangup": "Du hast aufgelegt.",
+      "missed": "Verpasst."
+    },
+    "outcomeShort": {
+      "success": "Beute",
+      "bait": "Köder",
+      "hangup": "Aufgelegt",
+      "farewell": "Tschüss",
+      "playerHangup": "Aufgelegt",
+      "missed": "Verpasst"
+    },
+    "reason": {
+      "trust": "Aufgelegt: kein Vertrauen mehr.",
+      "angry": "Wütend aufgelegt.",
+      "patience": "Aufgelegt: zu lange geschwiegen.",
+      "hold": "Aufgelegt: zu lange in der Warteschleife.",
+      "contradiction": "Aufgelegt: zu viele Widersprüche."
+    },
+    "voice": {
+      "currency": "Taler",
+      "percent": "Prozent"
     }
   }
 }

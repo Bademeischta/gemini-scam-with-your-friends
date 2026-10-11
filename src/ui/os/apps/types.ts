@@ -1,5 +1,7 @@
 import type { OsThemeId, Wallpaper } from '../../../data/os/appearance';
 import type { OsIcon } from '../../../gfx/osArt';
+import type { PhoneHub } from '../../../systems/calls/PhoneHub';
+import type { Notebook } from '../../../systems/os/notebook';
 import type { VirtualFs } from '../../../systems/os/vfs';
 import type { OsWindow } from '../OsWindow';
 import type { Host } from '../widgets';
@@ -14,6 +16,8 @@ export interface OsApi {
   contextMenu(x: number, y: number, items: ContextItem[]): void;
   /** Kompakter Handy-Modus (Apps im Vollbild). */
   readonly compact: boolean;
+  /** Start- oder Kontextmenü offen (DOM-Eingabefelder ausblenden). */
+  readonly overlayOpen: boolean;
   /** Zentrale Dienste des Desktops (Dateisystem, Schicht …). */
   readonly env: OsEnv;
 }
@@ -25,6 +29,10 @@ export interface OsEnv {
   /** Farbschema / Hintergrund ändern (Systemsteuerung). */
   setWallpaper(id: Wallpaper): void;
   setTheme(id: OsThemeId): void;
+  /** Platz, an dem der Spieler sitzt (Telefon dieses Platzes). */
+  desk: number;
+  phone: PhoneHub;
+  notes: Notebook;
 }
 
 export interface ToastOptions {

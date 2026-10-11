@@ -2,7 +2,8 @@ import Phaser from 'phaser';
 import { hex } from '../config/palette';
 import { TUNING } from '../config/tuning';
 import { DESKS, deskGeometry, OFFICE_OBJECTS, OFFICE_SIZE, SPAWN, SPRITE_SIZE, TILE, type OfficeObject } from '../data/office';
-import { currentShift, startNewRun } from '../core/run';
+import { currentRun, currentShift, startNewRun } from '../core/run';
+import { buildRingBubble, buildRingHandset, buildRingWaves } from '../gfx/callArt';
 import { BOSS_LOOK, CHAR_H, frameIndex, PLAYER_LOOK, type Pose } from '../gfx/characters';
 import { buildBossDoorHalf, buildFloor, buildSprite } from '../gfx/officeArt';
 import { characterTexture, gridTexture } from '../gfx/phaserTextures';
@@ -44,6 +45,8 @@ export class OfficeScene extends BaseScene {
   private hud: OfficeHudScene | null = null;
   /** MogelOS ist offen (Spieler sitzt am PC). */
   private desktopOpen = false;
+  /** Klingel-Anzeige je Platz (Hörer hüpft, Wellen, Blase). */
+  private rings: { handset: Phaser.GameObjects.Image; waves: Phaser.GameObjects.Image; bubble: Phaser.GameObjects.Image; phase: number; nextSound: number }[] = [];
 
   constructor() {
     super('Office');
@@ -80,6 +83,16 @@ export class OfficeScene extends BaseScene {
     this.prev = { x: SPAWN.x, y: SPAWN.y };
     this.player = this.add.sprite(SPAWN.x, SPAWN.y, 'char-player', frameIndex('up', 'walk0')).setOrigin(0.5, 1);
 
+    gridTexture(this, 'ring-handset', buildRingHandset);
+    gridTexture(this, 'ring-waves', buildRingWaves);
+    gridTexture(this, 'ring-bubble', buildRingBubble);
+    this.rings = DESKS.map((d) => ({
+      handset: this.add.image(d.x + 24, d.y + 10, 'ring-handset').setOrigin(0, 0).setVisible(false),
+      waves: this.add.image(d.x + 20, d.y + 6, 'ring-waves').setOrigin(0, 0).setVisible(false),
+      bubble: this.add.image(d.x + 16, d.y - 4, 'ring-bubble').setOrigin(0.5, 1).setVisible(false).setDepth(DEPTH_PROMPT - 1),
+      phase: Math.random(),
+      nextSound: 0,
+    }));
     this.promptBg = this.add.graphics().setDepth(DEPTH_PROMPT);
     this.prompt = new PixelLabel(this, '', { scale: 1, color: 'white', shadow: 'ink0', originX: 0.5, originY: 1, depth: DEPTH_PROMPT + 1 });
 
@@ -115,8 +128,11 @@ export class OfficeScene extends BaseScene {
   }
 
   protected override fixedUpdate(dt: number): void {
-    // Der Arbeitstag läuft, egal ob am PC oder im Büro (nur die Pause hält ihn an).
+    // Der Arbeitstag und die Anrufe laufen, egal ob am PC oder im Büro (nur die Pause hält sie an).
     currentShift().tick(dt);
+    const run = currentRun();
+    run.calls.tick(dt);
+    run.phone.tick(dt);
     this.prev = { x: this.mover.x, y: this.mover.y };
     if (this.seatedAt !== null) return;
     stepMover(this.mover, this.s.input.move, dt, this.params, this.world);
@@ -141,6 +157,7 @@ export class OfficeScene extends BaseScene {
     this.player.setDepth(this.seatedAt !== null ? (this.chairDepth.get(this.seatedAt) ?? y) + 0.5 : y + 0.25);
 
     this.focus = this.seatedAt === null ? findInteractable(this.interactables, this.mover, this.mover.facing, TUNING.office.interactRadius, TUNING.office.probeAhead) : null;
+    this.updateRinging(paused ? 0 : dt, x, y);
     this.updatePrompt();
     this.updateCameraTarget(x, y, dt);
     this.publishState();
@@ -161,6 +178,7 @@ export class OfficeScene extends BaseScene {
     this.prev = { x: g.seat.x, y: g.seat.y };
     this.s.sfx.confirm();
     this.events.emit('seated', deskIndex);
+    currentRun().calls.setStaffed(deskIndex, true);
     this.openDesktop(deskIndex);
   }
 
@@ -190,6 +208,7 @@ export class OfficeScene extends BaseScene {
   private standUp(): void {
     if (this.seatedAt === null) return;
     const g = deskGeometry(DESKS[this.seatedAt]!);
+    currentRun().calls.setStaffed(this.seatedAt, false);
     this.seatedAt = null;
     this.mover.x = g.standUp.x;
     this.mover.y = g.standUp.y;
@@ -220,6 +239,45 @@ export class OfficeScene extends BaseScene {
     this.add.image(o.x, o.y, key).setOrigin(0, 0).setDepth(depth);
     const chair = /^chair(\d)$/.exec(o.id);
     if (chair) this.chairDepth.set(Number(chair[1]), depth);
+  }
+
+  /**
+   * Klingelnde Telefone: Hörer hüpft, Wellen und Blase über dem Platz, räumlicher Klingelton
+   * (lauter und auf der richtigen Seite, je näher man ist). Liefert der HUD die Ziele für Pfeile.
+   */
+  private updateRinging(dt: number, px: number, py: number): void {
+    const views = currentRun().calls.views();
+    const cam = this.cameras.main;
+    const targets: { x: number; y: number; desk: number }[] = [];
+    views.forEach((v, i) => {
+      const r = this.rings[i]!;
+      const ringing = v.kind === 'ringing';
+      r.handset.setVisible(ringing);
+      r.waves.setVisible(false);
+      r.bubble.setVisible(ringing && this.seatedAt !== i);
+      if (!ringing) return;
+      const d = DESKS[i]!;
+      r.phase += dt;
+      // Klingel-Rhythmus: zwei kurze Stöße, dann Pause (1,6 s).
+      const t = r.phase % 1.6;
+      const buzzing = t < 0.9;
+      const jump = buzzing && Math.floor(t * 16) % 2 === 0;
+      r.handset.setY(d.y + 10 - (jump ? 2 : 0)).setDepth((this.chairDepth.get(i) ?? d.y + 24) + 0.6);
+      r.waves.setVisible(buzzing).setDepth(r.handset.depth);
+      r.bubble.setY(Math.round(d.y - 4 - Math.abs(Math.sin(r.phase * 4)) * 3));
+      r.nextSound -= dt;
+      if (r.nextSound <= 0 && dt > 0) {
+        r.nextSound = 1.6;
+        const dx = d.x + 16 - px;
+        const dist = Math.hypot(dx, d.y + 20 - py);
+        const near = this.seatedAt === i ? 1 : Math.max(0.12, 1 - dist / 420);
+        // Am PC hört man fremde Telefone gedämpft.
+        const vol = this.desktopOpen && this.seatedAt !== i ? near * 0.35 : near;
+        this.s.sfx.ring(vol, Math.max(-1, Math.min(1, dx / 220)));
+      }
+      targets.push({ x: (d.x + 16 - cam.worldView.x) * this.zoom, y: (d.y + 10 - cam.worldView.y) * this.zoom, desk: i });
+    });
+    this.hud?.setRingTargets(targets);
   }
 
   private currentPose(): Pose {

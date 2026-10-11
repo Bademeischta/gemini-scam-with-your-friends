@@ -1,9 +1,8 @@
 import { I18n, type Dict, type Params } from './i18n';
-import de from '../data/i18n/de.json';
-import en from '../data/i18n/en.json';
+import { DE, EN } from './locales';
 
-/** Referenzsprache: Deutsch. Weitere Sprachen = weitere JSON-Datei hier eintragen. */
-export const LOCALES: Record<string, Dict> = { de, en };
+/** Referenzsprache: Deutsch. Weitere Sprachen = weitere JSON-Datei in locales.ts eintragen. */
+export const LOCALES: Record<string, Dict> = { de: DE, en: EN };
 export const DEFAULT_LOCALE = 'de';
 
 export const i18n = new I18n({

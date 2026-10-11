@@ -111,6 +111,51 @@ export const TUNING = {
     countdownWarnSeconds: 60,
   },
 
+  /** Anrufe und Gesprächs-Engine (GAME_DESIGN.md §3 und §8). */
+  calls: {
+    /** Abnehm-Fenster (s): danach legt der Anrufer auf (verpasst). */
+    ringSeconds: 30,
+    /** Abstand bis zum nächsten Anruf am selben Platz (s, zufällig dazwischen). */
+    gapMin: 20,
+    gapMax: 35,
+    /** Unbesetzte Plätze klingeln seltener (Faktor auf den Abstand). */
+    unstaffedGapFactor: 2.5,
+    /** Erster Anruf des Tages nach … s. */
+    firstRingMin: 4,
+    firstRingMax: 12,
+    /** Ohne Eingabe wird der Anrufer nach … s ungeduldig (Standard; je Figur anpassbar). */
+    patienceSeconds: 25,
+    /** Geduld leert sich danach in … × patienceSeconds bis zum Auflegen. */
+    patienceDrainFactor: 1.2,
+    /** Jede Eingabe füllt die Geduld um diesen Anteil auf. */
+    patienceRefill: 0.25,
+    /** Halten: Höchstdauer (s), ab der Hälfte wird der Anrufer genervt. */
+    holdMaxSeconds: 20,
+    /** Auflegen bei Wut: Vertrauen unter … % länger als … s. */
+    angryHangupTrust: 15,
+    angryHangupSeconds: 6,
+    /** Wiederholung: gleiche Absicht wirkt pro Wiederholung × …, ähnlicher Satz × … */
+    wearPerRepeat: 0.6,
+    /** Mehrere gute Auslöser in einem Satz: der stärkste zählt voll, jeder weitere × dieser Faktor mehr (gegen Schlagwort-Sätze). */
+    stackFalloff: 0.6,
+    similarSentenceFactor: 0.3,
+    similarSentenceJaccard: 0.6,
+    /** Widerspruch (andere Rolle oder anderer Name als zuvor) kostet so viel Vertrauen. */
+    contradictionPenalty: 15,
+    /** Zu frühe Forderung: Grund-Malus plus Anteil je fehlendem Vertrauen. */
+    earlyDemandBase: 10,
+    earlyDemandScale: 20,
+    /** Forderungs-Schwelle (Vertrauen %), falls die Figur nichts anderes festlegt. */
+    demandThreshold: 60,
+    /** Stimmung: Druck, ab dem sie kippt (Trägheit), und Abbau pro Sekunde. */
+    moodThreshold: 1,
+    moodDecay: 0.12,
+    /** Untertitel: Zeichen pro Sekunde (Schreibmaschine). */
+    subtitleCps: 38,
+    /** Pause zwischen zwei Sätzen des Anrufers (s). */
+    linePause: 0.45,
+  },
+
   touch: {
     /** Joystick-Radius in CSS-px. */
     joystickRadius: 52,

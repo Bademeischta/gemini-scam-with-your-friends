@@ -1,6 +1,9 @@
 import Phaser from 'phaser';
 import { buildSheet, CHAR_H, CHAR_W, FACINGS, POSES, type Appearance } from './characters';
 import type { PixelGrid } from './PixelGrid';
+import type { CallerDef } from '../systems/conversation/caller';
+import type { Mood } from '../systems/conversation/types';
+import { buildPortrait } from './portraits';
 
 /** Überträgt ein PixelGrid als Canvas-Textur nach Phaser (einmalig, danach gecacht). */
 export function gridTexture(scene: Phaser.Scene, key: string, grid: PixelGrid | (() => PixelGrid)): string {
@@ -30,4 +33,9 @@ export function characterTexture(scene: Phaser.Scene, key: string, look: Appeara
     }),
   );
   return key;
+}
+
+/** Porträt eines Anrufers in einer Stimmung (lazy, einmal je Kombination). */
+export function portraitTexture(scene: Phaser.Scene, def: CallerDef, mood: Mood): string {
+  return gridTexture(scene, `portrait-${def.id}-${mood}`, () => buildPortrait(def.portrait, mood));
 }

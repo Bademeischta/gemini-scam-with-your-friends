@@ -36,7 +36,7 @@ export function drawBevel(g: Phaser.GameObjects.Graphics, x: number, y: number, 
   g.fillStyle(hex(pressed ? light : dark), 1).fillRect(x + u, y + h - 2 * u, w - 2 * u, u).fillRect(x + w - 2 * u, y + u, u, h - 2 * u);
 }
 
-abstract class Widget {
+export abstract class Widget {
   protected rect: Rect = { x: 0, y: 0, w: 0, h: 0 };
   protected unregister: (() => void) | null = null;
   protected visible = true;
@@ -66,6 +66,9 @@ export interface ButtonOptions {
   variant?: 'normal' | 'primary' | 'flat';
   /** Beschriftung links (mit Symbol davor) statt mittig. */
   align?: 'center' | 'left';
+  /** Zeiger gedrückt bzw. losgelassen/verlassen (Halten-zum-Sprechen). */
+  onDown?: () => void;
+  onRelease?: () => void;
 }
 
 /**
@@ -116,14 +119,17 @@ export class OsButton extends Widget {
       if (!this.enabled || p.button !== 0) return;
       this.pressed = true;
       this.draw();
+      opts.onDown?.();
     });
     this.zone.on('pointerup', () => {
       if (!this.enabled || !this.pressed) return;
       this.pressed = false;
       this.draw();
+      opts.onRelease?.();
       this.click();
     });
     this.zone.on('pointerout', () => {
+      if (this.pressed) opts.onRelease?.();
       this.pressed = false;
       this.hover = false;
       this.draw();
@@ -183,6 +189,7 @@ export class OsButton extends Widget {
   }
 
   setEnabled(on: boolean): this {
+    if (on === this.enabled) return this;
     this.enabled = on;
     this.draw();
     return this;
@@ -190,6 +197,7 @@ export class OsButton extends Widget {
 
   /** Hervorgehoben (z. B. gedrückter Umschalter, aktives Fenster in der Taskleiste). */
   setActive(on: boolean): this {
+    if (on === this.active) return this;
     this.active = on;
     this.draw();
     return this;
@@ -497,8 +505,12 @@ export class OsList extends Widget {
         lx += r.icon.width * r.icon.scaleX + 3 * u;
       }
       const item = this.items[i];
-      r.label.setScale(u).setColor(item?.dim ? t.textDim : t.text).setPosition(Math.round(lx), Math.round(ry + rh / 2));
       r.right?.setScale(u).setPosition(Math.round(x + w - 3 * u), Math.round(ry + rh / 2));
+      // Lange Einträge (Notizen) werden mit „…“ gekürzt, statt in die rechte Spalte zu laufen.
+      const avail = x + w - 5 * u - (r.right ? r.right.width + 4 * u : 0) - lx;
+      r.label.setScale(u);
+      if (item && (r.label.width > avail || r.label.main.text !== item.label)) fitLabel(r.label, item.label, avail);
+      r.label.setColor(item?.dim ? t.textDim : t.text).setPosition(Math.round(lx), Math.round(ry + rh / 2));
     });
     // Scrollbalken, wenn nötig.
     const total = this.items.length * rh;

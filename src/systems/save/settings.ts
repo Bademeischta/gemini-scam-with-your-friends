@@ -15,7 +15,23 @@ export interface Settings {
   /** MogelOS: Hintergrundbild und Farbschema (Systemsteuerung). */
   osWallpaper: Wallpaper;
   osTheme: OsThemeId;
+  /** Anruferstimmen: Sprachsynthese, Brabbeln oder stumm (nur Untertitel). */
+  voiceMode: VoiceMode;
+  /** Gewählte Systemstimme ('' = automatisch je Figur). */
+  voiceName: string;
+  voiceVolume: number;
+  /** Spracheingabe (Mikrofon) erlaubt, wo der Browser sie kann. */
+  speechInput: boolean;
+  /** Mikrofon: Halten zum Sprechen oder Sprachaktivierung (hört nach dem Antippen zu, bis man schweigt). */
+  micMode: MicMode;
+  /** Handy: Texteingabe in der Telefon-App eingeblendet (sonst nur Karten). */
+  phoneTyping: boolean;
 }
+
+export const VOICE_MODES = ['tts', 'babble', 'off'] as const;
+export type VoiceMode = (typeof VOICE_MODES)[number];
+export const MIC_MODES = ['ptt', 'auto'] as const;
+export type MicMode = (typeof MIC_MODES)[number];
 
 export const DEFAULT_SETTINGS: Settings = {
   locale: 'de',
@@ -25,6 +41,12 @@ export const DEFAULT_SETTINGS: Settings = {
   portraitAccepted: false,
   osWallpaper: 'mogel',
   osTheme: 'klassik',
+  voiceMode: 'tts',
+  voiceName: '',
+  voiceVolume: 0.8,
+  speechInput: true,
+  micMode: 'ptt',
+  phoneTyping: false,
 };
 
 const KEY = 'settings.v1';
@@ -62,6 +84,12 @@ export class SettingsStore {
     if (typeof raw.portraitAccepted === 'boolean') s.portraitAccepted = raw.portraitAccepted;
     if ((WALLPAPERS as readonly unknown[]).includes(raw.osWallpaper)) s.osWallpaper = raw.osWallpaper as Wallpaper;
     if ((OS_THEME_IDS as readonly unknown[]).includes(raw.osTheme)) s.osTheme = raw.osTheme as OsThemeId;
+    if ((VOICE_MODES as readonly unknown[]).includes(raw.voiceMode)) s.voiceMode = raw.voiceMode as VoiceMode;
+    if (typeof raw.voiceName === 'string' && raw.voiceName.length <= 200) s.voiceName = raw.voiceName;
+    if (typeof raw.voiceVolume === 'number' && raw.voiceVolume >= 0 && raw.voiceVolume <= 1) s.voiceVolume = raw.voiceVolume;
+    if (typeof raw.speechInput === 'boolean') s.speechInput = raw.speechInput;
+    if ((MIC_MODES as readonly unknown[]).includes(raw.micMode)) s.micMode = raw.micMode as MicMode;
+    if (typeof raw.phoneTyping === 'boolean') s.phoneTyping = raw.phoneTyping;
     return s;
   }
 }

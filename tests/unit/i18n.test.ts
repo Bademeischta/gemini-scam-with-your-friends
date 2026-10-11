@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
-import de from '../../src/data/i18n/de.json';
+import { DE as de } from '../../src/i18n/locales';
 import en from '../../src/data/i18n/en.json';
 import { supportedChars } from '../../src/gfx/fontGlyphs';
 import { collectKeys, collectStrings, I18n, type Dict } from '../../src/i18n/i18n';

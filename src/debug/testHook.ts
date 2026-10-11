@@ -1,4 +1,5 @@
 import type Phaser from 'phaser';
+import { currentRun } from '../core/run';
 import type { Services } from '../core/services';
 import { i18n } from '../i18n';
 import { isFullscreen } from '../systems/platform/fullscreen';
@@ -40,6 +41,10 @@ export interface TestHook {
   fullscreen(): boolean;
   rotateHintVisible(): boolean;
   locale(): string;
+  /** Anrufe aller Plätze, Verlauf, Notizen und Klingel-Pfeile im Büro. */
+  calls(): unknown;
+  /** Sprachausgabe: verfügbar und zuletzt gesprochene Texte. */
+  voice(): { supported: boolean; usable: boolean; spoken: string[] };
   errors: string[];
 }
 
@@ -71,6 +76,16 @@ export function installTestHook(game: Phaser.Game, s: Services): void {
     fullscreen: () => isFullscreen(),
     rotateHintVisible: () => !(document.getElementById('rotate-hint')?.hidden ?? true),
     locale: () => i18n.locale,
+    calls: () => {
+      const run = currentRun();
+      return {
+        views: run.calls.views(),
+        history: run.calls.history.map((r) => ({ desk: r.desk, callerId: r.callerId, outcome: r.outcome, trust: r.trust })),
+        notes: run.notes.notes.map((n) => ({ text: n.text, from: n.from })),
+        arrows: (game.registry.get('ringArrows') as number | undefined) ?? 0,
+      };
+    },
+    voice: () => ({ supported: s.voice.supported, usable: s.voice.usable, spoken: [...s.voice.spoken] }),
     errors: [],
   };
   window.addEventListener('error', (e) => hook.errors.push(String(e.message)));

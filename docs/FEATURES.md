@@ -51,8 +51,8 @@ Mechanik, Zweck und Funktion bleiben gleich. Namen, Figuren, Grafik, Texte und M
 - [ ] **PLT-01** Windows-PC-Spiel mit Maus und Tastatur → bei uns Desktop-Browser mit frei belegbarer Tastatur und Maus. *O [ST][FN]* · M0/M11
 - [x] **PLT-02** First-Person-Bewegung durchs Büro → bei uns Draufsicht-Büro mit Laufen per WASD, Joystick oder Stick. *O [ST-Tags], E* · M1
 - [x] **PLT-03** Ingame-Desktop per Maus bedienen → bei uns per Maus, Touch oder Gamepad-Fokusnavigation. *O [FN]* · M2
-- [ ] **PLT-04** Mit Anrufern sprechen per Mikrofon (Tag „Voice Control“) → bei uns Spracheingabe, wo der Browser sie kann. *O [ST][FN], E* · M3
-- [ ] **PLT-05** Text-Eingabe als Alternative zur Stimme. *O? [XB-ähnlich, FN-faq unklar], E* · M3
+- [x] **PLT-04** Mit Anrufern sprechen per Mikrofon (Tag „Voice Control“) → bei uns Spracheingabe, wo der Browser sie kann. *O [ST][FN], E* · M3
+- [x] **PLT-05** Text-Eingabe als Alternative zur Stimme. *O? [XB-ähnlich, FN-faq unklar], E* · M3
 - [ ] **PLT-06** Läuft zusätzlich auf Handy und Tablet (Touch) und ist als App installierbar. *A* · M0/M12
 - [ ] **PLT-07** Gamepad-Unterstützung. *A* · M11
 
@@ -100,72 +100,72 @@ Mechanik, Zweck und Funktion bleiben gleich. Namen, Figuren, Grafik, Texte und M
 - [x] **OS-05** Taskleiste zeigt die Quota. *O [FN]* · M2
 - [x] **OS-06** Taskleiste zeigt den Countdown bis zur Leistungsbewertung. *O [FN]* · M2
 - [ ] **OS-07** Ausstempeln-Taste in der Taskleiste, aktiv sobald die Quota erreicht ist. *O [FN]* · M5
-- [ ] **OS-08** Popup bei eingehendem Anruf mit Name und Bild des Anrufers. *O [FN]* · M3
+- [x] **OS-08** Popup bei eingehendem Anruf mit Name und Bild des Anrufers. *O [FN]* · M3
 - [x] **OS-09** Fenstermanager: öffnen, schließen, fokussieren, verschieben (Desktop), minimieren. Auf dem Handy laufen Apps im Vollbild mit App-Umschalter. *A/E* · M2
 - [ ] **OS-10** Gesperrte Apps sind sichtbar (Schloss plus „ab Tag X“ bzw. „im Ramschazon“). *D* · M5
-- [ ] **OS-11** Benachrichtigungen (Toasts): Lieferung da, App freigeschaltet, Chef-Mail, Virus. *D* · M2 (System und Chef-Mail seit M2; Lieferung, Freischaltung und Virus mit M5–M7)
+- [ ] **OS-11** Benachrichtigungen (Toasts): Lieferung da, App freigeschaltet, Chef-Mail, Virus. *D* · M2 (System und Chef-Mail seit M2, „Notiert!“ bei erfasster Beute seit M3; Lieferung, Freischaltung und Virus mit M5–M7)
 - [ ] **OS-12** Boss-Taste: wechselt den Bildschirm sofort zu einer harmlosen Tabellenkalkulation (hilft bei Razzia und Chef-Kontrolle). *D* · M7
 - [x] **OS-13** Desktop-Hintergrund und Theme änderbar (Systemsteuerung). *D* · M2
-- [ ] **OS-14** Aufstehen bzw. Desktop verlassen jederzeit möglich, laufende Anrufe gehen weiter (Kollege kann übernehmen). *D* · M2/M8 (Aufstehen jederzeit seit M2; Anrufe ab M3, Übernahme durch Kollegen M8)
+- [ ] **OS-14** Aufstehen bzw. Desktop verlassen jederzeit möglich, laufende Anrufe gehen weiter (Kollege kann übernehmen). *D* · M2/M8 (Aufstehen jederzeit seit M2; laufende Anrufe gehen seit M3 weiter und werden beim Hinsetzen fortgesetzt; Übernahme durch Kollegen M8)
 
 ## 5. Anrufe & Gesprächssystem
 
-- [ ] **CAL-01** Eingehende Anrufe kommen zufällig an die Arbeitsplätze, klingeln hörbar und sichtbar (räumlicher Klang im Büro). *O [FN], D* · M3
-- [ ] **CAL-02** Abnehm-Fenster: Nach 30 s ohne Abnehmen legt der Anrufer auf bzw. wird verpasst. *D (Referenzwert [XB])* · M3
-- [ ] **CAL-03** Telefon-App mit Mikrofon-Taste, Lautsprecher-Taste, Auflegen, Halten (Warteschleife) und Texteingabe. *O [FN]* · M3
-- [ ] **CAL-04** Freies Gespräch: Der Spieler formuliert frei (tippen oder sprechen), der Anrufer reagiert auf den Inhalt und nicht auf eine Dialogauswahl. *O [CG], E (lokale Sprach-KI statt Cloud-LLM)* · M3
-- [ ] **CAL-05** Lokales Sprachverständnis: erkennt Absichten (Begrüßen, Vorstellen als Rolle, Smalltalk, Kompliment, Mitgefühl, Dringlichkeit, Drohung, Beruhigen, Erklären, Fordern, Bestätigen, Beleidigen, Unsinn, Entschuldigen, Lachen, Themen und Schlüsselwörter des Anrufers). *E* · M3
-- [ ] **CAL-06** Schnellantwort-Karten (vorgeschlagene Sätze passend zur Lage), verarbeitet wie freie Eingaben. **Auf dem Handy die Hauptsteuerung** (immer sichtbar, Freitext und Sprache optional zuschaltbar); auch für Gamepad und ohne Tastatur. *E* · M3
-- [ ] **CAL-07** Vertrauens-Anzeige als Prozentwert plus Stimmungs-Label. *O [FN]* · M3
-- [ ] **CAL-08** Stimmung ist ein eigener Zustand und kein reiner Prozent-Schwellwert, z. B. „Vertrauensvoll“ bei 65 %, „Wütend“ bei 50 %. *O [FN]* · M3
-- [ ] **CAL-09** Stimmungen: Vertrauensvoll, Neutral, Misstrauisch, Verwirrt, Amüsiert, Genervt, Wütend, Ängstlich, Gelangweilt. *O (2 belegt), D (Rest)* · M3
-- [ ] **CAL-10** Bricht das Vertrauen ein (0 % bzw. Wut-Grenze), legt der Anrufer auf. *O [FN]* · M3
-- [ ] **CAL-11** Vertrauen erst aufbauen, dann nach Sensiblem fragen: Wer zu früh fordert, verliert stark. *O [FN-Tutorial]* · M3
-- [ ] **CAL-12** Gedächtnis des Anrufers: Widersprüche (erst „Bank“, dann „Enkel“) erzeugen Misstrauen, gemerkte Namen und Details erzeugen Vertrauen. *E (LLM-Kontext)* · M3
-- [ ] **CAL-13** Abnutzung: Dieselbe Floskel wirkt mit jeder Wiederholung schwächer, es gibt keinen Satz, der immer funktioniert. *E (gegen die Kritik aus [CG])* · M3
+- [x] **CAL-01** Eingehende Anrufe kommen zufällig an die Arbeitsplätze, klingeln hörbar und sichtbar (räumlicher Klang im Büro). *O [FN], D* · M3
+- [x] **CAL-02** Abnehm-Fenster: Nach 30 s ohne Abnehmen legt der Anrufer auf bzw. wird verpasst. *D (Referenzwert [XB])* · M3
+- [x] **CAL-03** Telefon-App mit Mikrofon-Taste, Lautsprecher-Taste, Auflegen, Halten (Warteschleife) und Texteingabe. *O [FN]* · M3
+- [x] **CAL-04** Freies Gespräch: Der Spieler formuliert frei (tippen oder sprechen), der Anrufer reagiert auf den Inhalt und nicht auf eine Dialogauswahl. *O [CG], E (lokale Sprach-KI statt Cloud-LLM)* · M3
+- [x] **CAL-05** Lokales Sprachverständnis: erkennt Absichten (Begrüßen, Vorstellen als Rolle, Smalltalk, Kompliment, Mitgefühl, Dringlichkeit, Drohung, Beruhigen, Erklären, Fordern, Bestätigen, Beleidigen, Unsinn, Entschuldigen, Lachen, Themen und Schlüsselwörter des Anrufers). *E* · M3
+- [x] **CAL-06** Schnellantwort-Karten (vorgeschlagene Sätze passend zur Lage), verarbeitet wie freie Eingaben. **Auf dem Handy die Hauptsteuerung** (immer sichtbar, Freitext und Sprache optional zuschaltbar); auch für Gamepad und ohne Tastatur. *E* · M3
+- [x] **CAL-07** Vertrauens-Anzeige als Prozentwert plus Stimmungs-Label. *O [FN]* · M3
+- [x] **CAL-08** Stimmung ist ein eigener Zustand und kein reiner Prozent-Schwellwert, z. B. „Vertrauensvoll“ bei 65 %, „Wütend“ bei 50 %. *O [FN]* · M3
+- [x] **CAL-09** Stimmungen: Vertrauensvoll, Neutral, Misstrauisch, Verwirrt, Amüsiert, Genervt, Wütend, Ängstlich, Gelangweilt. *O (2 belegt), D (Rest)* · M3
+- [x] **CAL-10** Bricht das Vertrauen ein (0 % bzw. Wut-Grenze), legt der Anrufer auf. *O [FN]* · M3
+- [x] **CAL-11** Vertrauen erst aufbauen, dann nach Sensiblem fragen: Wer zu früh fordert, verliert stark. *O [FN-Tutorial]* · M3
+- [x] **CAL-12** Gedächtnis des Anrufers: Widersprüche (erst „Bank“, dann „Enkel“) erzeugen Misstrauen, gemerkte Namen und Details erzeugen Vertrauen. *E (LLM-Kontext)* · M3
+- [x] **CAL-13** Abnutzung: Dieselbe Floskel wirkt mit jeder Wiederholung schwächer, es gibt keinen Satz, der immer funktioniert. *E (gegen die Kritik aus [CG])* · M3
 - [ ] **CAL-14** Gesprächsphasen pro Masche: Einstieg → Vertrauen → Pitch → Forderung → Beute → Abschluss. *O [FN-htp], D* · M4
 - [ ] **CAL-15** Anrufer nennt die Beute (Nummer oder Code) im Gespräch, Ziffer für Ziffer, auch mit Versprechern und Korrekturen; der Spieler muss mitschreiben. *O [FN „confirming a number back“]* · M4
-- [ ] **CAL-16** Anrufer-Stimmen per Sprachsynthese, eigene Stimme je Persönlichkeit (Tonhöhe, Tempo, Stimmwahl). Fallback ist eine synthetische „Brabbel“-Stimme. *O [SD lokale TTS], E* · M3
-- [ ] **CAL-17** Spracherkennung der Spielerstimme (Push-to-talk), wo der Browser sie unterstützt. Live-Untertitel des Erkannten. *O [SD lokale STT], E* · M3
-- [ ] **CAL-18** Untertitel für alles, was Anrufer sagen (Schreibmaschinen-Effekt). *A* · M3
-- [ ] **CAL-19** Gesprächs-Timer und Geduld: Anrufer werden ungeduldig, wenn man schweigt oder lange hält. *D* · M3
-- [ ] **CAL-20** Warteschleife: Halten mit Wartemusik (Running Gag). Zu langes Halten führt zum Auflegen. *D* · M3/M11
+- [x] **CAL-16** Anrufer-Stimmen per Sprachsynthese, eigene Stimme je Persönlichkeit (Tonhöhe, Tempo, Stimmwahl). Fallback ist eine synthetische „Brabbel“-Stimme. *O [SD lokale TTS], E* · M3
+- [x] **CAL-17** Spracherkennung der Spielerstimme (Push-to-talk), wo der Browser sie unterstützt. Live-Untertitel des Erkannten. *O [SD lokale STT], E* · M3
+- [x] **CAL-18** Untertitel für alles, was Anrufer sagen (Schreibmaschinen-Effekt). *A* · M3
+- [x] **CAL-19** Gesprächs-Timer und Geduld: Anrufer werden ungeduldig, wenn man schweigt oder lange hält. *D* · M3
+- [x] **CAL-20** Warteschleife: Halten mit Wartemusik (Running Gag). Zu langes Halten führt zum Auflegen. *D* · M3/M11
 - [ ] **CAL-21** Proximity: Kollegen und Bots in der Nähe „hören“ Gesprächsfetzen (Sprechblasen) und kommentieren sie. *E (Sprachchat)* · M8
-- [ ] **CAL-22** Alle Gesprächszeilen werden für Gesprächsanalyse und Bewertung protokolliert. *O [FN]* · M3/M9
+- [x] **CAL-22** Alle Gesprächszeilen werden für Gesprächsanalyse und Bewertung protokolliert. *O [FN]* · M3/M9
 - [ ] **CAL-23** Schwierigkeit pro Tag: härtere Anrufer und mehr Köder an späteren Tagen. *D* · M5
-- [ ] **CAL-24** Anrufer kann zurückschlagen: will einem seinen eigenen Coin andrehen, beleidigt einen, droht mit Polizei oder Sohn-Anwalt. *O [FN Franklin D. Hyper], D* · M3
-- [ ] **CAL-25** Mehrere Anrufe gleichzeitig im Büro (pro Arbeitsplatz einer). Unbesetzte Telefone klingeln weiter. *D* · M3/M8
+- [x] **CAL-24** Anrufer kann zurückschlagen: will einem seinen eigenen Coin andrehen, beleidigt einen, droht mit Polizei oder Sohn-Anwalt. *O [FN Franklin D. Hyper], D* · M3
+- [x] **CAL-25** Mehrere Anrufe gleichzeitig im Büro (pro Arbeitsplatz einer). Unbesetzte Telefone klingeln weiter. *D* · M3/M8
 
 ## 6. Anrufer (Persönlichkeiten)
 
 Jede Persönlichkeit ist datengetrieben (`src/data/callers/`) mit Pixel-Porträt, Stimme, Start-Vertrauen, Leichtgläubigkeit, Vorlieben und Abneigungen (Schlüsselwörter), Lieblings- und Hass-Maschen, Sprüchen, Beute-Daten und Eigenheiten.
 
-- [ ] **NPC-01** **Hildegard Sonnenschein**: ältere Dame, kooperativ, leichtgläubig, liest Nummern sorgfältig vor. *O (≈ Dorothy Mayfield) [FN]* · M3
-- [ ] **NPC-02** **Oma Walpurga Krähenfuß**: Hexenhut, abergläubisch, deutet Zahlen als Omen, fürchtet Unglück beim Vorlesen. *O (≈ Granny Grimshaw) [FN]* · M3
-- [ ] **NPC-03** **Kommandantin Stella „Komet“ Nebel**: Astronautin, will alles nach Protokoll, bevor sie ihren Guck-Code nennt. *O (≈ Cmdr. „Orbit“ Vega) [FN]* · M3
-- [ ] **NPC-04** **Maximilian „Moonboy“ Hypeberg**: Sonnenbrille, Beleidigungen, will einem den eigenen „HypeCoin“ andrehen. *O (≈ Franklin D. Hyper) [FN]* · M3
-- [ ] **NPC-05** **Chantal „Chanti“ Glitzer**: Influencerin, explodiert schnell, man muss sich entschuldigen. *O (≈ Brittany „Lexi“ Summers) [FN]* · M3
-- [ ] **NPC-06** **Dietmar Grauwald**: völlig unbeeindruckt, trocken, schwer zu knacken. *O (≈ Damien Holloway) [FN]* · M3
-- [ ] **NPC-07** **Desirée „Didi“ Bischof**: Anruferin aus dem Anruf-Popup, als vollwertige Gesprächspartnerin ausgebaut. *O (≈ Shanice „Dee“ Bishop) [FN], D* · M3
-- [ ] **NPC-08** **Köder Kevin**: Scambaiter, verschwendet Zeit mit endlosen Rückfragen und schickt Virus-Links. *O (Scambaiter) [ST][FN]* · M3/M7
-- [ ] **NPC-09** **Opa Trollinger**: Scambaiter, spielt den Leichtgläubigen und dreht den Spieß um (schickt einen Virus über FernGucker). *O (Scambaiter), D* · M3/M7
+- [x] **NPC-01** **Hildegard Sonnenschein**: ältere Dame, kooperativ, leichtgläubig, liest Nummern sorgfältig vor. *O (≈ Dorothy Mayfield) [FN]* · M3
+- [x] **NPC-02** **Oma Walpurga Krähenfuß**: Hexenhut, abergläubisch, deutet Zahlen als Omen, fürchtet Unglück beim Vorlesen. *O (≈ Granny Grimshaw) [FN]* · M3
+- [x] **NPC-03** **Kommandantin Stella „Komet“ Nebel**: Astronautin, will alles nach Protokoll, bevor sie ihren Guck-Code nennt. *O (≈ Cmdr. „Orbit“ Vega) [FN]* · M3
+- [x] **NPC-04** **Maximilian „Moonboy“ Hypeberg**: Sonnenbrille, Beleidigungen, will einem den eigenen „HypeCoin“ andrehen. *O (≈ Franklin D. Hyper) [FN]* · M3
+- [x] **NPC-05** **Chantal „Chanti“ Glitzer**: Influencerin, explodiert schnell, man muss sich entschuldigen. *O (≈ Brittany „Lexi“ Summers) [FN]* · M3
+- [x] **NPC-06** **Dietmar Grauwald**: völlig unbeeindruckt, trocken, schwer zu knacken. *O (≈ Damien Holloway) [FN]* · M3
+- [x] **NPC-07** **Desirée „Didi“ Bischof**: Anruferin aus dem Anruf-Popup, als vollwertige Gesprächspartnerin ausgebaut. *O (≈ Shanice „Dee“ Bishop) [FN], D* · M3
+- [ ] **NPC-08** **Köder Kevin**: Scambaiter, verschwendet Zeit mit endlosen Rückfragen und schickt Virus-Links. *O (Scambaiter) [ST][FN]* · M3/M7 (seit M3 im Spiel: Rückfragen, falsche Beute, „lustige Links“ als Sprüche; echter Virus über FernGucker mit M7)
+- [ ] **NPC-09** **Opa Trollinger**: Scambaiter, spielt den Leichtgläubigen und dreht den Spieß um (schickt einen Virus über FernGucker). *O (Scambaiter), D* · M3/M7 (seit M3 im Spiel: spielt den Leichtgläubigen, gibt falsche Beute; Virus über FernGucker mit M7)
 - [ ] **NPC-10** **Undercover-Ermittlerin „Frau Müller“**: Wer ihr eine Masche erzählt, erhöht den Fahndungsdruck stark (Razzia-Auslöser). *D* · M7
 - [ ] **NPC-11** **Konkurrenz-Spitzel Ronny Rival**: Anrufer vom Callcenter gegenüber, will Kunden abwerben oder Daten klauen. *D (Rivalen [FN])* · M7
-- [ ] **NPC-12** **Prof. Dr. Ottokar Besserwisser**: korrigiert Grammatik, liebt Fachbegriffe. *D* · M3
-- [ ] **NPC-13** **Bauer Hinnerk Rübsam**: Plattdeutsch-Brocken, misstraut Technik, liebt seine Kühe. *D* · M3
-- [ ] **NPC-14** **Jacqueline Schnatterbeck**: redet ununterbrochen, Klatsch. *D* · M3
-- [ ] **NPC-15** **Gerd Gemütlich**: schläfrig, sehr langsam, schläft mitten im Gespräch ein. *D* · M3
-- [ ] **NPC-16** **Zoe Zockerlein**: Gamer-Teenie, will Skins, kennt alle Maschen aus Videos. *D* · M3
-- [ ] **NPC-17** **Pfarrer Benedikt Sanftmut**: gutherzig, moralisch, vergibt alles außer Lügen über Gott und Welt. *D* · M3
-- [ ] **NPC-18** **Detlef Dauerbeschwerde**: beschwert sich über alles, verlangt den Vorgesetzten. *D* · M3
-- [ ] **NPC-19** **Lady Henrietta von Protz**: reich, snobistisch, mag nur Exklusives. *D* · M3
-- [ ] **NPC-20** **Agnes Argwohn**: Verschwörungstheoretikerin, glaubt alles, nur nicht das Naheliegende. *D* · M3
-- [ ] **NPC-21** **Bodo Bizeps**: Fitness-Typ, „Bro“, motivierbar über Gains. *D* · M3
-- [ ] **NPC-22** **Rosi Rentenglück**: frisch verrentet, endlich Zeit, liebt Kreuzfahrten. *D* · M3
-- [ ] **NPC-23** **Dr. Igor Dunkelstein**: exzentrischer Erfinder, will Teile für seine Zeitmaschine. *D* · M3
-- [ ] **NPC-24** **Familie Krawallski**: Anruf auf Lautsprecher, drei Leute reden durcheinander. *D* · M3
-- [ ] **NPC-25** Zufällige Varianten pro Anruf (Tagesform, Laune, Hintergrundgeräusch, Beute-Daten), damit sich Anrufe nicht wiederholen. *E (LLM-Vielfalt)* · M3
-- [ ] **NPC-26** Prozedural erzeugte Pixel-Porträts mit Gesichtsausdruck je Stimmung. *A* · M3
+- [x] **NPC-12** **Prof. Dr. Ottokar Besserwisser**: korrigiert Grammatik, liebt Fachbegriffe. *D* · M3
+- [x] **NPC-13** **Bauer Hinnerk Rübsam**: Plattdeutsch-Brocken, misstraut Technik, liebt seine Kühe. *D* · M3
+- [x] **NPC-14** **Jacqueline Schnatterbeck**: redet ununterbrochen, Klatsch. *D* · M3
+- [x] **NPC-15** **Gerd Gemütlich**: schläfrig, sehr langsam, schläft mitten im Gespräch ein. *D* · M3
+- [x] **NPC-16** **Zoe Zockerlein**: Gamer-Teenie, will Skins, kennt alle Maschen aus Videos. *D* · M3
+- [x] **NPC-17** **Pfarrer Benedikt Sanftmut**: gutherzig, moralisch, vergibt alles außer Lügen über Gott und Welt. *D* · M3
+- [x] **NPC-18** **Detlef Dauerbeschwerde**: beschwert sich über alles, verlangt den Vorgesetzten. *D* · M3
+- [x] **NPC-19** **Lady Henrietta von Protz**: reich, snobistisch, mag nur Exklusives. *D* · M3
+- [x] **NPC-20** **Agnes Argwohn**: Verschwörungstheoretikerin, glaubt alles, nur nicht das Naheliegende. *D* · M3
+- [x] **NPC-21** **Bodo Bizeps**: Fitness-Typ, „Bro“, motivierbar über Gains. *D* · M3
+- [x] **NPC-22** **Rosi Rentenglück**: frisch verrentet, endlich Zeit, liebt Kreuzfahrten. *D* · M3
+- [x] **NPC-23** **Dr. Igor Dunkelstein**: exzentrischer Erfinder, will Teile für seine Zeitmaschine. *D* · M3
+- [x] **NPC-24** **Familie Krawallski**: Anruf auf Lautsprecher, drei Leute reden durcheinander. *D* · M3
+- [x] **NPC-25** Zufällige Varianten pro Anruf (Tagesform, Laune, Hintergrundgeräusch, Beute-Daten), damit sich Anrufe nicht wiederholen. *E (LLM-Vielfalt)* · M3
+- [x] **NPC-26** Prozedural erzeugte Pixel-Porträts mit Gesichtsausdruck je Stimmung. *A* · M3
 
 ## 7. Maschen (Scams)
 
@@ -199,14 +199,14 @@ Jede Masche ist datengetrieben (`src/data/schemes/`): Pitch-Themen, nötige Beut
 Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die belegte Anzahl mit eigenen, funktionalen Apps.
 
 **Arbeit**
-- [ ] **APP-01** Telefon. *O* · M3
+- [x] **APP-01** Telefon. *O* · M3
 - [ ] **APP-02** Ident-o-Mat (Bürgernummer prüfen und eintragen). *O (Identity)* · M4
 - [ ] **APP-03** Kundenkartei (Hobbys, Familie, Vorlieben der Anrufer, gibt Hinweise für Vertrauen). Ab Tag 3. *O (Customer Info)* · M4
 - [ ] **APP-04** FernGucker (Guck-Code eingeben, Opfer-PC fernsteuern). Ab Tag 3. *O (AnyViewer)* · M4
 - [ ] **APP-05** Plauderbude (Messenger, Turbo-Geschenk-Masche, Spam von „Freunden“). *O (Disscord)* · M4
 - [ ] **APP-06** Team-Funk (Team-Chat, Emotes, Ping auf Orte, Bot-Kommentare). *E (Sprachchat)* · M8
 - [ ] **APP-07** Postfach (Chef-Mails, Tagesziele, Freischaltungen, Lieferscheine, Spam). *D* · M5
-- [ ] **APP-08** Notizblock (eigene Notizen plus automatisch markierte Zahlen aus dem Gespräch). *D* · M3
+- [x] **APP-08** Notizblock (eigene Notizen plus automatisch markierte Zahlen aus dem Gespräch). *D* · M3
 - [ ] **APP-09** Gesprächsanalyse (eigene Anrufe als Protokoll, beste und schlimmste Zitate). *O (Call Analysis)* · M9
 - [ ] **APP-10** Stempeluhr (Tagesziel, Ausstempel-Status aller Kollegen). *O (Clock Out)* · M5
 - [ ] **APP-11** Gutschein-Kasse (Gutscheincodes einlösen). *D* · M4
@@ -262,7 +262,7 @@ Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die bel
 - [ ] **APP-51** Warteschleifen-FM (Musik- und Radio-App: Sender wechseln, die Musik läuft im Büro). *D* · M11
 - [x] **APP-52** Wetter (Gag-Vorhersagen, z. B. „Heute 80 % Raketenwahrscheinlichkeit“). *D* · M2
 - [ ] **APP-53** Kalender & Uhr (Arbeitstag, Countdown, Freischalt-Vorschau). *D* · M5
-- [ ] **APP-54** Systemsteuerung (Hintergrund, Lautstärke, Theme, Spiel-Einstellungen). *D* · M2 (Hintergrund, Theme, Lautstärken, Vibration seit M2; weitere Spiel-Einstellungen mit M11)
+- [ ] **APP-54** Systemsteuerung (Hintergrund, Lautstärke, Theme, Spiel-Einstellungen). *D* · M2 (Hintergrund, Theme, Lautstärken, Vibration seit M2, Sprache/Stimmen/Mikrofon seit M3; weitere Spiel-Einstellungen mit M11)
 - [ ] **APP-55** Einarbeitungsmappe (Hilfe und Handbuch: Steuerung, Maschen, Apps, Gefahren). *A* · M10
 
 ## 9. Ramschazon (Shop) & Gegenstände
@@ -395,7 +395,7 @@ Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die bel
 - [ ] **MEN-02** Hauptmenü: Schicht beginnen (solo), Lobby (Koop lokal), Fortsetzen, Mod-Werkstatt, Galerie, Statistiken und Bestenliste, Einstellungen, Credits. *A/D* · M5–M11
 - [x] **MEN-03** Pausenmenü (Weiter, Hauptmenü). Solo und lokaler Koop pausieren die Zeit (alle sitzen an einem Gerät); im Online-Koop öffnet es nur das Menü (NET-10). *D* · M1
 - [ ] **MEN-04** Einstellungen Audio: Gesamt, Musik, Effekte, Anruferstimmen, Ingame-Radio. *A* · M11
-- [ ] **MEN-05** Einstellungen Sprache: Sprachsynthese an/aus und Stimmauswahl, Spracheingabe an/aus, Push-to-talk vs. Sprachaktivierung, Mikrofon-Test. *A/E* · M3/M11
+- [x] **MEN-05** Einstellungen Sprache: Sprachsynthese an/aus und Stimmauswahl, Spracheingabe an/aus, Push-to-talk vs. Sprachaktivierung, Mikrofon-Test. *A/E* · M3/M11
 - [ ] **MEN-06** Einstellungen Grafik: Pixel-Skalierung, Partikelmenge, Screenshake, Bewegungen reduzieren, FPS-Anzeige. *A* · M11
 - [ ] **MEN-07** Einstellungen Steuerung: Tastatur, Maus und Gamepad frei belegen, Empfindlichkeit, Touch-Layout-Editor. *A* · M11
 - [ ] **MEN-08** Einstellungen Barrierefreiheit: Textgröße, Kontrast, Untertitel-Hintergrund, Farbsehschwäche-Paletten. *A* · M11
@@ -407,9 +407,9 @@ Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die bel
 ## 19. HUD
 
 - [ ] **HUD-01** Büro-HUD: Mini-Quota-Balken, Countdown, persönliches Guthaben, Fahndungsdruck (sobald Radar gekauft), Interaktions-Hinweis. *O (Taskleiste) [FN], A* · M1/M5
-- [ ] **HUD-02** Anruf-HUD: Porträt, Name, Vertrauen %, Stimmung, Geduld, Masche-Phase, Untertitel, Eingabefeld bzw. Karten. *O [FN]* · M3
+- [x] **HUD-02** Anruf-HUD: Porträt, Name, Vertrauen %, Stimmung, Geduld, Masche-Phase, Untertitel, Eingabefeld bzw. Karten. *O [FN]* · M3
 - [ ] **HUD-03** Ereignis-Warnungen (Razzia, Luftangriff, Feuer) als Banner plus Richtungspfeile. *D* · M7
-- [ ] **HUD-04** Klingel-Anzeiger: Richtungspfeil zu klingelnden Telefonen im Büro. *D* · M3
+- [x] **HUD-04** Klingel-Anzeiger: Richtungspfeil zu klingelnden Telefonen im Büro. *D* · M3
 - [ ] **HUD-05** Schwebende Zahlen (+₮, Vertrauen ±), Toasts, Streak-Anzeige. *A* · M11
 - [ ] **HUD-06** Splitscreen-HUD pro Spieler. *E* · M8
 
@@ -421,7 +421,7 @@ Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die bel
 - [ ] **AUD-04** Bewertungs-Trommelwirbel, Erfolgs-Fanfare, Rauswurf-Posaune. *A* · M11
 - [ ] **AUD-05** Casino-Jingles, Shop-Fahrstuhlmusik, Razzia-Sirenen-Groove, Luftangriffs-Alarm. *A* · M11
 - [ ] **AUD-06** SFX: Telefonklingeln (räumlich), Abheben, Auflegen, Tippen, Klicks, Fenster, Benachrichtigung, Geld, Masche-Abschluss, Fehlschlag, Virus, Feuer, Feuerlöscher, Explosion, Tacker, Schritte, Spray, Schaumpfeil, Drohne, Drucker, Kaffeemaschine, Tauben, Stromausfall, Router. *A* · M11
-- [ ] **AUD-07** Anruferstimmen (Sprachsynthese) plus Brabbel-Fallback. *E* · M3
+- [x] **AUD-07** Anruferstimmen (Sprachsynthese) plus Brabbel-Fallback. *E* · M3
 - [ ] **AUD-08** Chef-Gebrüll (Brabbel-Synthese mit Verzerrung). *D* · M5/M11
 - [ ] **AUD-09** Alles prozedural erzeugt (Web Audio), keine fremden Audiodateien. *A* · M11
 
@@ -439,7 +439,7 @@ Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die bel
 ## 22. Humor, Running Gags, Easter Eggs
 
 - [ ] **FUN-01** Eigene Game-Over-Sprüche von Direktor Brülling (mindestens 30). *A* · M5
-- [ ] **FUN-02** Eigene Anrufer-Sprüche, Reaktionen und Ausreden in großer Menge (über 1.500 Zeilen). *A/E* · M3
+- [x] **FUN-02** Eigene Anrufer-Sprüche, Reaktionen und Ausreden in großer Menge (über 1.500 Zeilen). *A/E* · M3
 - [ ] **FUN-03** Schwindelheimer Nachrichten-Ticker über eure Taten (Netzlupe, Büro-TV). *D* · M6
 - [ ] **FUN-04** Spam-Mails, absurde Ramschazon-Bewertungen, Wetter-Gags. *D* · M6
 - [ ] **FUN-05** Running Gags: Warteschleife, Tacker, Ferdinand die Pflanze, Druckerstau, „Mein Sohn ist Anwalt“. *D* · M11
@@ -453,7 +453,7 @@ Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die bel
 
 **Desktop (frei belegbar)**
 - [ ] **CTL-03** Laufen WASD/Pfeile, Interagieren E, Benutzen/Werfen F/Q, Emote-Rad G, Boss-Taste B, Push-to-talk V, Pause Esc, Aufstehen Tab. *A* · M1
-- [ ] **CTL-04** Desktop-Bedienung per Maus, Enter sendet, Zifferntasten 1–4 wählen Schnellantwort-Karten, Strg+Tab wechselt Apps (im Browser reserviert → Bild↑/Bild↓, Gamepad LB/RB; Maus-Bedienung seit M2). *A* · M2/M3
+- [x] **CTL-04** Desktop-Bedienung per Maus, Enter sendet, Zifferntasten 1–4 wählen Schnellantwort-Karten, Strg+Tab wechselt Apps (im Browser reserviert → Bild↑/Bild↓, Gamepad LB/RB; Maus-Bedienung seit M2). *A* · M2/M3
 - [ ] **CTL-05** Tastenbelegung frei änderbar, Konflikterkennung, Zurücksetzen. *A* · M11
 
 **Gamepad**
@@ -464,7 +464,7 @@ Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die bel
 - [x] **CTL-08** Virtueller Joystick (schwebend, erscheint am Daumen) zum Laufen. *A* · M1
 - [ ] **CTL-09** Kontext-Aktionsbutton (Hinsetzen, Abnehmen, Aufheben, Benutzen) plus Benutzen- bzw. Werfen-Button plus Emote-Button. *A* · M1/M6
 - [x] **CTL-10** Desktop per Tippen; Wischen zwischen Apps; langes Drücken ersetzt Rechtsklick. *A* · M2
-- [ ] **CTL-11** Anruf: Halten-zum-Sprechen-Mic-Button, Schnellantwort-Karten, Texteingabe mit Bildschirmtastatur, nach oben wischen zum Abnehmen. *A* · M3
+- [x] **CTL-11** Anruf: Halten-zum-Sprechen-Mic-Button, Schnellantwort-Karten, Texteingabe mit Bildschirmtastatur, nach oben wischen zum Abnehmen. *A* · M3
 - [ ] **CTL-12** Zielen (Scharfschütze, Spray, Werfen) per Ziehen mit Vorschau-Linie. *A* · M6
 - [x] **CTL-13** Buttons daumengroß (mind. 56 dp), halbtransparent, an Hoch- und Querformat angepasst. *A* · M1
 - [ ] **CTL-14** Touch-Layout-Editor: Buttons verschieben, skalieren, Transparenz, zurücksetzen. *A* · M11

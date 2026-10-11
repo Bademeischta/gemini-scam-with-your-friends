@@ -1,6 +1,7 @@
 import { registerSW } from 'virtual:pwa-register';
 import { AudioEngine } from './audio/AudioEngine';
 import { createUiSfx } from './audio/sfx';
+import { VoiceOut } from './audio/voice';
 import { DEFAULT_BINDINGS } from './config/input-defaults';
 import { TUNING } from './config/tuning';
 import { createGame } from './core/createGame';
@@ -23,6 +24,7 @@ import { SettingsStore } from './systems/save/settings';
 import { SafeStorage } from './systems/save/storage';
 import { PauseController } from './systems/time/PauseController';
 import { Viewport } from './systems/viewport/Viewport';
+import { SpeechInput } from './systems/voice/SpeechInput';
 
 function attachDomInput(win: Window, input: InputManager): void {
   win.addEventListener('keydown', (e) => {
@@ -75,10 +77,19 @@ function boot(): void {
 
   const viewport = new Viewport(win, document.getElementById('safe-probe'), TUNING.display.maxDpr);
   const pause = new PauseController();
-  const audio = new AudioEngine(settings.get().masterVolume, settings.get().uiVolume);
-  settings.onChange((v) => audio.setVolumes(v.masterVolume, v.uiVolume));
-  const s: Services = { viewport, input, device, pause, storage, settings, audio, sfx: createUiSfx(audio) };
+  const audio = new AudioEngine(settings.get().masterVolume, settings.get().uiVolume, settings.get().voiceVolume);
+  settings.onChange((v) => audio.setVolumes(v.masterVolume, v.uiVolume, v.voiceVolume));
+  const voice = new VoiceOut(win);
+  const speech = new SpeechInput(win, 'de-DE');
+  const s: Services = { viewport, input, device, pause, storage, settings, audio, sfx: createUiSfx(audio), voice, speech };
   setServices(s);
+  // In der Pause verstummen die Anrufer, das Mikrofon geht aus.
+  // (Chrome setzt pausierte Sprachausgabe unzuverlässig fort, deshalb abbrechen; die Untertitel bleiben.)
+  pause.onChange((paused) => {
+    if (!paused) return;
+    voice.cancel();
+    speech.abort();
+  });
 
   // Auto-Pause im Hintergrund: Logik einfrieren, Ton anhalten, gedrückte Tasten lösen.
   const onVisibility = (): void => {

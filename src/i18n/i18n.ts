@@ -80,6 +80,31 @@ export class I18n {
     return params ? interpolate(text, params, this.numberFmt) : text;
   }
 
+  /**
+   * Varianten unter einem Schlüssel (Objekt mit "0", "1", …) als Liste, ohne Platzhalter zu ersetzen.
+   * Ein einzelner Text ergibt eine Liste mit einem Eintrag, ein fehlender Schlüssel eine leere Liste.
+   * Fällt nicht auf die Standardsprache zurück, wenn die aktuelle Sprache Varianten hat.
+   */
+  list(key: string): string[] {
+    const fromDict = (d: Dict | undefined): string[] => {
+      const node = lookup(d, key);
+      if (node === undefined) return [];
+      if (typeof node === 'string') return [node];
+      return Object.keys(node)
+        .filter((k) => /^\d+$/.test(k))
+        .sort((a, b) => Number(a) - Number(b))
+        .map((k) => node[k])
+        .filter((v): v is string => typeof v === 'string');
+    };
+    const own = fromDict(this.locales[this.current]);
+    return own.length > 0 ? own : fromDict(this.locales[this.fallback]);
+  }
+
+  /** Platzhalter in einem bereits geladenen Text ersetzen. */
+  format(text: string, params: Params): string {
+    return interpolate(text, params, this.numberFmt);
+  }
+
   /** Zahl im Format der aktuellen Sprache, z. B. 1.250 */
   formatNumber(n: number): string {
     return this.numberFmt.format(Math.round(n));
