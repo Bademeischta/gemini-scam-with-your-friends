@@ -4,6 +4,9 @@ import type { LootLedger } from '../../../systems/calls/ledger';
 import type { PhoneHub } from '../../../systems/calls/PhoneHub';
 import type { Notebook } from '../../../systems/os/notebook';
 import type { Plauder } from '../../../systems/os/plauder';
+import type { ShiftState } from '../../../systems/day/ShiftState';
+import type { Unlocks } from '../../../systems/day/unlocks';
+import type { Mailbox } from '../../../systems/os/mailbox';
 import type { VirtualFs } from '../../../systems/os/vfs';
 import type { OsWindow } from '../OsWindow';
 import type { Host } from '../widgets';
@@ -38,6 +41,19 @@ export interface OsEnv {
   /** Beute, die auf Eingabe wartet, und Auszahlungen (Ident-o-Mat, Gutschein-Kasse …). */
   ledger: LootLedger;
   plauder: Plauder;
+  /** Arbeitstag: Schicht, Freischaltungen, Postfach, Ausstempeln, Laune des Chefs. */
+  work: WorkEnv;
+}
+
+export interface WorkEnv {
+  shift(): ShiftState;
+  unlocks(): Unlocks;
+  mail: Mailbox;
+  /** Ausstempeln (nur mit erreichter Quota); true = hat geklappt. */
+  clockOut(): boolean;
+  clockedOut(): boolean;
+  /** Wut des Chefs 0–100. */
+  bossRage(): number;
 }
 
 export interface ToastOptions {

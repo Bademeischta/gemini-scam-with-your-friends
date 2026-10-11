@@ -36,6 +36,7 @@ export class Menu {
   private cx = 0;
   private cy = 0;
   private minHeightPx = 0;
+  private columns = 1;
   /** Eintrag, auf dem der aktuelle Zeiger gedrückt wurde (Auslösen nur beim Loslassen auf demselben). */
   private pressedIndex = -1;
   /** Tastatur/Gamepad erst ab dem nächsten Frame annehmen (sonst löst der öffnende Tastendruck aus). */
@@ -71,9 +72,16 @@ export class Menu {
   /** Umschließendes Rechteck aller Buttons (physische Pixel). */
   get bounds(): { x: number; y: number; width: number; height: number } {
     if (this.entries.length === 0) return { x: this.cx, y: this.cy, width: 0, height: 0 };
-    const first = this.entries[0]!.rect;
-    const last = this.entries[this.entries.length - 1]!.rect;
-    return { x: first.x, y: first.y, width: first.w, height: last.y + last.h - first.y };
+    const rs = this.entries.map((e) => e.rect);
+    const x = Math.min(...rs.map((r) => r.x));
+    const y = Math.min(...rs.map((r) => r.y));
+    return { x, y, width: Math.max(...rs.map((r) => r.x + r.w)) - x, height: Math.max(...rs.map((r) => r.y + r.h)) - y };
+  }
+
+  /** Breite eines Buttons bei dieser Skalierung (physische Pixel), z. B. um die Spaltenzahl zu wählen. */
+  buttonWidth(scale: number): number {
+    const labelW = Math.max(...this.entries.map((e) => e.label.setScale(scale).width), 0);
+    return Math.round(labelW + 10 * scale * 2 + 8 * scale);
   }
 
   setEnabled(on: boolean): void {
@@ -102,19 +110,21 @@ export class Menu {
   /** Texte neu holen (z. B. nach Sprach- oder Vollbild-Wechsel). */
   refreshLabels(): void {
     for (const e of this.entries) e.label.setText(e.item.label());
-    this.layout(this.cx, this.cy, this.scale, this.minHeightPx);
+    this.layout(this.cx, this.cy, this.scale, this.minHeightPx, this.columns);
   }
 
   /**
    * Positioniert das Menü zentriert um (cx, cy).
    * @param scale Art-Pixel-Skalierung
    * @param minHeightPx Mindesthöhe eines Buttons in physischen Pixeln (Daumengröße)
+   * @param columns Spalten (zeilenweise gefüllt; die Fokus-Reihenfolge bleibt die der Einträge)
    */
-  layout(cx: number, cy: number, scale: number, minHeightPx: number): void {
+  layout(cx: number, cy: number, scale: number, minHeightPx: number, columns = this.columns): void {
     this.cx = cx;
     this.cy = cy;
     this.scale = scale;
     this.minHeightPx = minHeightPx;
+    this.columns = Math.max(1, Math.min(columns, this.entries.length));
     const padX = 10 * scale;
     const padY = 4 * scale;
     for (const e of this.entries) e.label.setScale(scale);
@@ -122,15 +132,21 @@ export class Menu {
     const w = Math.round(labelW + padX * 2 + 8 * scale);
     const h = Math.round(Math.max(minHeightPx, (this.entries[0]?.label.height ?? 10 * scale) + padY * 2));
     const gap = Math.round(3 * scale);
-    const total = this.entries.length * h + (this.entries.length - 1) * gap;
-    let y = Math.round(cy - total / 2);
-    const x = Math.round(cx - w / 2);
-    for (const e of this.entries) {
+    const cols = this.columns;
+    const rows = Math.ceil(this.entries.length / cols);
+    const total = rows * h + (rows - 1) * gap;
+    const y0 = Math.round(cy - total / 2);
+    const gapX = 4 * gap;
+    this.entries.forEach((e, i) => {
+      const row = Math.floor(i / cols);
+      // Letzte, unvollständige Zeile mittig.
+      const inRow = Math.min(cols, this.entries.length - row * cols);
+      const x = Math.round(cx - (inRow * w + (inRow - 1) * gapX) / 2 + (i % cols) * (w + gapX));
+      const y = y0 + row * (h + gap);
       e.rect = { x, y, w, h };
       e.zone.setPosition(x, y).setSize(w, h);
       e.zone.input?.hitArea.setTo(0, 0, w, h);
-      y += h + gap;
-    }
+    });
     this.redraw();
   }
 
@@ -148,6 +164,9 @@ export class Menu {
       const inp = this.s.input;
       if (this.navUp.update(dt, inp.isDown('uiUp'), inp.justPressed('uiUp'))) this.move(-1);
       if (this.navDown.update(dt, inp.isDown('uiDown'), inp.justPressed('uiDown'))) this.move(1);
+      // Mehrspaltig: links/rechts wechselt die Spalte (Reihenfolge der Einträge).
+      if (this.columns > 1 && inp.justPressed('uiLeft')) this.move(-1);
+      if (this.columns > 1 && inp.justPressed('uiRight')) this.move(1);
       if (inp.justPressed('uiConfirm')) this.activate(this.focus);
     }
     if (dirty) this.redraw();

@@ -27,6 +27,8 @@ export class DesktopIcon {
   private readonly unregister: () => void;
   private rect: Rect = { x: 0, y: 0, w: 0, h: 0 };
   private selected = false;
+  private lock: Phaser.GameObjects.Image | null = null;
+  private lockedDay: number | null = null;
 
   constructor(
     private readonly host: Host,
@@ -71,6 +73,30 @@ export class DesktopIcon {
     return this.o.id;
   }
 
+  /** Gesperrt bis Tag `day` (OS-10): Symbol abgeblendet, Schloss darüber; null = frei. */
+  setLocked(day: number | null): void {
+    if (day === this.lockedDay) return;
+    this.lockedDay = day;
+    this.img.setAlpha(day === null ? 1 : 0.45);
+    this.label.setAlpha(day === null ? 1 : 0.6);
+    if (day !== null && !this.lock) {
+      this.lock = this.host.scene.add.image(0, 0, 'os-icon-lock');
+      this.host.container.add(this.lock);
+    }
+    this.lock?.setVisible(day !== null);
+    this.placeLock();
+  }
+
+  get locked(): boolean {
+    return this.lockedDay !== null;
+  }
+
+  private placeLock(): void {
+    if (!this.lock) return;
+    const s = Math.max(1, Math.round(this.img.scaleX * 0.6));
+    this.lock.setScale(s).setPosition(Math.round(this.img.x + (this.img.width * this.img.scaleX) / 2 - 4 * s), Math.round(this.img.y + (this.img.height * this.img.scaleY) / 2 - 4 * s));
+  }
+
   /** Breite der Beschriftung in einer Zeile (physische Pixel) bei Schriftgröße `u`. */
   labelWidth(u: number): number {
     this.label.setScale(u).setMaxWidth(0);
@@ -99,6 +125,7 @@ export class DesktopIcon {
     this.label.setScale(u).setMaxWidth(w - 2 * u).setPosition(Math.round(x + w / 2), Math.round(y + 4 * u + 16 * iconScale));
     this.zone.setPosition(this.rect.x, this.rect.y).setSize(this.rect.w, this.rect.h);
     this.zone.input?.hitArea.setTo(0, 0, this.rect.w, this.rect.h);
+    this.placeLock();
     this.draw();
   }
 
@@ -107,6 +134,7 @@ export class DesktopIcon {
     this.g.destroy();
     this.img.destroy();
     this.label.destroy();
+    this.lock?.destroy();
     this.zone.destroy();
   }
 

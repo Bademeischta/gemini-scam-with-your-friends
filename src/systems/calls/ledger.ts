@@ -19,6 +19,8 @@ export interface LootItem {
   bait?: boolean;
 }
 
+export type FailReason = 'bait' | 'locked' | 'call';
+
 export type SubmitResult =
   | { ok: true; item: LootItem }
   | { ok: false; reason: 'empty' | 'unknown' | 'locked' | 'bait'; item?: LootItem; attemptsLeft?: number };
@@ -38,6 +40,7 @@ export class LootLedger {
   private nextId = 1;
   private readonly listeners = new Set<() => void>();
   private readonly paidListeners = new Set<(item: LootItem) => void>();
+  private readonly failListeners = new Set<(item: LootItem, reason: FailReason) => void>();
 
   constructor(private readonly maxAttempts = 3) {}
 
@@ -70,6 +73,7 @@ export class LootLedger {
       // Köder-Beute fliegt beim Prüfen auf.
       hit.status = 'failed';
       this.emit();
+      this.emitFail(hit, 'bait');
       return { ok: false, reason: 'bait', item: hit };
     }
     if (hit) {
@@ -84,6 +88,7 @@ export class LootLedger {
     if (target.attempts >= this.maxAttempts) {
       target.status = 'failed';
       this.emit();
+      this.emitFail(target, 'locked');
       return { ok: false, reason: 'locked', item: target, attemptsLeft: 0 };
     }
     this.emit();
@@ -104,6 +109,7 @@ export class LootLedger {
     if (item.status !== 'pending') return;
     item.status = 'failed';
     this.emit();
+    this.emitFail(item, 'call');
   }
 
   onChange(fn: () => void): () => void {
@@ -114,6 +120,16 @@ export class LootLedger {
   onPaid(fn: (item: LootItem) => void): () => void {
     this.paidListeners.add(fn);
     return () => this.paidListeners.delete(fn);
+  }
+
+  /** Beute geplatzt: Köder enttarnt, zu oft vertippt oder Anrufer weg. */
+  onFailed(fn: (item: LootItem, reason: FailReason) => void): () => void {
+    this.failListeners.add(fn);
+    return () => this.failListeners.delete(fn);
+  }
+
+  private emitFail(item: LootItem, reason: FailReason): void {
+    for (const fn of this.failListeners) fn(item, reason);
   }
 
   private emit(): void {

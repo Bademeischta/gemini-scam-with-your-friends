@@ -380,7 +380,7 @@ export interface OsState {
   toasts: { title: string; body: string }[];
   toastRects: { x: number; y: number; w: number; h: number }[];
   taskbar: { money: string; team: string; countdown: string };
-  icons: { id: string; selected: boolean; rect: { x: number; y: number; w: number; h: number } }[];
+  icons: { id: string; selected: boolean; locked?: boolean; rect: { x: number; y: number; w: number; h: number } }[];
   targets: OsTarget[];
 }
 

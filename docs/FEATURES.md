@@ -61,10 +61,10 @@ Mechanik, Zweck und Funktion bleiben gleich. Namen, Figuren, Grafik, Texte und M
 - [ ] **MOD-01** Einzelspieler: allein im Büro wie im Original, Bot-Kollegen optional zuschaltbar. *O [ST]* · M5/M8
 - [ ] **MOD-02** Koop mit Freunden → bis M12 lokaler Multiplayer: Splitscreen mit 2–4 Menschen an einem Gerät **nur auf Desktop und Tablet**, auf dem Handy Solo mit Bot-Kollegen. Online-Koop folgt in M14 (§29). *O [ST], E* · M8
 - [ ] **MOD-03** Öffentliche Lobbys → Lobby-Browser mit Bot-Crews (Namen, Stil, Schwierigkeit) zum „Beitreten“; echte Online-Lobbys werden in M14 geprüft. *O [ST], E* · M8
-- [ ] **MOD-04** Run-basierte Progression: Ein Run besteht aus aufeinanderfolgenden Arbeitstagen und endet beim Rauswurf. *O [IG][ST]* · M5
-- [ ] **MOD-05** Perma-Death: Rauswurf = Run vorbei, kein Weiterspielen des Runs. *O [ST-Tag]* · M5
+- [x] **MOD-04** Run-basierte Progression: Ein Run besteht aus aufeinanderfolgenden Arbeitstagen und endet beim Rauswurf. *O [IG][ST]* · M5
+- [x] **MOD-05** Perma-Death: Rauswurf = Run vorbei, kein Weiterspielen des Runs. *O [ST-Tag]* · M5
 - [ ] **MOD-06** Raum-Code → Schicht-Code (Seed) zum Teilen: Freunde spielen denselben Run auf ihren Geräten und vergleichen in der lokalen Bestenliste. *E* · M8
-- [ ] **MOD-07** Spielstand-Fortsetzung: Ein laufender Run wird zwischen den Tagen automatisch gespeichert (Browser kann jederzeit geschlossen werden). *A/D* · M5
+- [x] **MOD-07** Spielstand-Fortsetzung: Ein laufender Run wird zwischen den Tagen automatisch gespeichert (Browser kann jederzeit geschlossen werden). *A/D* · M5
 
 ## 3. Büro (Spielwelt)
 
@@ -99,10 +99,10 @@ Mechanik, Zweck und Funktion bleiben gleich. Namen, Figuren, Grafik, Texte und M
 - [x] **OS-04** Taskleiste zeigt die Team-Summe. *O [FN]* · M2
 - [x] **OS-05** Taskleiste zeigt die Quota. *O [FN]* · M2
 - [x] **OS-06** Taskleiste zeigt den Countdown bis zur Leistungsbewertung. *O [FN]* · M2
-- [ ] **OS-07** Ausstempeln-Taste in der Taskleiste, aktiv sobald die Quota erreicht ist. *O [FN]* · M5
+- [x] **OS-07** Ausstempeln-Taste in der Taskleiste, aktiv sobald die Quota erreicht ist. *O [FN]* · M5
 - [x] **OS-08** Popup bei eingehendem Anruf mit Name und Bild des Anrufers. *O [FN]* · M3
 - [x] **OS-09** Fenstermanager: öffnen, schließen, fokussieren, verschieben (Desktop), minimieren. Auf dem Handy laufen Apps im Vollbild mit App-Umschalter. *A/E* · M2
-- [ ] **OS-10** Gesperrte Apps sind sichtbar (Schloss plus „ab Tag X“ bzw. „im Ramschazon“). *D* · M5
+- [x] **OS-10** Gesperrte Apps sind sichtbar (Schloss plus „ab Tag X“ bzw. „im Ramschazon“). *D* · M5 *Hinweis: „im Ramschazon“ kommt mit dem Shop (M6).*
 - [ ] **OS-11** Benachrichtigungen (Toasts): Lieferung da, App freigeschaltet, Chef-Mail, Virus. *D* · M2 (System und Chef-Mail seit M2, „Notiert!“ bei erfasster Beute seit M3; Lieferung, Freischaltung und Virus mit M5–M7)
 - [ ] **OS-12** Boss-Taste: wechselt den Bildschirm sofort zu einer harmlosen Tabellenkalkulation (hilft bei Razzia und Chef-Kontrolle). *D* · M7
 - [x] **OS-13** Desktop-Hintergrund und Theme änderbar (Systemsteuerung). *D* · M2
@@ -172,7 +172,7 @@ Jede Persönlichkeit ist datengetrieben (`src/data/callers/`) mit Pixel-Porträt
 Jede Masche ist datengetrieben (`src/data/schemes/`): Pitch-Themen, nötige Beute, Abschluss-App, Auszahlung, Freischaltung, passende und unpassende Anrufertypen. Alle Maschen sind absurd und fiktiv, fiktive Datenformate sind Pflicht.
 
 - [x] **SCH-01** **Rentennummer-Raffer**: Bürgernummer erfragen und in den Ident-o-Mat eingeben, Auszahlung 250 ₮. Ab Tag 1. *O (Social Security Stealer, 250 $) [FN]* · M4
-- [x] **SCH-02** **FernGucker-Support**: Guck-Code erfragen, per FernGucker auf den PC des Anrufers, dort die „Überweisung“ als Minispiel ausführen, während der Anrufer kommentiert. Ab Tag 3. *O (AnyViewer remote-support scam) [FN]* · M4 *Hinweis: Die Freischaltung erst ab Tag 3 kommt mit den Arbeitstagen (SCH-21, M5); bis dahin ab Tag 1 verfügbar.*
+- [x] **SCH-02** **FernGucker-Support**: Guck-Code erfragen, per FernGucker auf den PC des Anrufers, dort die „Überweisung“ als Minispiel ausführen, während der Anrufer kommentiert. Ab Tag 3. *O (AnyViewer remote-support scam) [FN]* · M4
 - [x] **SCH-03** **Turbo-Geschenk**: über die Plauderbude ein gefälschtes „Turbo-Geschenk“ schicken, der Anrufer muss es annehmen und seinen Login-Code vorlesen. *O (Disscord Nitro gift) [FN]* · M4
 - [x] **SCH-04** **Gutschein-Gaudi**: Der Anrufer kauft Gutscheine und liest die Codes vor, Eingabe in die Gutschein-Kasse. *D* · M4
 - [x] **SCH-05** **Enkel im Orbit**: „Ihr Enkel steckt auf der Raumstation fest“, Rückflugticket bezahlen. *D* · M4
@@ -191,7 +191,7 @@ Jede Masche ist datengetrieben (`src/data/schemes/`): Pitch-Themen, nötige Beut
 - [x] **SCH-18** Leitfaden je Masche: Stichpunkte, Tipps und Fortschrittsbalken der Phasen. *D* · M4
 - [x] **SCH-19** Auszahlung geht auf das persönliche Guthaben und auf die Team-Summe. *O [FN]* · M4
 - [x] **SCH-20** Falsche Eingabe (vertippte Nummer) lässt die Masche scheitern oder erfordert Nachfragen (Vertrauensverlust). *D* · M4
-- [ ] **SCH-21** Maschen werden „immer absurder“: Freischaltung in Stufen über Tage und Ramschazon. *O [ST]* · M5/M6
+- [ ] **SCH-21** Maschen werden „immer absurder“: Freischaltung in Stufen über Tage und Ramschazon. *O [ST]* · M5/M6 *Hinweis: Freischaltung über Tage ist umgesetzt (M5); der Kauf im Ramschazon folgt mit M6.*
 - [x] **SCH-22** Opfer-PC beim Fernzugriff: prozedural erzeugter Desktop mit Dateien, Ordnern und Bank-App. Verdächtige Klicks kosten Vertrauen („Was machen Sie mit meiner Maus?!“). *O [FN AnyViewer], D* · M4
 
 ## 8. Apps (55 – Original: „mehr als 45“)
@@ -201,14 +201,14 @@ Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die bel
 **Arbeit**
 - [x] **APP-01** Telefon. *O* · M3
 - [x] **APP-02** Ident-o-Mat (Bürgernummer prüfen und eintragen). *O (Identity)* · M4
-- [x] **APP-03** Kundenkartei (Hobbys, Familie, Vorlieben der Anrufer, gibt Hinweise für Vertrauen). Ab Tag 3. *O (Customer Info)* · M4 *Hinweis: Freischaltung ab Tag 3 siehe SCH-21 (M5).*
-- [x] **APP-04** FernGucker (Guck-Code eingeben, Opfer-PC fernsteuern). Ab Tag 3. *O (AnyViewer)* · M4 *Hinweis: Freischaltung ab Tag 3 siehe SCH-21 (M5).*
+- [x] **APP-03** Kundenkartei (Hobbys, Familie, Vorlieben der Anrufer, gibt Hinweise für Vertrauen). Ab Tag 3. *O (Customer Info)* · M4
+- [x] **APP-04** FernGucker (Guck-Code eingeben, Opfer-PC fernsteuern). Ab Tag 3. *O (AnyViewer)* · M4
 - [x] **APP-05** Plauderbude (Messenger, Turbo-Geschenk-Masche, Spam von „Freunden“). *O (Disscord)* · M4
 - [ ] **APP-06** Team-Funk (Team-Chat, Emotes, Ping auf Orte, Bot-Kommentare). *E (Sprachchat)* · M8
-- [ ] **APP-07** Postfach (Chef-Mails, Tagesziele, Freischaltungen, Lieferscheine, Spam). *D* · M5
+- [x] **APP-07** Postfach (Chef-Mails, Tagesziele, Freischaltungen, Lieferscheine, Spam). *D* · M5
 - [x] **APP-08** Notizblock (eigene Notizen plus automatisch markierte Zahlen aus dem Gespräch). *D* · M3
 - [ ] **APP-09** Gesprächsanalyse (eigene Anrufe als Protokoll, beste und schlimmste Zitate). *O (Call Analysis)* · M9
-- [ ] **APP-10** Stempeluhr (Tagesziel, Ausstempel-Status aller Kollegen). *O (Clock Out)* · M5
+- [x] **APP-10** Stempeluhr (Tagesziel, Ausstempel-Status aller Kollegen). *O (Clock Out)* · M5 *Hinweis: Solo steht nur man selbst in der Liste; Bot-Kollegen ab M8.*
 - [x] **APP-11** Gutschein-Kasse (Gutscheincodes einlösen). *D* · M4
 
 **Maschen-Apps** (je eine pro Masche, siehe §7)
@@ -261,7 +261,7 @@ Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die bel
 - [ ] **APP-50** Netzlupe (Browser mit Fake-Seiten: Schwindelheimer Nachrichten mit Berichten über eure Taten, Fahndungsliste, Konkurrenz-Website, Ramschazon-Bewertungen). *D* · M6
 - [ ] **APP-51** Warteschleifen-FM (Musik- und Radio-App: Sender wechseln, die Musik läuft im Büro). *D* · M11
 - [x] **APP-52** Wetter (Gag-Vorhersagen, z. B. „Heute 80 % Raketenwahrscheinlichkeit“). *D* · M2
-- [ ] **APP-53** Kalender & Uhr (Arbeitstag, Countdown, Freischalt-Vorschau). *D* · M5
+- [x] **APP-53** Kalender & Uhr (Arbeitstag, Countdown, Freischalt-Vorschau). *D* · M5
 - [ ] **APP-54** Systemsteuerung (Hintergrund, Lautstärke, Theme, Spiel-Einstellungen). *D* · M2 (Hintergrund, Theme, Lautstärken, Vibration seit M2, Sprache/Stimmen/Mikrofon seit M3; weitere Spiel-Einstellungen mit M11)
 - [ ] **APP-55** Einarbeitungsmappe (Hilfe und Handbuch: Steuerung, Maschen, Apps, Gefahren). *A* · M10
 
@@ -306,21 +306,21 @@ Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die bel
 
 ## 11. Arbeitstag, Quota, Chef & Bewertung
 
-- [ ] **DAY-01** Ein Arbeitstag mit Countdown bis zur Leistungsbewertung. *O [FN]* · M5
-- [ ] **DAY-02** Tägliche Team-Quota, die von Tag zu Tag steigt (Referenzwerte 600, 1.400, 1.750, 2.600). *O [FN]* · M5
-- [ ] **DAY-03** Quota skaliert mit der Teamgröße (Menschen plus Bots). *D* · M5
-- [ ] **DAY-04** Früher Feierabend: Ist die Quota erreicht, müssen **alle** ausstempeln (Bots stempeln mit, Splitscreen-Spieler einzeln). *O [FN]* · M5
-- [ ] **DAY-05** Leistungsbewertung durch Direktor Brülling: Team versammelt sich, Ergebnisbalken, Urteil. *O [ST][FN]* · M5
-- [ ] **DAY-06** Quota erreicht → nächster, schwererer Tag. *O [FN]* · M5
-- [ ] **DAY-07** Quota verfehlt → „Quota um X ₮ verfehlt – Sie sind gefeuert!“, Run endet. *O [FN]* · M5
-- [ ] **DAY-08** Bewertung zeigt die **drei stärksten Momente des Tages** (Zitate, Rekord-Abschlüsse, Chaos-Highlights). *O [FN]* · M5
-- [ ] **DAY-09** Bewertung kündigt an, welche Apps morgen freigeschaltet werden. *O [FN]* · M5
-- [ ] **DAY-10** Freischalt-Plan: Tag 1 Telefon, Ident-o-Mat, Rentennummer-Raffer · Tag 2 Plauderbude-Masche, Gutschein-Gaudi · **Tag 3 FernGucker und Kundenkartei** · danach je Tag weitere Maschen und Apps. *O (Tag 3 belegt) [FN], D* · M5
-- [ ] **DAY-11** Fliegende Tacker während der Bewertung: ausweichen, Treffer heißt kurz k.o., „Tacker-Helm“ schützt. *O?, D* · M5
-- [ ] **DAY-12** Chef ist ein Choleriker: Wut-Anzeige, Brüllanfälle mit Screenshake, Kontrollgänge durchs Büro. *O [SM „rageaholic“], D* · M5
-- [ ] **DAY-13** Chef-Kontrolle: Wer beim Zocken oder Faulenzen erwischt wird, kassiert eine Standpauke und Strafgeld (die Boss-Taste rettet). *D* · M5/M7
-- [ ] **DAY-14** Tagesbeginn: Chef-Mail mit Tagesziel, Wetter und Sprüchen, Einstempeln am Platz. *D* · M5
-- [ ] **DAY-15** Schwierigkeitskurve über die Tage: mehr Anrufe, zähere Anrufer, mehr Köder, häufigere Gefahren. *D* · M5/M7
+- [x] **DAY-01** Ein Arbeitstag mit Countdown bis zur Leistungsbewertung. *O [FN]* · M5
+- [x] **DAY-02** Tägliche Team-Quota, die von Tag zu Tag steigt (Referenzwerte 600, 1.400, 1.750, 2.600). *O [FN]* · M5
+- [x] **DAY-03** Quota skaliert mit der Teamgröße (Menschen plus Bots). *D* · M5
+- [x] **DAY-04** Früher Feierabend: Ist die Quota erreicht, müssen **alle** ausstempeln (Bots stempeln mit, Splitscreen-Spieler einzeln). *O [FN]* · M5 *Hinweis: Solo stempelt man allein aus; Bots und Splitscreen ab M8.*
+- [x] **DAY-05** Leistungsbewertung durch Direktor Brülling: Team versammelt sich, Ergebnisbalken, Urteil. *O [ST][FN]* · M5 *Hinweis: Solo steht nur die eigene Figur auf dem Teppich; das Team kommt mit M8.*
+- [x] **DAY-06** Quota erreicht → nächster, schwererer Tag. *O [FN]* · M5
+- [x] **DAY-07** Quota verfehlt → „Quota um X ₮ verfehlt – Sie sind gefeuert!“, Run endet. *O [FN]* · M5
+- [x] **DAY-08** Bewertung zeigt die **drei stärksten Momente des Tages** (Zitate, Rekord-Abschlüsse, Chaos-Highlights). *O [FN]* · M5
+- [x] **DAY-09** Bewertung kündigt an, welche Apps morgen freigeschaltet werden. *O [FN]* · M5
+- [x] **DAY-10** Freischalt-Plan: Tag 1 Telefon, Ident-o-Mat, Rentennummer-Raffer · Tag 2 Plauderbude-Masche, Gutschein-Gaudi · **Tag 3 FernGucker und Kundenkartei** · danach je Tag weitere Maschen und Apps. *O (Tag 3 belegt) [FN], D* · M5
+- [x] **DAY-11** Fliegende Tacker während der Bewertung: ausweichen, Treffer heißt kurz k.o., „Tacker-Helm“ schützt. *O?, D* · M5 *Hinweis: Der schützende Tacker-Helm kommt mit dem Ramschazon (M6), die Logik ist schon da.*
+- [x] **DAY-12** Chef ist ein Choleriker: Wut-Anzeige, Brüllanfälle mit Screenshake, Kontrollgänge durchs Büro. *O [SM „rageaholic“], D* · M5
+- [ ] **DAY-13** Chef-Kontrolle: Wer beim Zocken oder Faulenzen erwischt wird, kassiert eine Standpauke und Strafgeld (die Boss-Taste rettet). *D* · M5/M7 *Hinweis: Faulenzen wird seit M5 erwischt (Standpauke, Strafgeld); Zocken und die Boss-Taste folgen mit M6/M7.*
+- [x] **DAY-14** Tagesbeginn: Chef-Mail mit Tagesziel, Wetter und Sprüchen, Einstempeln am Platz. *D* · M5
+- [ ] **DAY-15** Schwierigkeitskurve über die Tage: mehr Anrufe, zähere Anrufer, mehr Köder, häufigere Gefahren. *D* · M5/M7 *Hinweis: Mehr Anrufe, zähere Anrufer und mehr Köder je Tag sind umgesetzt (M5); Gefahren folgen mit M7.*
 
 ## 12. Gefahren & Arbeitsplatz-Katastrophen
 
@@ -344,13 +344,13 @@ Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die bel
 
 ## 13. Progression, Freischaltungen, Run-Ende, Statistiken
 
-- [ ] **PRG-01** Persönliches Guthaben bleibt über die Tage eines Runs erhalten (für Shop und Casino). *O [FN], D* · M5
-- [ ] **PRG-02** Team-Summe wird täglich gegen die Quota gemessen. *O [FN]* · M5
-- [ ] **PRG-03** Freischaltung neuer Maschen und Apps pro Tag (siehe DAY-10). *O [ST][FN]* · M5
-- [ ] **PRG-04** **Kündigungsbericht Schwindelheim** am Run-Ende: gearbeitete Tage, Team-Gesamtbeute, Rangliste aller Spieler und Bots nach verdientem Geld, Spielzeit, Durchschnitt pro Tag. *O [FN]* · M5
-- [ ] **PRG-05** Lokale Bestenliste (beste Runs: Tage, Beute, Schicht-Code). *E (Ranglisten lokal)* · M5
-- [ ] **PRG-06** Lebenszeit-Statistiken (Anrufe, Erfolgsquote, Lieblingsmasche, verbrannte Monitore, Razzien, verschluckte Tacker …). *D* · M5
-- [ ] **PRG-07** Neuer Run nach dem Rauswurf („Neue Bewerbung schreiben“). *O* · M5
+- [x] **PRG-01** Persönliches Guthaben bleibt über die Tage eines Runs erhalten (für Shop und Casino). *O [FN], D* · M5
+- [x] **PRG-02** Team-Summe wird täglich gegen die Quota gemessen. *O [FN]* · M5
+- [x] **PRG-03** Freischaltung neuer Maschen und Apps pro Tag (siehe DAY-10). *O [ST][FN]* · M5
+- [x] **PRG-04** **Kündigungsbericht Schwindelheim** am Run-Ende: gearbeitete Tage, Team-Gesamtbeute, Rangliste aller Spieler und Bots nach verdientem Geld, Spielzeit, Durchschnitt pro Tag. *O [FN]* · M5
+- [x] **PRG-05** Lokale Bestenliste (beste Runs: Tage, Beute, Schicht-Code). *E (Ranglisten lokal)* · M5
+- [x] **PRG-06** Lebenszeit-Statistiken (Anrufe, Erfolgsquote, Lieblingsmasche, verbrannte Monitore, Razzien, verschluckte Tacker …). *D* · M5 *Hinweis: Verbrannte Monitore und Razzien zählen ab M7.*
+- [x] **PRG-07** Neuer Run nach dem Rauswurf („Neue Bewerbung schreiben“). *O* · M5
 - [ ] **PRG-08** Achievements („Auszeichnungen“, z. B. „Brandschutzbeauftragter“). Im Original nicht belegt. *+* · M11
 
 ## 14. Koop, Bots, Lobby (lokal)
@@ -363,7 +363,7 @@ Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die bel
 - [ ] **COP-06** Figur anpassen: Name, Haut, Haare, Kleidung, Farbe, Hut. *D* · M8
 - [ ] **COP-07** Emote-Rad und Sprechblasen (sichtbar in der Nähe, Bots reagieren). *E (Proximity-Sprachchat)* · M8
 - [ ] **COP-08** Teamwork: Telefonate weiterreichen bzw. übernehmen, Beute (Nummer) an Kollegen schicken, gemeinsames Ausstempeln. *D* · M8
-- [ ] **COP-09** Eigenständiger Team-Bericht mit allen Spielern im Kündigungsbericht und in der Bewertung. *O [FN]* · M5/M8
+- [ ] **COP-09** Eigenständiger Team-Bericht mit allen Spielern im Kündigungsbericht und in der Bewertung. *O [FN]* · M5/M8 *Hinweis: Bewertung und Kündigungsbericht haben schon eine Rangliste; mit Bots und Mitspielern (M8) wird sie gefüllt.*
 
 ## 15. Kreativ-Werkzeuge & Gesprächsanalyse
 
@@ -406,7 +406,7 @@ Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die bel
 
 ## 19. HUD
 
-- [ ] **HUD-01** Büro-HUD: Mini-Quota-Balken, Countdown, persönliches Guthaben, Fahndungsdruck (sobald Radar gekauft), Interaktions-Hinweis. *O (Taskleiste) [FN], A* · M1/M5
+- [x] **HUD-01** Büro-HUD: Mini-Quota-Balken, Countdown, persönliches Guthaben, Fahndungsdruck (sobald Radar gekauft), Interaktions-Hinweis. *O (Taskleiste) [FN], A* · M1/M5 *Hinweis: Der Fahndungsdruck erscheint, sobald es das Radar gibt (M6/M7).*
 - [x] **HUD-02** Anruf-HUD: Porträt, Name, Vertrauen %, Stimmung, Geduld, Masche-Phase, Untertitel, Eingabefeld bzw. Karten. *O [FN]* · M3
 - [ ] **HUD-03** Ereignis-Warnungen (Razzia, Luftangriff, Feuer) als Banner plus Richtungspfeile. *D* · M7
 - [x] **HUD-04** Klingel-Anzeiger: Richtungspfeil zu klingelnden Telefonen im Büro. *D* · M3
@@ -438,7 +438,7 @@ Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die bel
 
 ## 22. Humor, Running Gags, Easter Eggs
 
-- [ ] **FUN-01** Eigene Game-Over-Sprüche von Direktor Brülling (mindestens 30). *A* · M5
+- [x] **FUN-01** Eigene Game-Over-Sprüche von Direktor Brülling (mindestens 30). *A* · M5
 - [x] **FUN-02** Eigene Anrufer-Sprüche, Reaktionen und Ausreden in großer Menge (über 1.500 Zeilen). *A/E* · M3
 - [ ] **FUN-03** Schwindelheimer Nachrichten-Ticker über eure Taten (Netzlupe, Büro-TV). *D* · M6
 - [ ] **FUN-04** Spam-Mails, absurde Ramschazon-Bewertungen, Wetter-Gags. *D* · M6
@@ -483,7 +483,7 @@ Belegte Original-Apps sind mit **O** markiert. Die übrigen Apps füllen die bel
 - [ ] **TEC-09** PWA-Manifest (Name, Farben, Ausrichtung, Shortcuts). *A* · M0/M12
 - [x] **TEC-10** App-Icons in allen Größen inkl. maskable, per Code erzeugt (Pixel-Art). *A* · M0/M12
 - [ ] **TEC-11** Service Worker: komplett offline spielbar, Update-Hinweis bei neuer Version. *A* · M12
-- [ ] **TEC-12** Speicherung lokal (localStorage für Einstellungen, IndexedDB für Run, Bilder, Videos, Mods), Fehler werden abgefangen. *A* · M5
+- [x] **TEC-12** Speicherung lokal (localStorage für Einstellungen, IndexedDB für Run, Bilder, Videos, Mods), Fehler werden abgefangen. *A* · M5 *Hinweis: Bilder, Videos und Mods folgen mit ihren Meilensteinen (M9/M10) im selben Speicher.*
 - [ ] **TEC-13** Stabile 60 FPS auf Mittelklasse-Handy und Desktop; Objekt-Pools; keine Speicherlecks bei langen Sessions. *A* · M12
 - [ ] **TEC-14** GitHub-Pages-Deployment per GitHub-Actions-Workflow (Build, Test, Deploy). *A* · M12
 - [x] **TEC-15** Keine externen Laufzeit-Abhängigkeiten (kein CDN, keine Server), alles im Bundle. Ausnahme ab M13/M14: nur die vom Spieler aktivierten Online-Funktionen. *A* · M0

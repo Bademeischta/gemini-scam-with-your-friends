@@ -28,13 +28,23 @@ class SchemesView implements AppView {
   private readonly intro: Phaser.GameObjects.Text;
   private readonly list: OsList;
   private readonly off: () => void;
+  private unlockKey = '';
 
   constructor(private readonly ctx: AppContext) {
     const { host } = ctx;
     this.intro = host.scene.add.text(0, 0, t('os.schemes.intro'), { fontFamily: BODY_FONT, color: PALETTE.paper, fontSize: '13px' });
     host.container.add(this.intro);
     this.list = new OsList(host, `${ctx.win.id}:list`);
-    this.list.onActivate = (item) => ctx.os.open('script', item.id);
+    this.list.onActivate = (item) => {
+      // Gesperrte Maschen (SCH-21): Leitfaden erst ab ihrem Tag.
+      const s = schemeById(item.id);
+      if (s && !ctx.os.env.work.unlocks().scheme(s.id)) {
+        ctx.host.s.sfx.deny();
+        ctx.os.toast({ icon: 'lock', title: t('os.locked.title'), body: t('os.locked.body', { app: t(`schemes.${s.id}.name`), day: s.unlockDay }) });
+        return;
+      }
+      ctx.os.open('script', item.id);
+    };
     this.off = ctx.os.env.phone.on((e) => {
       if (e.type === 'scheme' || e.type === 'answered' || e.type === 'ended') this.refresh();
     });
@@ -49,12 +59,19 @@ class SchemesView implements AppView {
     this.list.layout(0, y, w, h - y);
   }
 
+  update(): void {
+    // Freischaltungen können sich ändern (Debug-Menü, später Ramschazon).
+    const unlocks = this.ctx.os.env.work.unlocks();
+    if (SCHEMES.map((s) => (unlocks.scheme(s.id) ? '1' : '0')).join('') !== this.unlockKey) this.refresh();
+  }
+
   firstFocus(): string | undefined {
     return `${this.ctx.win.id}:list`;
   }
 
   state(): unknown {
-    return { items: this.list.entries.map((e) => e.id), chosen: this.ctx.os.env.phone.scheme(this.ctx.os.env.desk)?.id ?? null };
+    const unlocks = this.ctx.os.env.work.unlocks();
+    return { items: this.list.entries.map((e) => e.id), locked: SCHEMES.filter((s) => !unlocks.scheme(s.id)).map((s) => s.id), chosen: this.ctx.os.env.phone.scheme(this.ctx.os.env.desk)?.id ?? null };
   }
 
   destroy(): void {
@@ -65,13 +82,19 @@ class SchemesView implements AppView {
 
   private refresh(): void {
     const chosen = this.ctx.os.env.phone.scheme(this.ctx.os.env.desk)?.id ?? null;
+    const unlocks = this.ctx.os.env.work.unlocks();
+    this.unlockKey = SCHEMES.map((s) => (unlocks.scheme(s.id) ? '1' : '0')).join('');
     this.list.setItems(
-      SCHEMES.map((s) => ({
-        id: s.id,
-        label: t(`schemes.${s.id}.name`),
-        right: s.id === chosen ? t('os.schemes.chosen') : payoutText(s),
-        icon: 'os-icon-scheme',
-      })),
+      SCHEMES.map((s) => {
+        const open = unlocks.scheme(s.id);
+        return {
+          id: s.id,
+          label: t(`schemes.${s.id}.name`),
+          right: !open ? t('os.schemes.locked', { day: s.unlockDay }) : s.id === chosen ? t('os.schemes.chosen') : payoutText(s),
+          icon: open ? 'os-icon-scheme' : 'os-icon-lock',
+          dim: !open,
+        };
+      }),
     );
   }
 }

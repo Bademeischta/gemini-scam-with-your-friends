@@ -79,6 +79,69 @@ export const TUNING = {
     quotaPerMember: 0.75,
     /** Rundung der Quota auf volle … Taler. */
     quotaRounding: 50,
+    /** Ingame-Uhr: Arbeitstag von … bis … Uhr (Kalender & Uhr). */
+    clockStart: 9,
+    clockEnd: 17,
+    /** Schwierigkeitskurve (DAY-15): Anruf-Abstand sinkt je Tag um diesen Anteil, nie unter … s. */
+    gapShrinkPerDay: 0.04,
+    gapMinSeconds: 12,
+    /** Gewicht der Anrufer je Schwierigkeit an Tag 1 und Zuwachs pro Tag (schwere Anrufer werden häufiger). */
+    callerWeight: { leicht: 1, mittel: 0.7, schwer: 0.25 },
+    callerWeightPerDay: { leicht: -0.05, mittel: 0.08, schwer: 0.15 },
+    /** Köder werden je Tag um diesen Anteil häufiger. */
+    baitWeightPerDay: 0.12,
+  },
+
+  /** Spielstände (TEC-12, PRG-05). */
+  save: {
+    leaderboardSize: 10,
+  },
+
+  /** Direktor Brülling im Büro (DAY-12/13). Wut 0–100. */
+  boss: {
+    /** Abstand zwischen Kontrollgängen (s, zufällig dazwischen); bei hoher Wut kürzer. */
+    patrolEvery: [70, 110] as const,
+    patrolEveryAngry: [30, 50] as const,
+    /** Ab dieser Wut gilt der Chef als „geladen“ (kürzere Abstände, rot im HUD). */
+    angryAt: 60,
+    /** Laufgeschwindigkeit in Kacheln/s. */
+    walkSpeedTiles: 2.6,
+    /** Wut-Änderungen: pro Sekunde (Abkühlen), bei Fehlschlag, verpasstem Anruf, Erfolg, Erwischen. */
+    rageDecay: 0.25,
+    rageFail: 7,
+    rageMissed: 5,
+    rageSuccess: -9,
+    rageCatch: 14,
+    /** Rückstand: Liegt die Team-Summe so weit hinter dem Zeitplan, steigt die Wut pro Sekunde. */
+    behindMargin: 0.25,
+    rageBehindPerSecond: 0.35,
+    /** Faulenzen: so lange nicht am Platz (und kein Anruf läuft), dann erwischt, wenn der Chef nah ist. */
+    slackSeconds: 12,
+    catchRadiusTiles: 5,
+    /** Strafgeld: Grundbetrag + je Tag (vom persönlichen Guthaben). */
+    fineBase: 40,
+    finePerDay: 20,
+    /** Brüllanfall ab dieser Wut; danach sinkt sie um … */
+    yellAt: 85,
+    yellDrop: 40,
+    yellSeconds: 2.2,
+    /** Screenshake beim Brüllen (Dauer s, Stärke als Anteil der Bildgröße). */
+    shakeSeconds: 0.6,
+    shakeIntensity: 0.012,
+  },
+
+  /** Leistungsbewertung mit fliegenden Tackern (DAY-05, DAY-11). */
+  review: {
+    /** Ergebnisbalken füllt sich in … s. */
+    barSeconds: 3.2,
+    /** Tacker fliegen … s lang, alle … s einer (zufällig dazwischen), mit … Bühnen-Pixeln/s. */
+    staplerSeconds: 9,
+    staplerEvery: [0.55, 1.2] as const,
+    staplerSpeed: 150,
+    /** Getroffen: so lange k.o. (Sternchen). */
+    koSeconds: 1.4,
+    /** Laufgeschwindigkeit auf dem Teppich (Bühnen-Pixel/s). */
+    playerSpeed: 110,
   },
 
   /** MogelOS (Ingame-Desktop). Längen in CSS-px. */

@@ -4,7 +4,8 @@ import type { Facing } from '../../gfx/characters';
  * Interaktionssuche: Welches Objekt meint die Figur gerade?
  * Prüfpunkt liegt etwas vor den Füßen in Blickrichtung; gewählt wird das nächste Ziel im Radius.
  */
-export type InteractableKind = 'desk';
+/** Arbeitsplatz oder Stempeluhr an der Wand (Ausstempeln, OS-07). */
+export type InteractableKind = 'desk' | 'timeclock';
 
 export interface Interactable {
   id: string;

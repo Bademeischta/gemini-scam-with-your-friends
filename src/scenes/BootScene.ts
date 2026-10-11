@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { drawArt, HANDSET_ART, HANDSET_LEGEND, artSize, type ArtGrid, type Legend } from '../gfx/pixelArt';
+import { whenSavesReady } from '../core/services';
 import { registerPixelFont } from '../gfx/pixelFont';
 
 export const TEX = {
@@ -8,7 +9,7 @@ export const TEX = {
 } as const;
 
 /**
- * Erzeugt alle Grund-Texturen per Code (Schrift, Sprites) und startet den Titel.
+ * Erzeugt alle Grund-Texturen per Code (Schrift, Sprites), wartet auf die Spielstände und startet den Titel.
  * Es werden keine Dateien geladen – alles entsteht hier.
  */
 export class BootScene extends Phaser.Scene {
@@ -20,7 +21,8 @@ export class BootScene extends Phaser.Scene {
     registerPixelFont(this);
     this.makePixel();
     this.makeArt(TEX.handset, HANDSET_ART, HANDSET_LEGEND);
-    this.scene.start('Title');
+    // Spielstände sind in der Regel nach wenigen Millisekunden geladen (IndexedDB).
+    void whenSavesReady().then(() => this.scene.start('Title'));
   }
 
   private makePixel(): void {

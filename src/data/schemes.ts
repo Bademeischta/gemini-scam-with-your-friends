@@ -22,7 +22,7 @@ export interface SchemeDef {
   /** Anrufer, bei denen die Masche besonders gut bzw. schlecht zieht (SCH-17). */
   fans: readonly string[];
   skeptics: readonly string[];
-  /** Ab welchem Arbeitstag verfügbar (Freischaltung über Tage folgt mit M5). */
+  /** Ab welchem Arbeitstag verfügbar (Freischalt-Plan DAY-10, „immer absurder“). */
   unlockDay: number;
 }
 
@@ -69,7 +69,7 @@ export const SCHEMES: readonly SchemeDef[] = [
     keywords: ['gutschein kaufen', 'gutscheinkarte', 'kiosk', 'tankstelle', 'gutscheine besorgen', 'begleichen'],
     fans: ['hildegard', 'gerd', 'jacqueline', 'krawallski'],
     skeptics: ['zoe', 'besserwisser', 'dietmar'],
-    unlockDay: 1,
+    unlockDay: 2,
   },
   {
     id: 'orbit',
@@ -80,7 +80,7 @@ export const SCHEMES: readonly SchemeDef[] = [
     keywords: ['raumstation', 'rückflug', 'rückflugticket', 'orbit', 'weltraum', 'festsitzen', 'gestrandet', 'enkel im orbit'],
     fans: ['hildegard', 'rosi', 'walpurga', 'benedikt'],
     skeptics: ['stella', 'zoe', 'dietmar'],
-    unlockDay: 2,
+    unlockDay: 4,
   },
   {
     id: 'mond',
@@ -91,7 +91,7 @@ export const SCHEMES: readonly SchemeDef[] = [
     keywords: ['mondgrundstück', 'grundstück', 'mondrückseite', 'krater', 'parzelle', 'erdblick', 'grundstück auf dem mond'],
     fans: ['henrietta', 'moonboy', 'agnes', 'igor'],
     skeptics: ['stella', 'besserwisser', 'hinnerk'],
-    unlockDay: 2,
+    unlockDay: 4,
   },
   {
     id: 'pinguin',
@@ -102,7 +102,7 @@ export const SCHEMES: readonly SchemeDef[] = [
     keywords: ['pinguin', 'erbschaft', 'erbe', 'königshaus', 'prinz', 'testament', 'eisscholle'],
     fans: ['henrietta', 'jacqueline', 'desiree', 'rosi'],
     skeptics: ['dietmar', 'besserwisser', 'zoe'],
-    unlockDay: 3,
+    unlockDay: 5,
   },
   {
     id: 'atlantis',
@@ -113,7 +113,7 @@ export const SCHEMES: readonly SchemeDef[] = [
     keywords: ['atlantis', 'lotto', 'unterwasser', 'tauchgebühr', 'lotterie', 'tiefsee', 'muschel'],
     fans: ['rosi', 'gerd', 'krawallski', 'walpurga'],
     skeptics: ['dietmar', 'zoe', 'stella'],
-    unlockDay: 3,
+    unlockDay: 6,
   },
   {
     id: 'toaster',
@@ -124,7 +124,7 @@ export const SCHEMES: readonly SchemeDef[] = [
     keywords: ['toaster', 'toastbrot', 'kurzschluss', 'küchengerät', 'fernwartung', 'krümel'],
     fans: ['gerd', 'krawallski', 'hinnerk', 'hildegard'],
     skeptics: ['igor', 'zoe', 'besserwisser'],
-    unlockDay: 4,
+    unlockDay: 5,
   },
   {
     id: 'goldfisch',
@@ -135,7 +135,7 @@ export const SCHEMES: readonly SchemeDef[] = [
     keywords: ['goldfisch', 'goldfischsteuer', 'finanzamt', 'steuer', 'aquarium', 'nachzahlung'],
     fans: ['detlef', 'benedikt', 'hildegard', 'gerd'],
     skeptics: ['besserwisser', 'agnes', 'zoe'],
-    unlockDay: 4,
+    unlockDay: 7,
   },
   {
     id: 'abo',
@@ -146,7 +146,7 @@ export const SCHEMES: readonly SchemeDef[] = [
     keywords: ['luftgitarre', 'luftgitarren', 'abo', 'probemonat', 'rockstar', 'solo', 'unterricht'],
     fans: ['bodo', 'desiree', 'krawallski', 'zoe'],
     skeptics: ['besserwisser', 'henrietta', 'dietmar'],
-    unlockDay: 2,
+    unlockDay: 7,
   },
   {
     id: 'zeitreise',
@@ -157,7 +157,7 @@ export const SCHEMES: readonly SchemeDef[] = [
     keywords: ['zeitreise', 'versicherung', 'police', 'gestern', 'zeitmaschine', 'paradoxon', 'vergangenheit'],
     fans: ['igor', 'agnes', 'walpurga', 'gerd'],
     skeptics: ['stella', 'besserwisser', 'dietmar'],
-    unlockDay: 5,
+    unlockDay: 8,
   },
   {
     id: 'coin',
@@ -168,7 +168,7 @@ export const SCHEMES: readonly SchemeDef[] = [
     keywords: ['schwindelcoin', 'coin', 'krypto', 'investieren', 'rendite', 'kurs', 'einsteigen'],
     fans: ['moonboy', 'bodo', 'kevin', 'chantal'],
     skeptics: ['hildegard', 'benedikt', 'dietmar', 'hinnerk'],
-    unlockDay: 5,
+    unlockDay: 9,
   },
   {
     id: 'wasser',
@@ -179,7 +179,7 @@ export const SCHEMES: readonly SchemeDef[] = [
     keywords: ['wunderwasser', 'heilwasser', 'montag', 'quelle', 'flasche', 'heilkraft', 'kur'],
     fans: ['agnes', 'walpurga', 'gerd', 'detlef'],
     skeptics: ['besserwisser', 'stella', 'igor'],
-    unlockDay: 1,
+    unlockDay: 8,
   },
   {
     id: 'dinner',
@@ -190,7 +190,7 @@ export const SCHEMES: readonly SchemeDef[] = [
     keywords: ['dinner', 'heino hallodri', 'hallodri', 'schlagerstar', 'abendessen', 'promi', 'platzgebühr'],
     fans: ['rosi', 'jacqueline', 'chantal', 'desiree'],
     skeptics: ['zoe', 'dietmar', 'besserwisser'],
-    unlockDay: 3,
+    unlockDay: 9,
   },
   {
     id: 'klammer',
@@ -201,7 +201,7 @@ export const SCHEMES: readonly SchemeDef[] = [
     keywords: ['büroklammer', 'büroklammern', 'spende', 'rettung', 'artenschutz', 'klammer', 'patenschaft'],
     fans: ['benedikt', 'hildegard', 'walpurga', 'rosi'],
     skeptics: ['moonboy', 'dietmar', 'zoe'],
-    unlockDay: 1,
+    unlockDay: 6,
   },
 ];
 

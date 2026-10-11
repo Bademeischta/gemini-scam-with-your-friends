@@ -29,7 +29,7 @@ export class PauseScene extends BaseScene {
     this.dim = this.add.graphics();
     this.panel = this.add.graphics();
     this.heading = new PixelLabel(this, t('pause.heading'), { scale: 2, color: 'mustard', shadow: 'ink0', originX: 0.5 });
-    this.hint = this.add.text(0, 0, t('pause.hint'), { fontFamily: BODY_FONT, color: PALETTE.fog, fontSize: '14px', align: 'center' }).setOrigin(0.5, 0);
+    this.hint = this.add.text(0, 0, `${t('pause.hint')}\n${t('pause.saved')}`, { fontFamily: BODY_FONT, color: PALETTE.fog, fontSize: '14px', align: 'center' }).setOrigin(0.5, 0);
     this.menu = new Menu(this, this.s, [
       { id: 'resume', label: () => t('menu.resume'), onSelect: () => this.resume() },
       { id: 'mainMenu', label: () => t('menu.mainMenu'), onSelect: () => this.toMainMenu() },

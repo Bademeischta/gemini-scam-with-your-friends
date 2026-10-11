@@ -96,12 +96,13 @@ const HILDEGARD = [
 
 const desktopOnly = (info: { project: { name: string } }): boolean => info.project.name !== 'desktop';
 
+// Maschen und Apps werden nach Tagen freigeschaltet (SCH-21): `day=` startet den Run am passenden Tag.
 test.describe('Maschen', () => {
   test('Rentennummer-Raffer: Masche wählen, Pitch, Diktat, Ident-o-Mat zahlt aus, Kundenkartei', async ({ page }, info) => {
     test.slow();
     test.skip(desktopOnly(info), 'Tastatur/Maus, DPR-unabhängig');
     const errors = collectErrors(page);
-    await openGame(page, '?ring=hildegard&seed=7');
+    await openGame(page, '?ring=hildegard&seed=7&day=3');
     await sitAtDesk(page, false);
     // Vor dem Abheben: Masche in der Übersicht wählen (SCH-17).
     await dbl(page, 'icon:schemes');
@@ -163,7 +164,7 @@ test.describe('Maschen', () => {
     test.slow();
     test.skip(desktopOnly(info), 'Tastatur/Maus, DPR-unabhängig');
     const errors = collectErrors(page);
-    await openGame(page, '?ring=hildegard&seed=7');
+    await openGame(page, '?ring=hildegard&seed=7&day=3');
     await sitAtDesk(page, false);
     await page.keyboard.press('KeyE');
     await expect.poll(async () => (await phone(page))?.mode).toBe('call');
@@ -217,7 +218,7 @@ test.describe('Maschen', () => {
     test.slow();
     test.skip(desktopOnly(info), 'Tastatur/Maus, DPR-unabhängig');
     const errors = collectErrors(page);
-    await openGame(page, '?ring=kevin&seed=7');
+    await openGame(page, '?ring=kevin&seed=7&day=2');
     await sitAtDesk(page, false);
     await page.keyboard.press('KeyE');
     await expect.poll(async () => (await phone(page))?.mode).toBe('call');
@@ -269,7 +270,7 @@ test.describe('Maschen', () => {
     test.slow();
     test.skip(desktopOnly(info), 'Tastatur/Maus, DPR-unabhängig');
     const errors = collectErrors(page);
-    await openGame(page, '?ring=rosi&seed=7');
+    await openGame(page, '?ring=rosi&seed=7&day=6');
     await sitAtDesk(page, false);
     await dbl(page, 'icon:schemes');
     await active(page, 'schemes');
@@ -300,7 +301,7 @@ test.describe('Maschen', () => {
     test.slow();
     test.skip(desktopOnly(info), 'Tastatur/Maus, DPR-unabhängig');
     const errors = collectErrors(page);
-    await openGame(page, '?ring=hildegard&seed=7');
+    await openGame(page, '?ring=hildegard&seed=7&day=2');
     await sitAtDesk(page, false);
     await dbl(page, 'icon:schemes');
     await active(page, 'schemes');

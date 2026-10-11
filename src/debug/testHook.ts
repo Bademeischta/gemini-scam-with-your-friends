@@ -1,5 +1,5 @@
 import type Phaser from 'phaser';
-import { currentRun } from '../core/run';
+import { currentRun, hasRun } from '../core/run';
 import type { Services } from '../core/services';
 import { i18n } from '../i18n';
 import { isFullscreen } from '../systems/platform/fullscreen';
@@ -45,6 +45,15 @@ export interface TestHook {
   calls(): unknown;
   /** Sprachausgabe: verfügbar und zuletzt gesprochene Texte. */
   voice(): { supported: boolean; usable: boolean; spoken: string[] };
+  /** Arbeitstag: HUD, Chef, Bewertung, Bericht, Statistik-Szene, Run-Zustand, Spielstände. */
+  hud(): unknown;
+  titleNotice(): string;
+  boss(): unknown;
+  review(): unknown;
+  report(): unknown;
+  stats(): unknown;
+  run(): unknown;
+  saves(): unknown;
   errors: string[];
 }
 
@@ -96,6 +105,29 @@ export function installTestHook(game: Phaser.Game, s: Services): void {
         arrows: (game.registry.get('ringArrows') as number | undefined) ?? 0,
       };
     },
+    hud: () => game.registry.get('hud') ?? null,
+    titleNotice: () => (game.registry.get('titleNotice') as string | undefined) ?? '',
+    boss: () => game.registry.get('boss') ?? null,
+    review: () => game.registry.get('review') ?? null,
+    report: () => game.registry.get('report') ?? null,
+    stats: () => game.registry.get('stats') ?? null,
+    run: () => {
+      if (!hasRun()) return null;
+      const r = currentRun();
+      return {
+        day: r.shift.day,
+        personal: r.shift.personal,
+        team: r.shift.team,
+        quota: r.shift.quota,
+        timeLeft: r.shift.timeLeft,
+        clockedIn: r.clockedIn,
+        clockedOut: r.clockedOut,
+        mails: r.mail.mails.map((m) => ({ from: m.from, read: m.read })),
+        unlockedApps: ['plauder', 'voucher', 'ferngucker', 'kartei', 'identomat'].filter((a) => r.unlocks.app(a)),
+        days: r.core.days.length,
+      };
+    },
+    saves: () => ({ backend: s.saves.backend, run: s.saves.run ? { day: s.saves.run.day, personal: s.saves.run.personal, days: s.saves.run.days.length } : null, stats: s.saves.stats, leaderboard: s.saves.leaderboard }),
     voice: () => ({ supported: s.voice.supported, usable: s.voice.usable, spoken: [...s.voice.spoken] }),
     errors: [],
   };

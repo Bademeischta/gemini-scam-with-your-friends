@@ -1,4 +1,4 @@
-import { DESKS, deskGeometry, OFFICE_MAP, OFFICE_OBJECTS, OFFICE_SIZE, SOLID_TILES, TILE } from '../../data/office';
+import { DESKS, deskGeometry, OFFICE_MAP, OFFICE_OBJECTS, OFFICE_SIZE, SOLID_TILES, TILE, TIMECLOCK } from '../../data/office';
 import { CollisionWorld, type Rect } from './collision';
 import type { Interactable } from './interaction';
 
@@ -20,5 +20,6 @@ export function buildOfficeWorld(): { world: CollisionWorld; interactables: Inte
     const g = deskGeometry(d);
     return { id: `desk${d.index}`, kind: 'desk', x: g.standUp.x, y: g.standUp.y, ref: d.index, enabled: true };
   });
+  interactables.push({ id: 'timeclock', kind: 'timeclock', x: TIMECLOCK.x, y: TIMECLOCK.y, ref: -1, enabled: true });
   return { world, interactables };
 }

@@ -215,3 +215,33 @@ export const OFFICE_OBJECTS: readonly OfficeObject[] = [
 export const SPAWN = { x: 18 * TILE, y: 20 * TILE + 6 };
 
 export const OFFICE_SIZE = { w: OFFICE_MAP[0]!.length * TILE, h: OFFICE_MAP.length * TILE };
+
+/** Platz des Chefs (Füße) am Schreibtisch im Chefbüro. */
+export const BOSS_SEAT = { x: 29 * TILE + 16, y: 3 * TILE + 16 };
+
+/**
+ * Kontrollgang des Chefs (DAY-12): aus dem Chefbüro über den Bewertungs-Teppich, den Gang zwischen
+ * den Reihen nach links, unten zurück und wieder hinein. Wegpunkte liegen im freien Gang.
+ */
+export const BOSS_ROUTE: readonly { x: number; y: number }[] = [
+  { x: 33 * TILE, y: 3 * TILE + 16 },
+  { x: 33 * TILE, y: 7 * TILE + 8 },
+  { x: 29 * TILE + 16, y: 7 * TILE + 8 },
+  { x: 29 * TILE + 16, y: 10 * TILE + 8 },
+  { x: 25 * TILE, y: 13 * TILE + 8 },
+  { x: 4 * TILE + 8, y: 13 * TILE + 8 },
+  { x: 4 * TILE + 8, y: 19 * TILE + 8 },
+  { x: 22 * TILE, y: 19 * TILE + 8 },
+  { x: 25 * TILE, y: 13 * TILE + 8 },
+  { x: 29 * TILE + 16, y: 10 * TILE + 8 },
+  { x: 29 * TILE + 16, y: 7 * TILE + 8 },
+  { x: 33 * TILE, y: 7 * TILE + 8 },
+  { x: 33 * TILE, y: 3 * TILE + 16 },
+  BOSS_SEAT,
+];
+
+/** Bewertungs-Teppich (Versammlungsort, DAY-05) und Stempeluhr an der Wand (Ausstempeln). */
+export const REVIEW_CARPET = { x: 26 * TILE + 4, y: 11 * TILE, w: 8 * TILE - 8, h: 4 * TILE };
+
+/** Stehplatz vor der Wanduhr, die zugleich Stempeluhr ist (Ausstempeln im Büro). */
+export const TIMECLOCK = { x: 8 * TILE + 8, y: 2 * TILE + 10 };

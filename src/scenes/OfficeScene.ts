@@ -1,13 +1,16 @@
 import Phaser from 'phaser';
 import { hex } from '../config/palette';
 import { TUNING } from '../config/tuning';
-import { DESKS, deskGeometry, OFFICE_OBJECTS, OFFICE_SIZE, SPAWN, SPRITE_SIZE, TILE, type OfficeObject } from '../data/office';
-import { currentRun, currentShift, startNewRun } from '../core/run';
+import { BOSS_SEAT, DESKS, deskGeometry, OFFICE_OBJECTS, OFFICE_SIZE, SPAWN, SPRITE_SIZE, TILE, TIMECLOCK, type OfficeObject } from '../data/office';
+import { clockOut, currentRun, dayOver, hasRun, resumeRun, startNewRun, tickBoss } from '../core/run';
+import { i18n } from '../i18n';
+import type { BossEvent } from '../systems/day/boss';
 import { buildRingBubble, buildRingHandset, buildRingWaves } from '../gfx/callArt';
-import { BOSS_LOOK, CHAR_H, frameIndex, PLAYER_LOOK, type Pose } from '../gfx/characters';
+import { BOSS_LOOK, CHAR_H, frameIndex, PLAYER_LOOK, type Facing, type Pose } from '../gfx/characters';
 import { buildBossDoorHalf, buildFloor, buildSprite } from '../gfx/officeArt';
 import { characterTexture, gridTexture } from '../gfx/phaserTextures';
 import { t } from '../i18n';
+
 import { actionHint } from '../i18n/keyNames';
 import type { CollisionWorld } from '../systems/office/collision';
 import { findInteractable, type Interactable } from '../systems/office/interaction';
@@ -22,6 +25,19 @@ import type { OfficeHudScene } from './OfficeHudScene';
 const DEPTH_FLOOR = -1_000_000;
 const DEPTH_WALL = -500_000;
 const DEPTH_PROMPT = 1_000_000;
+
+/** Wie die Büro-Szene betreten wird: neuer Run, gespeicherten fortsetzen, nächster Tag (Run steht schon). */
+export interface OfficeData {
+  mode?: 'new' | 'continue' | 'day';
+}
+
+/** Ereignisse des Arbeitstags für Desktop und HUD (über `game.events`, Name `office-event`). */
+export type OfficeEvent =
+  | { type: 'patrol'; line: string }
+  | { type: 'catch'; line: string; fine: string }
+  | { type: 'yell'; line: string }
+  | { type: 'quota' }
+  | { type: 'timeUp' };
 
 /**
  * Das Büro: begehbare Draufsicht mit 8 Arbeitsplätzen, Chefbüro und Küche.
@@ -45,6 +61,15 @@ export class OfficeScene extends BaseScene {
   private hud: OfficeHudScene | null = null;
   /** MogelOS ist offen (Spieler sitzt am PC). */
   private desktopOpen = false;
+  private boss!: Phaser.GameObjects.Sprite;
+  private bossPrev = { x: 0, y: 0 };
+  private bossSay!: PixelLabel;
+  private bossSayBg!: Phaser.GameObjects.Graphics;
+  private bossSayTime = 0;
+  private bossChairDepth = 0;
+  /** Bewertung läuft an (Szene wird gleich gewechselt). */
+  private reviewing = false;
+  private quotaAnnounced = false;
   /** Klingel-Anzeige je Platz (Hörer hüpft, Wellen, Blase). */
   private rings: { handset: Phaser.GameObjects.Image; waves: Phaser.GameObjects.Image; bubble: Phaser.GameObjects.Image; phase: number; nextSound: number }[] = [];
 
@@ -52,15 +77,20 @@ export class OfficeScene extends BaseScene {
     super('Office');
   }
 
-  protected build(): void {
+  protected build(data?: unknown): void {
     this.params = {
       speed: TUNING.office.walkSpeedTiles * TILE,
       accelTime: TUNING.office.accelTime,
       decelTime: TUNING.office.decelTime,
       hitbox: TUNING.office.hitbox,
     };
-    // Wer das Büro vom Titel aus betritt, beginnt einen neuen Run (Speichern folgt mit M5).
-    startNewRun();
+    // Neuer Run, gespeicherten fortsetzen (MOD-07) oder nächster Tag nach der Bewertung.
+    const mode = (data as OfficeData | undefined)?.mode ?? 'new';
+    const saved = this.s.saves.run;
+    if (mode === 'continue' && saved) resumeRun(saved);
+    else if (mode !== 'day' || !hasRun()) startNewRun();
+    this.reviewing = false;
+    this.quotaAnnounced = currentRun().shift.quotaReached;
     this.desktopOpen = false;
     const built = buildOfficeWorld();
     this.world = built.world;
@@ -73,10 +103,13 @@ export class OfficeScene extends BaseScene {
 
     characterTexture(this, 'char-boss', BOSS_LOOK);
     const chair = OFFICE_OBJECTS.find((o) => o.id === 'bossChair')!;
-    this.add
-      .sprite(chair.x + 8, chair.y + 16, 'char-boss', frameIndex('down', 'walk0'))
-      .setOrigin(0.5, 1)
-      .setDepth(chair.y + 18.5);
+    this.bossChairDepth = chair.y + 18.5;
+    this.boss = this.add.sprite(BOSS_SEAT.x, BOSS_SEAT.y, 'char-boss', frameIndex('down', 'walk0')).setOrigin(0.5, 1).setDepth(this.bossChairDepth);
+    this.bossPrev = { ...BOSS_SEAT };
+    this.bossSayBg = this.add.graphics().setDepth(DEPTH_PROMPT - 2).setVisible(false);
+    this.bossSay = new PixelLabel(this, '', { scale: 1, color: 'white', shadow: null, originX: 0.5, originY: 1, depth: DEPTH_PROMPT - 1, align: 'center' });
+    this.bossSay.setMaxWidth(150).setVisible(false);
+    this.bossSayTime = 0;
 
     characterTexture(this, 'char-player', PLAYER_LOOK);
     this.mover = createMover(SPAWN.x, SPAWN.y, 'up');
@@ -128,11 +161,24 @@ export class OfficeScene extends BaseScene {
   }
 
   protected override fixedUpdate(dt: number): void {
+    if (this.reviewing) return;
     // Der Arbeitstag und die Anrufe laufen, egal ob am PC oder im Büro (nur die Pause hält sie an).
-    currentShift().tick(dt);
     const run = currentRun();
+    run.shift.tick(dt);
     run.calls.tick(dt);
     run.phone.tick(dt);
+    this.bossPrev = { x: run.boss.pos.x, y: run.boss.pos.y };
+    for (const e of tickBoss(run, dt, { seated: this.seatedAt !== null, player: { x: this.mover.x, y: this.mover.y } })) this.onBossEvent(e);
+    if (!this.quotaAnnounced && run.shift.quotaReached) {
+      this.quotaAnnounced = true;
+      this.s.sfx.notify();
+      this.emitOffice({ type: 'quota' });
+    }
+    // Countdown abgelaufen oder ausgestempelt: alle zur Leistungsbewertung (DAY-01, DAY-04).
+    if (dayOver(run)) {
+      this.startReview();
+      return;
+    }
     this.prev = { x: this.mover.x, y: this.mover.y };
     if (this.seatedAt !== null) return;
     stepMover(this.mover, this.s.input.move, dt, this.params, this.world);
@@ -142,11 +188,15 @@ export class OfficeScene extends BaseScene {
     const paused = this.s.pause.paused;
     const inp = this.s.input;
     // Am PC steuert MogelOS (Aufstehen, Pause); das Büro wartet.
-    if (!paused && !this.desktopOpen) {
+    if (!paused && !this.desktopOpen && !this.reviewing) {
       if (inp.justPressed('pause')) this.openPause();
       else if (this.seatedAt !== null && (inp.justPressed('interact') || inp.justPressed('leave'))) this.standUp();
-      else if (this.seatedAt === null && this.focus && inp.justPressed('interact')) this.sitDown(this.focus.ref);
+      else if (this.seatedAt === null && this.focus && inp.justPressed('interact')) {
+        if (this.focus.kind === 'timeclock') this.useTimeclock();
+        else this.sitDown(this.focus.ref);
+      }
     }
+    this.drawBoss(paused ? 0 : dt, alpha);
 
     // Darstellung: zwischen den letzten beiden Logik-Zuständen interpolieren.
     const x = this.prev.x + (this.mover.x - this.prev.x) * alpha;
@@ -164,6 +214,58 @@ export class OfficeScene extends BaseScene {
   }
 
   // ------------------------------------------------------------------ Aktionen
+
+  /** Stempeluhr an der Wand: Ausstempeln, sobald die Quota erreicht ist (OS-07). */
+  private useTimeclock(): void {
+    if (clockOut(currentRun())) this.s.sfx.start();
+    else this.s.sfx.deny();
+  }
+
+  /** Chef-Ereignisse: Sprechblase, Klang, Screenshake; der Desktop zeigt sie als Benachrichtigung. */
+  private onBossEvent(e: BossEvent): void {
+    const pick = (key: string): string => {
+      const all = i18n.list(key);
+      return all.length > 0 ? all[Math.floor(Math.random() * all.length)]! : '';
+    };
+    if (e.type === 'patrolStart') {
+      const line = pick('boss.patrol');
+      this.say(line, 3);
+      this.emitOffice({ type: 'patrol', line });
+    } else if (e.type === 'yell') {
+      const line = pick('boss.yell');
+      this.say(line, TUNING.boss.yellSeconds + 0.6);
+      this.shake();
+      this.emitOffice({ type: 'yell', line });
+    } else if (e.type === 'catch') {
+      const line = pick('boss.catch');
+      this.say(line, 3.5);
+      this.shake();
+      this.emitOffice({ type: 'catch', line, fine: i18n.formatMoney(e.fine) });
+    }
+  }
+
+  private say(text: string, seconds: number): void {
+    this.bossSay.setText(text);
+    this.bossSayTime = seconds;
+  }
+
+  /** Brüllanfall: Bildschirm wackelt (Büro und, falls offen, der Desktop). */
+  private shake(): void {
+    this.cameras.main.shake(TUNING.boss.shakeSeconds * 1000, TUNING.boss.shakeIntensity);
+    this.s.sfx.moodDown();
+  }
+
+  private emitOffice(e: OfficeEvent): void {
+    this.game.events.emit('office-event', e);
+  }
+
+  private startReview(): void {
+    if (this.reviewing) return;
+    this.reviewing = true;
+    this.s.input.setVirtualStick(0, 0);
+    if (!currentRun().clockedOut) this.emitOffice({ type: 'timeUp' });
+    this.scene.start('Review');
+  }
 
   private sitDown(deskIndex: number): void {
     const desk = DESKS[deskIndex];
@@ -303,6 +405,11 @@ export class OfficeScene extends BaseScene {
       px = this.player.x;
       py = this.player.y + 3;
       below = true;
+    } else if (this.focus?.kind === 'timeclock') {
+      const ready = currentRun().shift.quotaReached;
+      text = ready ? actionHint('interact', t('office.prompt.clock'), mode, bindings) : t('office.prompt.clockLocked');
+      px = TIMECLOCK.x;
+      py = TIMECLOCK.y - 18;
     } else if (this.focus) {
       text = actionHint('interact', t('office.prompt.sit'), mode, bindings);
       const desk = DESKS[this.focus.ref]!;
@@ -310,7 +417,8 @@ export class OfficeScene extends BaseScene {
       py = desk.y - 2;
     }
     // Auf Touch-Geräten zeigt der Kontext-Button die Aktion – dort reicht ein dezenter Hinweis.
-    this.hud?.setContext(this.seatedAt !== null ? 'stand' : this.focus ? 'sit' : 'none', this.seatedAt !== null ? t('office.prompt.stand') : this.focus ? t('office.prompt.sit') : '');
+    const ctxLabel = this.seatedAt !== null ? t('office.prompt.stand') : this.focus?.kind === 'timeclock' ? t('office.prompt.clock') : this.focus ? t('office.prompt.sit') : '';
+    this.hud?.setContext(this.seatedAt !== null ? 'stand' : this.focus ? 'sit' : 'none', ctxLabel);
     const show = text !== '';
     this.prompt.setVisible(show);
     this.promptBg.setVisible(show);
@@ -346,7 +454,37 @@ export class OfficeScene extends BaseScene {
     cam.centerOn(Math.round(cx * this.zoom) / this.zoom, Math.round(cy * this.zoom) / this.zoom);
   }
 
+  /** Chef zeichnen: sitzt am Schreibtisch oder läuft seinen Kontrollgang; beim Brüllen zittert er. */
+  private drawBoss(dt: number, alpha: number): void {
+    const b = currentRun().boss;
+    const x = this.bossPrev.x + (b.pos.x - this.bossPrev.x) * alpha;
+    const y = this.bossPrev.y + (b.pos.y - this.bossPrev.y) * alpha;
+    const yelling = b.state === 'yell';
+    const jitter = yelling ? (Math.floor(this.time.now / 40) % 2 === 0 ? 1 : -1) : 0;
+    const atDesk = b.state === 'office' || (yelling && Math.hypot(b.pos.x - BOSS_SEAT.x, b.pos.y - BOSS_SEAT.y) < 1);
+    let facing: Facing = 'down';
+    if (!atDesk) facing = Math.abs(b.dir.x) > Math.abs(b.dir.y) ? (b.dir.x < 0 ? 'left' : 'right') : b.dir.y < 0 ? 'up' : 'down';
+    const stride = (TUNING.boss.walkSpeedTiles * TILE) / TUNING.office.walkAnimFps;
+    const pose: Pose = b.moving ? (['walk0', 'walk1', 'walk2', 'walk3'] as const)[Math.floor(b.distance / stride) % 4]! : 'walk0';
+    this.boss.setPosition(Math.round(x) + jitter, Math.round(y)).setFrame(frameIndex(facing, pose));
+    this.boss.setDepth(atDesk ? this.bossChairDepth : y + 0.25);
+    // Sprechblase über dem Kopf.
+    this.bossSayTime = Math.max(0, this.bossSayTime - dt);
+    const show = this.bossSayTime > 0;
+    this.bossSay.setVisible(show);
+    this.bossSayBg.setVisible(show);
+    if (!show) return;
+    this.bossSay.setColor(yelling ? 'red' : 'white').setPosition(Math.round(x), Math.round(y - CHAR_H - 4));
+    const w = this.bossSay.width + 6;
+    const h = this.bossSay.height + 4;
+    const left = Math.round(x - w / 2);
+    const top = Math.round(y - CHAR_H - 4 - h + 2);
+    this.bossSayBg.clear().fillStyle(hex('ink0'), 0.85).fillRect(left, top, w, h).fillStyle(hex(yelling ? 'red' : 'paper'), 1).fillRect(left, top + h, w, 1);
+  }
+
   private publishState(): void {
+    const run = currentRun();
+    this.registry.set('boss', { state: run.boss.state, rage: Math.round(run.boss.rage), x: Math.round(run.boss.pos.x), y: Math.round(run.boss.pos.y), yells: run.boss.yells, catches: run.boss.catches });
     this.registry.set('office', {
       x: Math.round(this.mover.x * 10) / 10,
       y: Math.round(this.mover.y * 10) / 10,

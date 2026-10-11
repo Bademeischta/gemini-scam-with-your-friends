@@ -40,6 +40,11 @@ export class SafeStorage {
     } catch {
       return;
     }
+    this.writeRaw(key, raw);
+  }
+
+  /** Text unverändert speichern (Spielstände bringen ihr eigenes Format mit). */
+  writeRaw(key: string, raw: string): void {
     this.memory.set(key, raw);
     try {
       this.backend?.setItem(PREFIX + key, raw);
@@ -57,7 +62,7 @@ export class SafeStorage {
     }
   }
 
-  private readRaw(key: string): string | null {
+  readRaw(key: string): string | null {
     try {
       const v = this.backend?.getItem(PREFIX + key);
       if (v !== null && v !== undefined) return v;

@@ -21,7 +21,8 @@ import { APPS, appById } from './apps';
 import { lootTarget, lootTargetName } from './apps/loot';
 import { chatName } from './apps/plauder';
 import { emptyTrash } from './apps/trash';
-import type { AppDef, AppView, ContextItem, OsApi, OsEnv, ToastOptions } from './apps/types';
+import type { AppDef, AppView, ContextItem, OsApi, OsEnv, ToastOptions, WorkEnv } from './apps/types';
+import { appUnlockDay } from '../../systems/day/unlocks';
 import { CallPopup } from './CallPopup';
 import { DesktopIcon } from './DesktopIcon';
 import { FocusManager } from './FocusManager';
@@ -56,6 +57,7 @@ export interface MogelOSOptions {
   notes: Notebook;
   ledger: LootLedger;
   plauder: Plauder;
+  work: WorkEnv;
   /** Aufstehen angefordert (Taskleiste, Tab, B). */
   onLeave: () => void;
   onPause: () => void;
@@ -127,6 +129,7 @@ export class MogelOS implements OsApi {
       notes: o.notes,
       ledger: o.ledger,
       plauder: o.plauder,
+      work: o.work,
     };
     this.unit = pixelScale(this.vp, TUNING.display.uiArtScale);
     const nr = (): NavRepeat => new NavRepeat(TUNING.input.navRepeatDelay, TUNING.input.navRepeatInterval);
@@ -162,6 +165,7 @@ export class MogelOS implements OsApi {
       onWindow: (id) => this.taskbarClick(id),
       onLeave: () => o.onLeave(),
       onPause: () => o.onPause(),
+      onClockOut: () => this.clockOut(),
     });
     this.toasts = new Toasts(this.base, DEPTH.toasts);
     this.popup = new CallPopup(this.base, DEPTH.call, { onAnswer: () => this.answerCall(), onDecline: () => this.declineCall() });
@@ -238,6 +242,12 @@ export class MogelOS implements OsApi {
   open(appId: string, args?: unknown): void {
     const def = appById(appId);
     if (!def) return;
+    // Gesperrte Apps (OS-10): sichtbar, aber erst ab ihrem Tag nutzbar.
+    if (!this.o.work.unlocks().app(def.id)) {
+      this.s.sfx.deny();
+      this.toast({ icon: 'lock', title: t('os.locked.title'), body: t('os.locked.body', { app: t(def.titleKey), day: appUnlockDay(def.id) }) });
+      return;
+    }
     this.closeOverlays();
     const id = def.windowId ? def.windowId(args) : def.id;
     const existing = this.windows.find((w) => w.win.id === id);
@@ -310,6 +320,17 @@ export class MogelOS implements OsApi {
 
   // ------------------------------------------------------------------ Ablauf
 
+  /** Ausstempeln (OS-07): beendet den Tag, alle gehen zur Bewertung. */
+  clockOut(): void {
+    if (this.o.work.clockOut()) this.s.sfx.start();
+    else this.s.sfx.deny();
+  }
+
+  /** Bildschirm wackelt (Brüllanfall des Chefs). */
+  shake(): void {
+    this.scene.cameras.main.shake(TUNING.boss.shakeSeconds * 1000, TUNING.boss.shakeIntensity);
+  }
+
   get overlayOpen(): boolean {
     return this.startMenu !== null || this.ctxMenu !== null;
   }
@@ -341,6 +362,15 @@ export class MogelOS implements OsApi {
       }
       this.popup.update(dt, v.left / TUNING.calls.ringSeconds);
     } else this.popup.hide();
+  }
+
+  /** Schloss an gesperrten Desktop-Symbolen (OS-10); ändert sich nur durch Debug-Menü bzw. Ramschazon. */
+  private syncLocks(): void {
+    const unlocks = this.o.work.unlocks();
+    for (const ic of this.icons) {
+      const day = unlocks.app(ic.id) ? null : appUnlockDay(ic.id);
+      ic.setLocked(day);
+    }
   }
 
   /** Freunde in der Plauderbude melden sich, solange man am PC sitzt (APP-05). */
@@ -402,6 +432,8 @@ export class MogelOS implements OsApi {
   update(dt: number, acceptInput: boolean): void {
     this.syncPopup(dt);
     this.tickPlauder(dt);
+    this.syncLocks();
+    this.taskbar.setClockOut(this.o.work.shift().quotaReached && !this.o.work.clockedOut());
     if (acceptInput) this.handleInput(dt);
     for (const e of this.windows) e.view.update?.(dt);
     this.taskbar.update(this.o.shift(), dt);
@@ -442,7 +474,7 @@ export class MogelOS implements OsApi {
       toastRects: this.toasts.rects().map(css),
       taskbar: this.taskbar.statusTexts(),
       taskbarRects: Object.fromEntries(Object.entries(this.taskbar.rects()).map(([k, r]) => [k, css(r)])),
-      icons: this.icons.map((ic) => ({ id: ic.id, selected: ic === this.selectedIcon, rect: css(ic.screenRect()) })),
+      icons: this.icons.map((ic) => ({ id: ic.id, selected: ic === this.selectedIcon, locked: ic.locked, rect: css(ic.screenRect()) })),
       targets: this.focus.all().map((f) => ({ id: f.id, scope: f.scope, ...css(f.rect) })),
     };
   }
@@ -776,7 +808,13 @@ export class MogelOS implements OsApi {
     }
     this.closeOverlays();
     this.s.sfx.confirm();
-    const entries: PopupEntry[] = APPS.filter((a) => a.inStartMenu).map((a) => ({ id: a.id, label: t(a.titleKey), icon: this.iconTexture(a), onSelect: () => this.open(a.id) }));
+    const unlocks = this.o.work.unlocks();
+    const entries: PopupEntry[] = APPS.filter((a) => a.inStartMenu).map((a) => ({
+      id: a.id,
+      label: unlocks.app(a.id) ? t(a.titleKey) : t('os.locked.entry', { app: t(a.titleKey), day: appUnlockDay(a.id) }),
+      icon: unlocks.app(a.id) ? this.iconTexture(a) : 'os-icon-lock',
+      onSelect: () => this.open(a.id),
+    }));
     entries.push({ id: 'leave', label: t('os.taskbar.leave'), icon: 'os-icon-standUp', onSelect: () => this.o.onLeave(), separator: true });
     const menu = new PopupMenu(this.base, {
       scope: 'start',

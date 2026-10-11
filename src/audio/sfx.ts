@@ -104,6 +104,30 @@ export function createUiSfx(audio: AudioEngine) {
     click(): void {
       audio.tone(bus(), 2200, 0.015, 'square', 0.08);
     },
+    /** Trommelwirbel vor dem Urteil (Bewertung). */
+    drumroll(seconds: number): void {
+      for (let t = 0; t < seconds; t += 0.05) audio.tone(bus(), 110 + (t * 37) % 30, 0.04, 'square', 0.05 + 0.05 * (t / seconds), 0, t);
+    },
+    /** Bestanden: kurze Fanfare. */
+    fanfare(): void {
+      const notes = [523, 659, 784, 1046];
+      notes.forEach((f, i) => audio.tone(bus(), f, i === 3 ? 0.35 : 0.1, 'square', 0.12, 0, i * 0.11));
+    },
+    /** Gefeuert: traurige Posaune (drei Schritte abwärts, der letzte jault). */
+    fired(): void {
+      audio.tone(bus(), 392, 0.32, 'sawtooth', 0.12, 370, 0);
+      audio.tone(bus(), 370, 0.32, 'sawtooth', 0.12, 349, 0.36);
+      audio.tone(bus(), 349, 0.32, 'sawtooth', 0.12, 330, 0.72);
+      audio.tone(bus(), 330, 0.9, 'sawtooth', 0.12, 262, 1.08);
+    },
+    /** Tacker fliegt (Zischen) bzw. trifft (Bong). */
+    staplerThrow(): void {
+      audio.tone(bus(), 1400, 0.09, 'triangle', 0.05, 500);
+    },
+    staplerHit(): void {
+      audio.tone(bus(), 180, 0.12, 'square', 0.18, 90);
+      audio.tone(bus(), 1700, 0.25, 'sine', 0.06, 1500, 0.05);
+    },
   };
 }
 

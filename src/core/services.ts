@@ -3,6 +3,7 @@ import type { UiSfx } from '../audio/sfx';
 import type { VoiceOut } from '../audio/voice';
 import type { DeviceTracker } from '../systems/input/device';
 import type { InputManager } from '../systems/input/InputManager';
+import type { SaveManager } from '../systems/save/SaveManager';
 import type { SettingsStore } from '../systems/save/settings';
 import type { SafeStorage } from '../systems/save/storage';
 import type { PauseController } from '../systems/time/PauseController';
@@ -23,6 +24,8 @@ export interface Services {
   voice: VoiceOut;
   /** Spracheingabe des Spielers. */
   speech: SpeechInput;
+  /** Spielstände, Statistik, Bestenliste (wird in der Boot-Szene geladen). */
+  saves: SaveManager;
 }
 
 let current: Services | null = null;
@@ -34,4 +37,15 @@ export function setServices(s: Services): void {
 export function services(): Services {
   if (!current) throw new Error('Dienste wurden noch nicht initialisiert');
   return current;
+}
+
+let savesReady: Promise<void> = Promise.resolve();
+
+/** Ladevorgang der Spielstände (main.ts setzt ihn, die Boot-Szene wartet darauf). */
+export function setSavesReady(p: Promise<void>): void {
+  savesReady = p;
+}
+
+export function whenSavesReady(): Promise<void> {
+  return savesReady;
 }

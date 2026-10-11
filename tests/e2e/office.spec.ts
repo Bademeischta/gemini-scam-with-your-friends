@@ -159,8 +159,8 @@ test.describe('Büro', () => {
     await expectHook(page, 'scene', 'Title');
     expect(await hook<string[]>(page, 'scenes')).toEqual(['Title']);
     expect(await hook<boolean>(page, 'paused')).toBe(false);
-    // Erneut ins Büro: alles frisch, keine Reste der alten Schicht.
-    await expectHook(page, 'menuFocus', 'start');
+    // Erneut ins Büro: Der Spielstand wird fortgesetzt, die Figur steht wieder am Eingang.
+    await expectHook(page, 'menuFocus', 'continue');
     await page.keyboard.press('Enter');
     await expectHook(page, 'scene', 'Office');
     expect((await office(page)).seated).toBeNull();

@@ -10,6 +10,8 @@ test.describe('Eingabe & Menüs', () => {
     await expectHook(page, 'titleState', 'menu');
     await expectHook(page, 'menuFocus', 'start');
     await page.keyboard.press('ArrowDown');
+    await expectHook(page, 'menuFocus', 'stats');
+    await page.keyboard.press('ArrowDown');
     await expectHook(page, 'menuFocus', 'about');
     await page.keyboard.press('ArrowDown');
     await expectHook(page, 'menuFocus', 'fullscreen');
@@ -72,6 +74,8 @@ test.describe('Eingabe & Menüs', () => {
     await expectHook(page, 'hintMode', 'gamepad');
     await expectHook(page, 'menuFocus', 'start');
     await padButton(page, 13); // Steuerkreuz runter
+    await expectHook(page, 'menuFocus', 'stats');
+    await padButton(page, 13);
     await expectHook(page, 'menuFocus', 'about');
     await padButton(page, 0);
     await expectHook(page, 'scene', 'About');

@@ -52,6 +52,8 @@ export class CallManager {
     private readonly rng: Rng,
     private readonly callers: readonly CallerDef[],
     deskCount: number,
+    /** Arbeitstag: kürzere Abstände, mehr schwere Anrufer und Köder (DAY-15). */
+    private readonly day = 1,
   ) {
     const c = TUNING.calls;
     this.desks = Array.from({ length: deskCount }, () => ({ kind: 'idle' as const, next: this.rng.range(c.firstRingMin, c.firstRingMax) * c.unstaffedGapFactor }));
@@ -180,7 +182,7 @@ export class CallManager {
   private ring(desk: number, forced?: CallerDef): void {
     const busy = new Set(this.desks.flatMap((d) => (d.kind === 'ringing' ? [d.caller.id] : d.kind === 'active' ? [d.conversation.caller.id] : [])));
     const pool = this.callers.filter((c) => !busy.has(c.id) && c.id !== this.lastCaller);
-    const caller = forced ?? (pool.length > 0 ? this.rng.pick(pool) : this.rng.pick(this.callers));
+    const caller = forced ?? this.pickWeighted(pool.length > 0 ? pool : this.callers);
     this.lastCaller = caller.id;
     const callId = this.nextId++;
     this.desks[desk] = { kind: 'ringing', left: TUNING.calls.ringSeconds, caller, callId, seed: this.rng.int(1, 2 ** 31 - 1) };
@@ -199,8 +201,26 @@ export class CallManager {
 
   private toIdle(desk: number): void {
     const c = TUNING.calls;
-    const gap = this.rng.range(c.gapMin, c.gapMax) * (this.staffed.has(desk) ? 1 : c.unstaffedGapFactor);
-    this.desks[desk] = { kind: 'idle', next: gap };
+    const d = TUNING.day;
+    const base = Math.max(d.gapMinSeconds, this.rng.range(c.gapMin, c.gapMax) * (1 - d.gapShrinkPerDay) ** (this.day - 1));
+    this.desks[desk] = { kind: 'idle', next: base * (this.staffed.has(desk) ? 1 : c.unstaffedGapFactor) };
+  }
+
+  /** Anrufer nach Tages-Gewicht: Mit jedem Tag kommen mehr schwere Anrufer und Köder (DAY-15). */
+  private pickWeighted(pool: readonly CallerDef[]): CallerDef {
+    const d = TUNING.day;
+    const n = this.day - 1;
+    const weight = (c: CallerDef): number => {
+      const w = Math.max(0.05, d.callerWeight[c.difficulty] + d.callerWeightPerDay[c.difficulty] * n);
+      return c.traits?.includes('baiter') ? w * (1 + d.baitWeightPerDay * n) : w;
+    };
+    const total = pool.reduce((sum, c) => sum + weight(c), 0);
+    let r = this.rng.next() * total;
+    for (const c of pool) {
+      r -= weight(c);
+      if (r <= 0) return c;
+    }
+    return pool[pool.length - 1]!;
   }
 
   private emit(e: CallEvent): void {

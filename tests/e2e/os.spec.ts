@@ -232,8 +232,15 @@ test.describe('MogelOS', () => {
     await expectHook(page, 'scene', 'Title');
     expect(await hook<string[]>(page, 'scenes')).toEqual(['Title']);
     expect(await hook(page, 'os')).toBeNull();
-    // Neue Schicht: wieder hinsetzen, der PC ist im Ausgangszustand.
+    // Neue Schicht: Mit Spielstand steht „Weiter“ oben; „Schicht beginnen“ fragt nach (Fokus auf „Abbrechen“).
+    await expectHook(page, 'menuFocus', 'continue');
+    await page.keyboard.press('ArrowDown');
     await expectHook(page, 'menuFocus', 'start');
+    await page.keyboard.press('Enter');
+    await expectHook(page, 'titleState', 'confirm');
+    await expectHook(page, 'menuFocus', 'cancel');
+    await page.keyboard.press('ArrowUp');
+    await expectHook(page, 'menuFocus', 'confirmNew');
     await page.keyboard.press('Enter');
     await expectHook(page, 'scene', 'Office');
     await sitAtDesk(page, false, true);

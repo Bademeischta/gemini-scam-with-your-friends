@@ -12,10 +12,12 @@ import { trashApp } from './trash';
 import type { AppDef } from './types';
 import { viewerApp } from './viewer';
 import { weatherApp } from './weather';
+import { calendarApp, clockApp, mailApp } from './workApps';
 
 /**
  * Alle Apps von MogelOS in Desktop- und Startmenü-Reihenfolge: erst Telefon, Notizen und die
- * Maschen-Werkzeuge, dann die System-Apps. Weitere (Shop, Chat …) folgen ab M5.
+ * Maschen-Werkzeuge, dann die System-Apps und die Arbeitstag-Apps (Postfach, Stempeluhr, Kalender).
+ * Weitere (Shop, Chat …) folgen ab M6.
  */
 export const APPS: readonly AppDef[] = [
   phoneApp,
@@ -31,6 +33,9 @@ export const APPS: readonly AppDef[] = [
   calcApp,
   weatherApp,
   settingsApp,
+  mailApp,
+  clockApp,
+  calendarApp,
   viewerApp,
   scriptApp,
 ];

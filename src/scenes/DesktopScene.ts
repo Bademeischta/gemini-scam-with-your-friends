@@ -2,7 +2,8 @@ import Phaser from 'phaser';
 import { CallVoice } from '../audio/callVoice';
 import { HoldMusic } from '../audio/holdMusic';
 import { TUNING } from '../config/tuning';
-import { currentRun } from '../core/run';
+import { clockIn, clockOut, currentRun } from '../core/run';
+import type { OfficeEvent } from './OfficeScene';
 import { i18n, t } from '../i18n';
 import type { ViewportState } from '../systems/viewport/viewportMath';
 import { CrtTransition } from '../ui/os/CrtTransition';
@@ -61,6 +62,14 @@ export class DesktopScene extends BaseScene {
       notes: run.notes,
       ledger: run.ledger,
       plauder: run.plauder,
+      work: {
+        shift: () => currentRun().shift,
+        unlocks: () => currentRun().unlocks,
+        mail: run.mail,
+        clockOut: () => clockOut(currentRun()),
+        clockedOut: () => currentRun().clockedOut,
+        bossRage: () => currentRun().boss.rage,
+      },
       onLeave: () => this.leave(),
       onPause: () => this.opts.onPause(),
     });
@@ -72,12 +81,17 @@ export class DesktopScene extends BaseScene {
     if (run.phone.session(this.opts.desk)) this.os.open('phone');
     this.s.sfx.crtOn();
     run.desktopVisits++;
-    if (run.desktopVisits === 1) {
-      // Erste Sitzung des Tages: Chef-Mail mit der Quota.
-      this.time.delayedCall(TUNING.os.crtSeconds * 1000 + 250, () =>
-        this.os.toast({ icon: 'textfile', title: t('os.toast.bossMail.title'), body: t('os.toast.bossMail.body', { quota: i18n.formatMoney(run.shift.quota) }) }),
-      );
+    if (clockIn(run)) {
+      // Erstes Hinsetzen des Tages: Einstempeln und Chef-Mail mit Tagesziel (DAY-14).
+      this.time.delayedCall(TUNING.os.crtSeconds * 1000 + 250, () => {
+        this.s.sfx.start();
+        this.os.toast({ icon: 'mail', title: t('os.toast.bossMail.title'), body: t('os.toast.bossMail.body', { day: run.shift.day, quota: i18n.formatMoney(run.shift.quota) }), onClick: () => this.os.open('mail') });
+      });
     }
+    // Chef und Tagesablauf aus dem Büro: am PC als Benachrichtigung, Brüllen wackelt auch hier.
+    const onOffice = (e: OfficeEvent): void => this.onOfficeEvent(e);
+    this.game.events.on('office-event', onOffice);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.game.events.off('office-event', onOffice));
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.registry.set('os', null);
       this.voice.destroy();
@@ -109,6 +123,27 @@ export class DesktopScene extends BaseScene {
     this.crt.update(paused ? 0 : dt, this.scale.width, this.scale.height);
     this.armed = true;
     this.registry.set('os', this.os.snapshot(accept && !paused));
+  }
+
+  private onOfficeEvent(e: OfficeEvent): void {
+    switch (e.type) {
+      case 'quota':
+        this.os.toast({ icon: 'timeclock', title: t('os.toast.quota.title'), body: t('os.toast.quota.body'), onClick: () => this.os.open('clock') });
+        break;
+      case 'patrol':
+        this.os.toast({ icon: 'settings', title: t('os.toast.patrol.title'), body: t('os.toast.patrol.body') });
+        break;
+      case 'yell':
+        this.os.shake();
+        this.os.toast({ icon: 'settings', title: t('os.toast.yell.title'), body: t('os.toast.yell.body', { line: e.line }) });
+        break;
+      case 'catch':
+        this.os.shake();
+        this.os.toast({ icon: 'coin', title: t('os.toast.catch.title'), body: t('os.toast.catch.body', { fine: e.fine }) });
+        break;
+      case 'timeUp':
+        break;
+    }
   }
 
   /** Aufstehen: Bildschirm aus, dann übernimmt das Büro. */

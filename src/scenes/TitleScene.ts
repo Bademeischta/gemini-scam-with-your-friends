@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { hex } from '../config/palette';
+import { hex, PALETTE } from '../config/palette';
 import { TUNING } from '../config/tuning';
 import { designSkyline, drawSkyline, drawStars, drawWindows, type SkylineModel } from '../gfx/skyline';
 import { PIXEL_FONT } from '../gfx/pixelFont';
@@ -9,10 +9,11 @@ import { fullscreenSupported, isFullscreen, isStandalone, onFullscreenChange, to
 import { pixelScale, safeRect, type ViewportState } from '../systems/viewport/viewportMath';
 import { Menu, type MenuItem } from '../ui/Menu';
 import { PixelLabel } from '../ui/PixelLabel';
+import { BODY_FONT } from './AboutScene';
 import { BaseScene } from './BaseScene';
 import { TEX } from './BootScene';
 
-type TitleState = 'attract' | 'menu';
+type TitleState = 'attract' | 'menu' | 'confirm';
 
 const SKYLINE_KEY = 'skyline';
 
@@ -42,12 +43,17 @@ export class TitleScene extends BaseScene {
   private menuBg!: Phaser.GameObjects.Graphics;
   private fsZone!: Phaser.GameObjects.Zone;
   private menu!: Menu;
+  private mainMenu!: Menu;
+  private confirmMenu!: Menu;
+  /** Hinweis (beschädigter Spielstand, Überschreiben bestätigen). */
+  private notice!: Phaser.GameObjects.Text;
   private time0 = 0;
   private ringTimer = 0;
   private blinkTimer = 0;
   private handsetScale = 1;
   private handsetBase = { x: 0, y: 0 };
   private fsRect = { x: 0, y: 0, size: 0 };
+  private noticeText = '';
 
   constructor() {
     super('Title');
@@ -89,10 +95,15 @@ export class TitleScene extends BaseScene {
     this.fsButton.setVisible(showFs);
     if (!showFs) this.fsZone.disableInteractive();
 
-    const items: MenuItem[] = [
-      { id: 'start', label: () => t('menu.start'), onSelect: () => void this.scene.start('Office') },
+    const saved = this.s.saves.run;
+    const items: MenuItem[] = [];
+    // Laufender Run: „Weiter“ steht oben; eine neue Schicht will bestätigt werden (MOD-07).
+    if (saved) items.push({ id: 'continue', label: () => t('menu.continue', { day: saved.day }), onSelect: () => void this.scene.start('Office', { mode: 'continue' }) });
+    items.push(
+      { id: 'start', label: () => t('menu.start'), onSelect: () => (saved ? this.setState('confirm') : void this.scene.start('Office', { mode: 'new' })) },
+      { id: 'stats', label: () => t('menu.stats'), onSelect: () => void this.scene.start('Stats') },
       { id: 'about', label: () => t('menu.about'), onSelect: () => void this.scene.start('About') },
-    ];
+    );
     if (showFs) {
       items.push({
         id: 'fullscreen',
@@ -102,10 +113,23 @@ export class TitleScene extends BaseScene {
         },
       });
     }
-    this.menu = new Menu(this, this.s, items);
+    this.mainMenu = new Menu(this, this.s, items);
+    this.confirmMenu = new Menu(this, this.s, [
+      { id: 'confirmNew', label: () => t('menu.confirmNew'), onSelect: () => void this.scene.start('Office', { mode: 'new' }) },
+      { id: 'cancel', label: () => t('menu.cancel'), onSelect: () => this.setState('menu') },
+    ]);
+    this.menu = this.mainMenu;
+    this.notice = this.add.text(0, 0, '', { fontFamily: BODY_FONT, color: PALETTE.mustard, fontSize: '14px', align: 'center' }).setOrigin(0.5, 0).setDepth(8);
+    // Beschädigter oder zu neuer Spielstand: einmal sagen, was passiert ist – kein Absturz.
+    this.noticeText = '';
+    const notice = this.s.saves.takeNotice();
+    if (notice) {
+      this.noticeText = t(`title.notice.${notice}`);
+      if (this.state === 'attract') this.state = 'menu';
+    }
 
     const offFs = (): void => {
-      this.menu.refreshLabels();
+      this.mainMenu.refreshLabels();
       this.s.viewport.refresh();
     };
     onFullscreenChange(offFs);
@@ -114,7 +138,8 @@ export class TitleScene extends BaseScene {
       offDevice();
       document.removeEventListener('fullscreenchange', offFs);
       document.removeEventListener('webkitfullscreenchange', offFs);
-      this.menu.destroy();
+      this.mainMenu.destroy();
+      this.confirmMenu.destroy();
       if (this.textures.exists(SKYLINE_KEY)) this.textures.remove(SKYLINE_KEY);
       this.skyTex = null;
     });
@@ -161,9 +186,15 @@ export class TitleScene extends BaseScene {
     for (let i = 0; i < 6; i++) fb.fillStyle(hex('ink0'), 0.12 * (i + 1)).fillRect(0, footerTop - 6 * small + i * small, vp.width, small);
     fb.fillStyle(hex('ink0'), 0.78).fillRect(0, footerTop, vp.width, vp.height - footerTop);
 
-    // Platzbedarf des Menüblocks (Buttons + Hinweis + Ränder).
+    // Platzbedarf des Menüblocks (Buttons + Hinweis + Ränder). Reicht die Höhe nicht für Menü und
+    // Logo (Handy quer, mit „Weiter“ fünf Buttons), stehen die Buttons in zwei Spalten.
     const gap = Math.round(3 * ui);
-    const menuBlock = this.menu.count * minBtn + (this.menu.count - 1) * gap + 18 * small + 12 * ui;
+    const count = Math.max(this.mainMenu.count, this.confirmMenu.count);
+    const blockFor = (rows: number): number => rows * minBtn + (rows - 1) * gap + 18 * small + 12 * ui;
+    const minHeader = 10 * ui + 11 * ui + 13 * ui;
+    const twoFit = 2 * this.mainMenu.buttonWidth(ui) + 12 * gap <= safe.width * 0.94;
+    const columns = count > 2 && twoFit && footerTop - safe.y - blockFor(count) < minHeader * 2 ? 2 : 1;
+    const menuBlock = blockFor(Math.ceil(count / columns));
 
     // Kopfbereich: größtes ganzzahliges Logo, das in Breite und verbleibende Höhe passt.
     this.logo.setScale(1);
@@ -215,8 +246,11 @@ export class TitleScene extends BaseScene {
     // Menü bzw. Aufforderung mittig im Restplatz zwischen Kopf und Fußzeile.
     const midY = Math.round((y + footerTop) / 2 - 9 * small);
     this.prompt.setScale(ui).setPosition(cx, midY);
-    this.menu.layout(cx, midY, ui, minBtn);
+    this.mainMenu.layout(cx, midY, ui, minBtn, columns);
+    this.confirmMenu.layout(cx, midY, ui, minBtn, columns);
     const mb = this.menu.bounds;
+    this.notice.setFontSize(Math.round(14 * vp.dpr)).setWordWrapWidth(Math.min(safe.width, 520 * vp.dpr));
+    this.notice.setPosition(cx, Math.round(mb.y - 8 * ui - this.notice.height));
     this.navHint.setScale(small).setPosition(cx, Math.round(mb.y + mb.height + 9 * small));
     // Halbtransparente Fläche hinter Menü und Hinweis (Lesbarkeit über der Skyline).
     const padBg = 6 * ui;
@@ -252,12 +286,11 @@ export class TitleScene extends BaseScene {
       this.menu.update(dt);
       if (inp.justPressed('uiBack')) {
         this.s.sfx.back();
-        this.state = 'attract';
-        this.applyState();
+        this.setState(this.state === 'confirm' ? 'menu' : 'attract');
       }
     }
     this.registry.set('titleState', this.state);
-    this.registry.set('menuFocus', this.state === 'menu' ? this.menu.focusedId : undefined);
+    this.registry.set('menuFocus', this.state !== 'attract' ? this.menu.focusedId : undefined);
   }
 
   protected override fixedUpdate(dt: number): void {
@@ -276,14 +309,28 @@ export class TitleScene extends BaseScene {
     this.skyTex.refresh();
   }
 
+  private setState(state: TitleState): void {
+    this.state = state;
+    this.applyState();
+    if (this.vp) this.layout(this.vp);
+  }
+
   private applyState(): void {
-    const menu = this.state === 'menu';
-    this.menu.setVisible(menu);
-    this.menu.setEnabled(menu);
+    const menu = this.state !== 'attract';
+    this.menu = this.state === 'confirm' ? this.confirmMenu : this.mainMenu;
+    for (const m of [this.mainMenu, this.confirmMenu]) {
+      const on = menu && m === this.menu;
+      m.setVisible(on);
+      m.setEnabled(on);
+    }
     this.prompt.setVisible(!menu);
     this.navHint.setVisible(menu);
     this.menuBg.setVisible(menu);
-    if (menu) this.menu.setFocus(0);
+    if (menu) this.menu.setFocus(this.state === 'confirm' ? 1 : 0);
+    const saved = this.s.saves.run;
+    const text = this.state === 'confirm' && saved ? t('title.notice.confirm', { day: saved.day }) : this.noticeText;
+    this.notice.setText(text).setVisible(menu && text !== '');
+    this.registry.set('titleNotice', menu ? text : '');
     this.registry.set('titleState', this.state);
   }
 

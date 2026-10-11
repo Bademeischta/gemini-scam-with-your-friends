@@ -5,7 +5,8 @@ import { VoiceOut } from './audio/voice';
 import { DEFAULT_BINDINGS } from './config/input-defaults';
 import { TUNING } from './config/tuning';
 import { createGame } from './core/createGame';
-import { setServices, type Services } from './core/services';
+import { setRunPersistence } from './core/run';
+import { setSavesReady, setServices, type Services } from './core/services';
 import { installTestHook } from './debug/testHook';
 import { applyDomTranslations, i18n } from './i18n';
 import { AboutScene } from './scenes/AboutScene';
@@ -14,12 +15,17 @@ import { DesktopScene } from './scenes/DesktopScene';
 import { OfficeHudScene } from './scenes/OfficeHudScene';
 import { OfficeScene } from './scenes/OfficeScene';
 import { PauseScene } from './scenes/PauseScene';
+import { ReportScene } from './scenes/ReportScene';
+import { ReviewScene } from './scenes/ReviewScene';
+import { StatsScene } from './scenes/StatsScene';
 import { TitleScene } from './scenes/TitleScene';
 import { DeviceTracker, detectFormFactor, detectInitialKind, readDeviceEnv } from './systems/input/device';
 import { InputManager } from './systems/input/InputManager';
 import { enterFullscreen, fullscreenSupported, isStandalone } from './systems/platform/fullscreen';
 import { installBrowserGuards, isTextField } from './systems/platform/guards';
 import { OrientationHint, shouldShowRotateHint } from './systems/platform/orientation';
+import { MemoryKv, openBestKv } from './systems/save/kv';
+import { SaveManager } from './systems/save/SaveManager';
 import { SettingsStore } from './systems/save/settings';
 import { SafeStorage } from './systems/save/storage';
 import { PauseController } from './systems/time/PauseController';
@@ -81,8 +87,20 @@ function boot(): void {
   settings.onChange((v) => audio.setVolumes(v.masterVolume, v.uiVolume, v.voiceVolume));
   const voice = new VoiceOut(win);
   const speech = new SpeechInput(win, 'de-DE');
-  const s: Services = { viewport, input, device, pause, storage, settings, audio, sfx: createUiSfx(audio), voice, speech };
+  // Spielstände: IndexedDB (sonst localStorage); die Boot-Szene wartet, bis sie geladen sind.
+  const saves = new SaveManager(new MemoryKv());
+  const s: Services = { viewport, input, device, pause, storage, settings, audio, sfx: createUiSfx(audio), voice, speech, saves };
   setServices(s);
+  setSavesReady(
+    openBestKv(win, storage)
+      .then(async (kv) => {
+        const m = new SaveManager(kv);
+        await m.init();
+        s.saves = m;
+        setRunPersistence(m);
+      })
+      .catch(() => setRunPersistence(s.saves)),
+  );
   // In der Pause verstummen die Anrufer, das Mikrofon geht aus.
   // (Chrome setzt pausierte Sprachausgabe unzuverlässig fort, deshalb abbrechen; die Untertitel bleiben.)
   pause.onChange((paused) => {
@@ -139,8 +157,10 @@ function boot(): void {
   }
 
   // Reihenfolge = Zeichenreihenfolge: Desktop über dem Büro, Pause über allem.
-  const game = createGame(s, [BootScene, TitleScene, AboutScene, OfficeScene, OfficeHudScene, DesktopScene, PauseScene]);
+  const game = createGame(s, [BootScene, TitleScene, AboutScene, StatsScene, OfficeScene, OfficeHudScene, DesktopScene, ReviewScene, ReportScene, PauseScene]);
   if (import.meta.env.VITE_E2E === '1') installTestHook(game, s);
+  // Debug-Menü (F9) nur im Dev- und Test-Build; im Produktions-Build fällt der Import weg.
+  if (import.meta.env.DEV || import.meta.env.VITE_E2E === '1') void import('./debug/DebugMenu').then((m) => m.installDebugMenu(game));
 
   registerSW({ immediate: true });
 }

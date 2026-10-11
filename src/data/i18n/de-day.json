@@ -1,0 +1,250 @@
+{
+  "boss": {
+    "name": "Direktor Brülling",
+    "fired": {
+      "0": "Sie sind gefeuert! Und nehmen Sie Ihren Kaktus mit, der hat auch nichts geleistet.",
+      "1": "Raus! Ihr Stuhl hat heute mehr gearbeitet als Sie.",
+      "2": "Gefeuert. Ich hätte die Quota mit einem Toaster am Telefon geschafft.",
+      "3": "Sie sind entlassen. Fristlos, grundlos, aber mit Genuss.",
+      "4": "Packen Sie ein. Ihr Headset bleibt hier, Ihre Würde haben Sie ja schon abgegeben.",
+      "5": "Das war’s. Sie können sich ab morgen bei der Konkurrenz blamieren.",
+      "6": "Gefeuert! Ihr Lebenslauf bekommt heute ein neues Loch.",
+      "7": "Raus hier, bevor ich Sie als Briefbeschwerer verwende!",
+      "8": "Ich habe schon Goldfische gefeuert, die motivierter waren.",
+      "9": "Sie sind gefeuert. Der Drucker weint nicht um Sie, ich auch nicht.",
+      "10": "Kündigung! Und zwar so schnell, dass sie Ihren Feierabend überholt.",
+      "11": "Gehen Sie nach Hause. Nein, ganz nach Hause. Für immer.",
+      "12": "Sie haben die Quota verfehlt wie ein Pinguin das Fliegen.",
+      "13": "Das Einzige, was Sie heute erreicht haben, ist meine Halsschlagader.",
+      "14": "Gefeuert! Ich lasse Ihren Namen vom Klingelschild kratzen. Mit den Zähnen.",
+      "15": "Sie sind raus. Selbst der Wasserspender hat mehr Druck gemacht als Sie.",
+      "16": "Abgabe der Stempelkarte bitte am Ausgang. Der Ausgang ist da, wo Sie jetzt hingehen.",
+      "17": "Sie sind gefeuert. Rufen Sie uns nicht an, wir rufen Sie auch nicht an.",
+      "18": "Fristlos! Sogar Ihre Büroklammern haben gekündigt.",
+      "19": "Raus! Ich brauche Ihren Platz für einen Gummibaum mit Ambitionen.",
+      "20": "Sie sind entlassen. Ihre Bewertung: ein Stern, und den hat der Tacker verdient.",
+      "21": "Gefeuert! Ihr Kaffeebecher bleibt hier, der ist das Einzige mit Inhalt.",
+      "22": "Sie waren so wenig produktiv, dass das Finanzamt Sie nicht mal findet.",
+      "23": "Kündigung. Schreiben Sie es auf. Ach, Sie können ja nicht mal mitschreiben.",
+      "24": "Raus! Selbst der Pinguinprinz hätte mehr Erbschaft rangeschafft.",
+      "25": "Sie sind gefeuert. Die Konkurrenz hat angerufen und sich bedankt.",
+      "26": "Weg mit Ihnen! Mein Blutdruck hat heute mehr Rekorde gebrochen als Sie.",
+      "27": "Gefeuert. Ich hätte Sie auch per Fax entlassen, aber das wäre zu viel Mühe.",
+      "28": "Sie fliegen raus, höher als jeder Tacker, den ich je geworfen habe.",
+      "29": "Schluss, aus, vorbei! Abschiedskuchen gibt es nicht, der ist in der Quota verschwunden.",
+      "30": "Sie sind gefeuert. Hinterlassen Sie bitte keine Nachricht nach dem Piepton.",
+      "31": "Raus! Das Büro wird gelüftet, Sie zuerst.",
+      "32": "Ich feuere Sie mit sofortiger Wirkung. Die Wirkung tritt ein: jetzt.",
+      "33": "Das war die kürzeste Karriere seit der Erfindung des Kurzschlusses."
+    },
+    "passed": {
+      "0": "Bestanden. Glauben Sie bloß nicht, dass ich Sie mag.",
+      "1": "Quota geschafft. Morgen das Doppelte, mit einem Lächeln, das ich nicht sehen will.",
+      "2": "Na also! Warum nicht gleich so? Ach, war ja gleich so. Egal!",
+      "3": "Gut. Sie dürfen morgen wiederkommen. Das ist keine Belohnung, das ist eine Drohung.",
+      "4": "Ausreichend. Ich gebe Ihnen eine Note: Mangelhaft plus.",
+      "5": "Geschafft! Ich bin fast zufrieden. Fast. Das vergeht gleich wieder.",
+      "6": "Quota erreicht. Mein Tacker bleibt heute ausnahmsweise warm.",
+      "7": "Nicht schlecht. Für ein Callcenter im Hinterhof sogar fast mittelmäßig.",
+      "8": "Bestanden! Feiern Sie leise, ich habe Kopfschmerzen.",
+      "9": "Weiter so! Und mit „so“ meine ich: mehr.",
+      "10": "Die Zahlen stimmen. Ihre Frisur nicht, aber das bespreche ich morgen.",
+      "11": "Ordentlich. Ich erhöhe trotzdem die Quota, aus Prinzip."
+    },
+    "yell": {
+      "0": "WAS IST DAS HIER, EIN KINDERGARTEN?!",
+      "1": "ICH WILL TALER SEHEN, KEINE AUSREDEN!",
+      "2": "WER HAT MEINEN KUGELSCHREIBER ANGEFASST?!",
+      "3": "TELEFONE KLINGELN NICHT ZUM SPASS!",
+      "4": "DIE QUOTA ERREICHT SICH NICHT VON SELBST!",
+      "5": "MEHR DRUCK! MEHR LÄRM! MEHR GELD!",
+      "6": "IST HIER IRGENDWER WACH?!",
+      "7": "ICH HÖRE KEIN VERKAUFEN! ICH HÖRE NUR ATMEN!",
+      "8": "WER JETZT GÄHNT, ZAHLT DEN KAFFEE FÜR ALLE!",
+      "9": "SCHNELLER! DIE KONKURRENZ SCHLÄFT NICHT!"
+    },
+    "catch": {
+      "0": "Sie! Ja, Sie! Spazierengehen ist kein Arbeitsplatz!",
+      "1": "Erwischt! Hier wird telefoniert, nicht flaniert!",
+      "2": "Machen Sie gerade Pause? In MEINER Arbeitszeit?",
+      "3": "Ich zahle Sie nicht fürs Herumstehen. Ich zahle Sie eigentlich gar nicht gern.",
+      "4": "Wenn Sie so weiterbummeln, bummeln Sie bald arbeitslos.",
+      "5": "Das Telefon steht da drüben. Am Telefon. Wo Sie sein sollten!",
+      "6": "Faulenzen kostet extra. Ich buche ab.",
+      "7": "Sind Sie hier zur Besichtigung? Dann zahlen Sie Eintritt!"
+    },
+    "patrol": {
+      "0": "Mal sehen, wer hier arbeitet …",
+      "1": "Kontrollgang! Alle schön beschäftigt aussehen!",
+      "2": "Ich rieche Faulheit. Und Kaffee. Hauptsächlich Faulheit.",
+      "3": "Wer nicht telefoniert, wird bemerkt.",
+      "4": "Hier riecht es nach verpassten Anrufen.",
+      "5": "Ich habe Augen überall. Und einen Tacker."
+    }
+  },
+  "mail": {
+    "boss": {
+      "subject": "Tag {day}: Ihre Quota",
+      "body": "Guten Morgen, Sie Trantüte!\n\nTagesziel fürs ganze Team: {quota}.\nWetter: {weather}\n\n{saying}\n\nDirektor H. Brülling",
+      "sayings": {
+        "0": "Lächeln Sie am Telefon. Aber nicht zu viel, das kostet Strom.",
+        "1": "Wer zuerst auflegt, verliert. Wer zuletzt auflegt, auch.",
+        "2": "Ein Anruf ohne Abschluss ist wie ein Kaffee ohne Koffein: sinnlos.",
+        "3": "Die Quota ist kein Ziel, sie ist ein Lebensgefühl.",
+        "4": "Pausen sind etwas für Leute mit Hobbys.",
+        "5": "Erst Vertrauen, dann Taler. Das steht so in keinem Buch, aber in meinem Kopf.",
+        "6": "Wer mitschreibt, kassiert. Wer sich vertippt, fliegt.",
+        "7": "Heute ist ein guter Tag, um meine Laune nicht zu verderben.",
+        "8": "Glauben Sie an sich. Ich tue es nämlich nicht.",
+        "9": "Schreibtisch aufräumen ist Arbeitsverweigerung mit Staubtuch.",
+        "10": "Der Teppich vor meinem Büro ist frisch gesaugt. Machen Sie ihn heute Abend nicht dreckig.",
+        "11": "Kaffee ist Arbeitsmaterial. Trinken Sie also schneller."
+      }
+    },
+    "unlock": {
+      "subject": "Neu freigeschaltet",
+      "body": "Ab heute verfügbar: {list}.\n\nDie Leitfäden liegen in der Maschen-App. Viel Erfolg – aber nicht zu viel, das wird teuer.\n\nIhre MogelOS-Verwaltung"
+    },
+    "spam": {
+      "subject": "{subject}",
+      "body": "{body}",
+      "subjects": {
+        "0": "Sie haben gewonnen!!! (wirklich diesmal)",
+        "1": "Ihr Paket konnte nicht zugestellt werden, weil es keine Lust hatte",
+        "2": "Letzte Mahnung: Ihr Abo für „Gedanken lesen“ läuft ab",
+        "3": "Heiße Singles in Ihrer Kaffeeküche",
+        "4": "Wunderwasser: Jetzt auch in Pulverform",
+        "5": "Prinz Pinguin bittet um Ihre Kontonummer (fiktiv)",
+        "6": "Schwindelheimer Kaninchenzüchter laden zum Frühlingsball",
+        "7": "Ihr Horoskop: Heute wird gestapelt",
+        "8": "Gratis: Ein Gutschein für einen Gutschein",
+        "9": "Dringend: Ihr Drucker hat Ihnen eine Nachricht hinterlassen"
+      },
+      "bodies": {
+        "0": "Klicken Sie nirgends, schreiben Sie nichts, glauben Sie alles. Mit freundlichen Grüßen, Ihr Spam.",
+        "1": "Diese Nachricht ist garantiert echt. Echt jetzt. Garantiert.",
+        "2": "Antworten Sie innerhalb von 3 Sekunden, sonst verfällt Ihr Glück. 3 … 2 …",
+        "3": "Sie lesen diese Mail. Das bedeutet, sie hat funktioniert.",
+        "4": "Unsere Buchhaltung hat herausgefunden, dass Sie etwas gewonnen haben. Was, wissen wir nicht."
+      }
+    }
+  },
+  "review": {
+    "title": "Leistungsbewertung",
+    "barLine": "Tag {day} · Team {team} / {quota}",
+    "quoteLine": "{name}: „{text}“",
+    "momentLine": "{n}. {text}",
+    "day": "Tag {day}",
+    "quota": "Quota: {quota}",
+    "team": "Team: {team}",
+    "passed": "Quota erreicht!",
+    "fired": "Quota um {missing} verfehlt – Sie sind gefeuert!",
+    "momentsTitle": "Die drei stärksten Momente",
+    "tomorrow": "Morgen neu: {list}",
+    "tomorrowNone": "Morgen: nichts Neues. Nur mehr Druck.",
+    "continue": "Weiter zu Tag {day}",
+    "toReport": "Zum Kündigungsbericht",
+    "dodge": {
+      "desktop": "Den Tackern ausweichen: A / D oder Pfeiltasten",
+      "gamepad": "Den Tackern ausweichen: linker Stick",
+      "touch": "Den Tackern ausweichen: links oder rechts tippen und halten"
+    },
+    "ko": "K.O.!",
+    "hits": {
+      "one": "{count} Tacker abbekommen",
+      "other": "{count} Tacker abbekommen"
+    },
+    "noHits": "Kein Tacker hat getroffen. Respekt.",
+    "moments": {
+      "record": "Rekord-Abschluss: {amount} von {name} ({scheme})",
+      "quote": "{name} am Telefon: „{text}“",
+      "fast": "Blitz-Masche: {name} in {seconds} Sekunden um den Finger gewickelt",
+      "hangup": "{name} legte auf mit den Worten: „{text}“",
+      "bait": "Köder enttarnt: {name} wollte uns reinlegen",
+      "typo": "Vertippt: Die Beute von {name} ist futsch ({scheme})",
+      "yell": "Brülling hat heute {count}-mal gebrüllt",
+      "catch": "Beim Faulenzen erwischt: {fine} Strafgeld",
+      "idle": "{text}"
+    },
+    "idle": {
+      "0": "Die Kaffeemaschine wurde entkalkt. Von niemandem.",
+      "1": "Ferdinand, die Büropflanze, hat ein neues Blatt bekommen.",
+      "2": "Jemand hat den Drucker angelächelt. Er hat nicht zurückgelächelt.",
+      "3": "Der Wasserspender hat dreimal geblubbert. Rekord!",
+      "4": "Ein Kugelschreiber ist spurlos verschwunden.",
+      "5": "Der Router hat kurz geblinkt. Alle haben es gesehen.",
+      "6": "Im Kühlschrank wurde ein Joghurt von 2019 gefunden.",
+      "7": "Die Uhr an der Wand ging heute fünf Minuten vor. Aus Motivation.",
+      "8": "Jemand hat „Guten Morgen“ gesagt und es ernst gemeint.",
+      "9": "Die Taube auf dem Fensterbrett hat heute mehr verkauft als die Konkurrenz."
+    }
+  },
+  "report": {
+    "title": "Kündigungsbericht Schwindelheim",
+    "days": {
+      "one": "{count} Tag gearbeitet",
+      "other": "{count} Tage gearbeitet"
+    },
+    "loot": "Team-Gesamtbeute: {loot}",
+    "average": "Durchschnitt pro Tag: {avg}",
+    "time": "Spielzeit: {time}",
+    "ranking": "Rangliste",
+    "rankRow": "{rank}. {name} – {loot}",
+    "you": "Du",
+    "code": "Schicht-Code: {code}",
+    "rank": "Platz {rank} in der Bestenliste!",
+    "noRank": "Für die Bestenliste hat es nicht gereicht.",
+    "staplers": "Verschluckte Tacker: {count}",
+    "again": "Neue Bewerbung schreiben",
+    "menu": "Hauptmenü"
+  },
+  "stats": {
+    "title": "Bestenliste & Statistik",
+    "board": "Bestenliste",
+    "empty": "Noch keine Runs. Zeit für die erste Bewerbung!",
+    "entry": "{rank}. {days} · {loot} · {code}",
+    "days": {
+      "one": "{count} Tag",
+      "other": "{count} Tage"
+    },
+    "lifetime": "Lebenszeit",
+    "row": "{label}: {value}",
+    "percent": "{value} %",
+    "runs": "Runs",
+    "firings": "Rauswürfe",
+    "daysWorked": "Arbeitstage",
+    "calls": "Angenommene Anrufe",
+    "successRate": "Erfolgsquote",
+    "loot": "Beute gesamt",
+    "bestDay": "Bester Tag",
+    "longestRun": "Längster Run",
+    "favorite": "Lieblingsmasche",
+    "staplers": "Verschluckte Tacker",
+    "catches": "Beim Faulenzen erwischt",
+    "yells": "Brüllanfälle erlebt",
+    "baits": "Köder enttarnt",
+    "monitors": "Verbrannte Monitore",
+    "raids": "Razzien",
+    "playtime": "Spielzeit",
+    "none": "–",
+    "back": "Zurück"
+  },
+  "hud": {
+    "day": "Tag {day}",
+    "rage": "Chef",
+    "clockOut": "Quota erreicht – Ausstempeln!"
+  },
+  "debug": {
+    "title": "Debug (nur Dev)",
+    "day": "Tag",
+    "go": "Tag starten",
+    "money": "Geld",
+    "set": "Setzen",
+    "skipQuota": "Quota überspringen",
+    "endDay": "Tag beenden",
+    "unlockAll": "Alles freischalten",
+    "unlockOff": "Freischaltung normal",
+    "close": "Schließen",
+    "hint": "F9 öffnet und schließt dieses Menü."
+  }
+}

@@ -1,5 +1,6 @@
 import type { Reply } from '../conversation/engine';
 import type { Topic } from '../conversation/types';
+import type { DossierSnap } from '../save/schemas';
 
 export interface DossierEntry {
   /** Wie oft schon am Telefon gehabt. */
@@ -26,6 +27,21 @@ export class Dossier {
 
   get(callerId: string): DossierEntry | undefined {
     return this.map.get(callerId);
+  }
+
+  /** Für den Spielstand (Kundenkartei-Wissen bleibt über die Tage erhalten). */
+  snapshot(): Record<string, DossierSnap> {
+    const out: Record<string, DossierSnap> = {};
+    for (const [id, e] of this.map) out[id] = { calls: e.calls, likes: [...e.likes], dislikes: [...e.dislikes], fans: [...e.fans], skeptics: [...e.skeptics], best: e.best, wins: e.wins };
+    return out;
+  }
+
+  restore(snap: Readonly<Record<string, DossierSnap>>): void {
+    this.map.clear();
+    for (const [id, e] of Object.entries(snap)) {
+      this.map.set(id, { calls: e.calls, likes: new Set(e.likes as Topic[]), dislikes: new Set(e.dislikes as Topic[]), fans: new Set(e.fans), skeptics: new Set(e.skeptics), best: e.best, wins: e.wins });
+    }
+    this.emit();
   }
 
   /** Alle bekannten Anrufer (in der Reihenfolge des ersten Anrufs). */

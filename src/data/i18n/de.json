@@ -16,6 +16,11 @@
       "touch": "Tippen zum Einstempeln",
       "desktop": "Taste drücken zum Einstempeln",
       "gamepad": "A-Taste drücken zum Einstempeln"
+    },
+    "notice": {
+      "corrupt": "Der Spielstand war beschädigt und wurde beiseitegelegt. Du startest mit einem neuen Run.",
+      "incompatible": "Der Spielstand stammt aus einer neueren Spielversion und wurde nicht geladen.",
+      "confirm": "Es gibt einen laufenden Run (Tag {day}). Eine neue Schicht überschreibt ihn."
     }
   },
   "menu": {
@@ -25,7 +30,11 @@
     "back": "Zurück",
     "start": "Schicht beginnen",
     "resume": "Weiter",
-    "mainMenu": "Hauptmenü"
+    "mainMenu": "Hauptmenü",
+    "continue": "Weiter: Tag {day}",
+    "stats": "Bestenliste & Statistik",
+    "confirmNew": "Neu anfangen (Spielstand geht verloren)",
+    "cancel": "Abbrechen"
   },
   "device": {
     "label": "Steuerung: {device}",
@@ -54,16 +63,22 @@
   },
   "pause": {
     "heading": "Pause",
-    "hint": "Die Schicht ruht. Der Chef merkt nichts. Hoffentlich."
+    "hint": "Die Schicht ruht. Der Chef merkt nichts. Hoffentlich.",
+    "saved": "Gespeichert wird zu Beginn jedes Arbeitstags."
   },
   "office": {
     "prompt": {
       "sit": "Hinsetzen",
-      "stand": "Aufstehen"
+      "stand": "Aufstehen",
+      "clock": "Ausstempeln",
+      "clockLocked": "Stempeluhr (Quota fehlt)"
     },
     "keyHint": "{key}: {action}",
     "touch": {
       "pause": "Pause"
+    },
+    "boss": {
+      "catch": "Erwischt!"
     }
   },
   "keys": {
@@ -159,6 +174,18 @@
       "kartei": {
         "title": "Kundenkartei",
         "short": "Kartei"
+      },
+      "mail": {
+        "title": "Postfach",
+        "short": "Post"
+      },
+      "clock": {
+        "title": "Stempeluhr",
+        "short": "Stempeluhr"
+      },
+      "calendar": {
+        "title": "Kalender & Uhr",
+        "short": "Kalender"
       }
     },
     "start": {
@@ -169,7 +196,8 @@
       "leave": "Aufstehen",
       "money": "Du: {amount}",
       "team": "Team {team} / {quota}",
-      "teamShort": "{team} / {quota}"
+      "teamShort": "{team} / {quota}",
+      "clockOut": "Ausstempeln"
     },
     "ctx": {
       "open": "Öffnen",
@@ -334,7 +362,31 @@
     "toast": {
       "bossMail": {
         "title": "Chef-Mail: Direktor Brülling",
-        "body": "Heutige Quota: {quota}. Keine Ausreden, keine Pausen, kein Lächeln am Telefon ohne Grund."
+        "body": "Tag {day}: Quota {quota}. Details im Postfach."
+      },
+      "quota": {
+        "title": "Quota erreicht!",
+        "body": "Jetzt ausstempeln – oder weiter Taler scheffeln."
+      },
+      "patrol": {
+        "title": "Brülling ist unterwegs!",
+        "body": "Kontrollgang durchs Büro. Wer am Platz sitzt, ist sicher."
+      },
+      "catch": {
+        "title": "Erwischt!",
+        "body": "Strafgeld: {fine}."
+      },
+      "yell": {
+        "title": "Brüllanfall!",
+        "body": "{line}"
+      },
+      "clockIn": {
+        "title": "Eingestempelt",
+        "body": "Tag {day} läuft. Quota: {quota}."
+      },
+      "timeUp": {
+        "title": "Feierabend!",
+        "body": "Alle zur Leistungsbewertung."
       }
     },
     "notes": {
@@ -364,7 +416,8 @@
       "placeholder": "Zahlungs-Code …",
       "submit": "Verbuchen",
       "times": "{count} × {demand}",
-      "join": " + "
+      "join": " + ",
+      "locked": "ab Tag {day}"
     },
     "loot": {
       "ok": "Treffer! {amount} verbucht.",
@@ -461,6 +514,49 @@
       "hint": "Aktenhinweis: Hat ein Herz für {topic}.",
       "list": "{name} · {calls}",
       "stats": "{calls} · {wins} · {best}"
+    },
+    "locked": {
+      "day": "ab Tag {day}",
+      "title": "Noch gesperrt",
+      "body": "{app} gibt es ab Tag {day}.",
+      "entry": "{app} (ab Tag {day})"
+    },
+    "mail": {
+      "empty": "Keine Mails. Verdächtig ruhig.",
+      "from": {
+        "boss": "Direktor Brülling",
+        "system": "MogelOS",
+        "spam": "Unbekannt"
+      },
+      "delete": "Löschen",
+      "unread": "{count} ungelesen"
+    },
+    "clock": {
+      "goal": "Tagesziel: {quota}",
+      "team": "Team: {team} ({percent} %)",
+      "colleagues": "Kollegen",
+      "working": "arbeitet",
+      "clockedOut": "ausgestempelt",
+      "button": "Ausstempeln",
+      "locked": "Ausstempeln geht erst, wenn die Quota erreicht ist.",
+      "ready": "Quota erreicht! Ausstempeln beendet den Tag – alle gehen zur Bewertung.",
+      "rage": "Brüllings Laune: {level}",
+      "rageLevels": {
+        "calm": "entspannt",
+        "grumpy": "grummelig",
+        "angry": "geladen",
+        "furious": "explosiv"
+      },
+      "member": "{name} – {status}"
+    },
+    "calendar": {
+      "day": "Arbeitstag {day}",
+      "time": "{time} Uhr",
+      "left": "Noch {left} bis zur Bewertung",
+      "unlocks": "Freischaltungen",
+      "unlockDay": "Tag {day}: {list}",
+      "today": "heute",
+      "allDone": "Alles freigeschaltet. Ab jetzt zählt nur noch die Quota."
     }
   },
   "calls": {

@@ -21,6 +21,8 @@ export interface TaskbarCallbacks {
   onWindow(id: string): void;
   onLeave(): void;
   onPause(): void;
+  /** Ausstempeln (OS-07), nur sichtbar, solange es möglich ist. */
+  onClockOut(): void;
 }
 
 export interface TaskbarGeometry {
@@ -162,6 +164,8 @@ export class Taskbar {
   private readonly startBtn: OsButton;
   private readonly leaveBtn: OsButton;
   private readonly pauseBtn: OsButton;
+  private readonly clockBtn: OsButton;
+  private clockVisible = false;
   private readonly status: StatusView;
   private readonly winBtns = new Map<string, OsButton>();
   private windows: TaskbarWindow[] = [];
@@ -186,11 +190,21 @@ export class Taskbar {
     this.startBtn = new OsButton(this.host, 'tb:start', { icon: 'os-icon-start', label: t('os.taskbar.start'), onClick: () => cb.onStart() });
     this.leaveBtn = new OsButton(this.host, 'tb:leave', { icon: 'os-icon-standUp', label: t('os.taskbar.leave'), onClick: () => cb.onLeave() });
     this.pauseBtn = new OsButton(this.host, 'tb:pause', { icon: 'icon-pause', onClick: () => cb.onPause() });
+    this.clockBtn = new OsButton(this.host, 'tb:clockout', { icon: 'os-icon-timeclock', label: t('os.taskbar.clockOut'), variant: 'primary', onClick: () => cb.onClockOut() });
+    this.clockBtn.setVisible(false);
     this.status = new StatusView(this.host);
   }
 
   get compact(): boolean {
     return this.geo?.compact ?? false;
+  }
+
+  /** Ausstempeln-Taste zeigen (Quota erreicht, noch nicht ausgestempelt). */
+  setClockOut(visible: boolean): void {
+    if (visible === this.clockVisible) return;
+    this.clockVisible = visible;
+    this.clockBtn.setVisible(visible);
+    if (this.geo) this.layout(this.geo);
   }
 
   setWindows(list: TaskbarWindow[]): void {
@@ -222,7 +236,7 @@ export class Taskbar {
     g.clear();
     const pad = 2 * u;
     const iconScale = Math.max(1, Math.round(u / 2));
-    for (const b of [this.startBtn, this.leaveBtn, this.pauseBtn]) b.setIconScale(iconScale);
+    for (const b of [this.startBtn, this.leaveBtn, this.pauseBtn, this.clockBtn]) b.setIconScale(iconScale);
 
     if (!geo.compact) {
       const top = vpH - (vpH - safe.y - safe.height) - barH;
@@ -247,6 +261,11 @@ export class Taskbar {
       const leaveW = roomy ? leaveFull : bh;
       this.leaveBtn.setLabelVisible(roomy).layout(right - leaveW, by, leaveW, bh);
       right -= leaveW + 2 * pad;
+      if (this.clockVisible) {
+        const cw = roomy ? this.clockBtn.setLabelVisible(true).preferredWidth() : bh;
+        this.clockBtn.setLabelVisible(roomy).layout(right - cw, by, cw, bh);
+        right -= cw + 2 * pad;
+      }
       const sw = Math.min(statusW, Math.max(60 * u, right - left - 40 * u));
       this.statusArea = { x: right - sw, y: by, w: sw, h: bh };
       this.status.layout(right - sw, by, sw, bh);
@@ -268,8 +287,11 @@ export class Taskbar {
       const leaveW = roomy ? leaveFull : sh;
       this.leaveBtn.setLabelVisible(roomy).layout(safe.x + pad, sy, leaveW, sh);
       this.pauseBtn.layout(safe.x + safe.width - pad - sh, sy, sh, sh);
+      // Ausstempeln: links neben der Pause, nur als Symbol (wenig Platz).
+      const clockW = this.clockVisible ? sh + pad : 0;
+      if (this.clockVisible) this.clockBtn.setLabelVisible(false).layout(safe.x + safe.width - 2 * pad - 2 * sh, sy, sh, sh);
       let sx = safe.x + 2 * pad + leaveW + 2 * u;
-      let sw = safe.x + safe.width - 2 * pad - sh - 2 * u - sx;
+      let sw = safe.x + safe.width - 2 * pad - sh - 2 * u - sx - clockW;
       const shift = this.lastShift;
       const short = !!shift && this.status.preferredWidth(shift) > sw;
       this.status.setShort(short, shift);
@@ -277,7 +299,7 @@ export class Taskbar {
       if (shift && roomy && this.status.preferredWidth(shift, true) > sw) {
         this.leaveBtn.setLabelVisible(false).layout(safe.x + pad, sy, sh, sh);
         sx = safe.x + 2 * pad + sh + 2 * u;
-        sw = safe.x + safe.width - 2 * pad - sh - 2 * u - sx;
+        sw = safe.x + safe.width - 2 * pad - sh - 2 * u - sx - clockW;
       }
       this.statusArea = { x: sx, y: sy, w: sw, h: sh };
       this.status.layout(sx, sy, sw, sh);
@@ -308,7 +330,7 @@ export class Taskbar {
 
   redraw(): void {
     if (this.geo) this.layout(this.geo);
-    for (const b of [this.startBtn, this.leaveBtn, this.pauseBtn, ...this.winBtns.values()]) b.draw();
+    for (const b of [this.startBtn, this.leaveBtn, this.pauseBtn, this.clockBtn, ...this.winBtns.values()]) b.draw();
   }
 
   destroy(): void {
@@ -316,6 +338,7 @@ export class Taskbar {
     this.startBtn.destroy();
     this.leaveBtn.destroy();
     this.pauseBtn.destroy();
+    this.clockBtn.destroy();
     this.container.destroy(true);
   }
 
