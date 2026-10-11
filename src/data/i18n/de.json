@@ -360,7 +360,7 @@
       "micTestNothing": "Nichts gehört. Mikrofon erlaubt?",
       "micFallbackHint": "Im Telefon öffnet „Sprechen“ dann das Textfeld – dort mit dem Mikrofon der Tastatur diktieren.",
       "ai": {
-        "toggle": "KI-Anrufer (Claude)",
+        "toggle": "KI-Anrufer",
         "placeholder": "API-Schlüssel einfügen …",
         "save": "Speichern",
         "test": "Verbindung testen",
@@ -369,16 +369,35 @@
         "cleared": "Schlüssel gelöscht.",
         "testing": "Teste die Verbindung …",
         "ok": "Verbindung klappt. Die Anrufer antworten jetzt mit KI.",
-        "keySet": "Schlüssel: {key}",
-        "keyNone": "Kein Schlüssel hinterlegt – die Anrufer nutzen die lokale Engine.",
+        "keySet": "Schlüssel für {provider}: {key}",
+        "keyNone": "Kein Schlüssel für {provider} hinterlegt.",
         "status": {
           "ready": "Status: KI-Anrufer aktiv.",
           "off": "Status: aus – lokale Engine.",
-          "noKey": "Status: ohne Schlüssel – lokale Engine.",
+          "noKey": "Status: kein Schlüssel – lokale Engine.",
           "offline": "Status: offline – lokale Engine."
         },
-        "usage": "Verbrauch seit Spielstart: {input} Tokens rein, {output} raus · Anfragen: {requests}.",
-        "privacy": "Modell {model}. Der Schlüssel bleibt nur in diesem Browser und geht direkt an api.anthropic.com – nie ins Spiel, Repo oder an andere Server. Die Kosten trägt dein Konto."
+        "usage": "{provider}: {input} Tokens rein, {output} raus, {requests} Anfragen",
+        "privacy": "Schlüssel bleiben nur in diesem Browser und gehen direkt an den gewählten Anbieter – nie ins Spiel, Repo oder an andere Server. Fallback-Kette: Ist ein Anbieter am Limit, springt der nächste mit Schlüssel ein.",
+        "chain": "Fallback-Kette",
+        "providers": {
+          "groq": "Groq",
+          "gemini": "Gemini",
+          "openrouter": "OpenRouter",
+          "claude": "Claude"
+        },
+        "model": "Modell: {model}",
+        "modelOwn": "Modell (eigenes): {model}",
+        "modelCustom": "Modell: eigenes eintragen …",
+        "modelPlaceholder": "Modellname eintragen, Enter",
+        "modelSaved": "Modell gespeichert.",
+        "modelInvalid": "Ungültiger Modellname (nur Buchstaben, Ziffern, . : / @ _ -).",
+        "usageRate": ", {count}× am Limit",
+        "usageCooling": ", Pause noch {seconds} s",
+        "usageNone": "Noch kein Verbrauch seit Spielstart.",
+        "networkHint": "Vielleicht blockiert der Browser den direkten Aufruf (CORS) – dann einen anderen Anbieter nehmen.",
+        "free": "Mit kostenloser Stufe (Limits je Minute und Tag).",
+        "paid": "Kostenpflichtig: Die Kosten trägt dein Konto."
       }
     },
     "toast": {
@@ -634,19 +653,23 @@
       "thinking": "{name} überlegt …",
       "ai": {
         "tag": "KI",
+        "tagProvider": "KI: {provider}",
         "fallbackTitle": "KI-Anrufer pausiert",
         "noKey": "Lokale Engine: kein KI-Schlüssel (Systemsteuerung, Reiter KI).",
         "offline": "Lokale Engine: offline.",
         "auth": "KI-Schlüssel ungültig – lokale Engine übernimmt.",
         "permission": "KI-Schlüssel ohne Berechtigung – lokale Engine übernimmt.",
-        "rate": "KI ausgelastet (zu viele Anfragen) – dieser Satz lokal.",
+        "rate": "KI am Limit (zu viele Anfragen) – dieser Satz lokal.",
         "overloaded": "KI-Dienst überlastet – dieser Satz lokal.",
         "network": "Keine Verbindung zur KI – dieser Satz lokal.",
         "timeout": "KI antwortet zu langsam – dieser Satz lokal.",
         "refusal": "Die KI wollte hier nicht antworten – lokale Engine übernimmt.",
         "badRequest": "KI-Anfrage abgelehnt – dieser Satz lokal.",
         "aborted": "KI-Anfrage abgebrochen.",
-        "other": "KI-Antwort unbrauchbar – dieser Satz lokal."
+        "other": "KI-Antwort unbrauchbar – dieser Satz lokal.",
+        "retry": "{provider} am Limit – neuer Versuch in {seconds} s …",
+        "switch": "{from} am Limit – weiter mit {to}.",
+        "switchError": "{from} hakt – weiter mit {to}."
       }
     },
     "phase": {

@@ -95,7 +95,7 @@ export function installTestHook(game: Phaser.Game, s: Services): void {
         team: run.shift.team,
         personal: run.shift.personal,
         // KI-Anrufer (ohne Schlüssel!): Status, Verbrauch, letzter Fehler.
-        ai: { status: s.ai.status(), total: { ...s.ai.total }, lastError: s.ai.lastError },
+        ai: { status: s.ai.status(), provider: s.ai.provider, model: s.ai.model(), candidates: s.ai.candidates(), total: { ...s.ai.total }, byProvider: JSON.parse(JSON.stringify(s.ai.byProvider)) as unknown, lastError: s.ai.lastError },
         schemes: run.calls.views().map((_, i) => run.phone.scheme(i)?.id ?? null),
         dossier: Object.fromEntries(
           run.phone.dossier.ids().map((id) => {

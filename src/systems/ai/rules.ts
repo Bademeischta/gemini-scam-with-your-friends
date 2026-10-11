@@ -41,7 +41,15 @@ export function parseVerdict(json: string): AiVerdict | null {
   try {
     raw = JSON.parse(json);
   } catch {
-    return null;
+    // Ohne Schema-Zwang packen manche Modelle das JSON in Codeblöcke oder Text: das Objekt herausschneiden.
+    const from = json.indexOf('{');
+    const to = json.lastIndexOf('}');
+    if (from < 0 || to <= from) return null;
+    try {
+      raw = JSON.parse(json.slice(from, to + 1));
+    } catch {
+      return null;
+    }
   }
   if (typeof raw !== 'object' || raw === null) return null;
   const r = raw as Record<string, unknown>;

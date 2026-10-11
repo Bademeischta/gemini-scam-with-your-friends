@@ -1,3 +1,4 @@
+import { AI_PROVIDERS, type AiProviderId } from '../../data/aiProviders';
 import { OS_THEME_IDS, WALLPAPERS, type OsThemeId, type Wallpaper } from '../../data/os/appearance';
 import type { SafeStorage } from './storage';
 
@@ -26,8 +27,14 @@ export interface Settings {
   micMode: MicMode;
   /** Handy: Texteingabe in der Telefon-App eingeblendet (sonst nur Karten). */
   phoneTyping: boolean;
-  /** KI-Anrufer (Claude API mit eigenem Schlüssel); ohne Schlüssel antwortet die lokale Engine. */
+  /** KI-Anrufer (Anbieter mit eigenem Schlüssel); ohne Schlüssel antwortet die lokale Engine. */
   aiCallers: boolean;
+  /** Gewählter KI-Anbieter. */
+  aiProvider: AiProviderId;
+  /** Modell je Anbieter (fehlt = Standardmodell des Anbieters). */
+  aiModels: Partial<Record<AiProviderId, string>>;
+  /** Fallback-Kette: Ist der Anbieter am Limit, den nächsten mit eingetragenem Schlüssel nehmen. */
+  aiChain: boolean;
 }
 
 export const VOICE_MODES = ['tts', 'babble', 'off'] as const;
@@ -50,6 +57,9 @@ export const DEFAULT_SETTINGS: Settings = {
   micMode: 'ptt',
   phoneTyping: false,
   aiCallers: true,
+  aiProvider: 'groq',
+  aiModels: {},
+  aiChain: true,
 };
 
 const KEY = 'settings.v1';
@@ -94,6 +104,16 @@ export class SettingsStore {
     if ((MIC_MODES as readonly unknown[]).includes(raw.micMode)) s.micMode = raw.micMode as MicMode;
     if (typeof raw.phoneTyping === 'boolean') s.phoneTyping = raw.phoneTyping;
     if (typeof raw.aiCallers === 'boolean') s.aiCallers = raw.aiCallers;
+    if ((AI_PROVIDERS as readonly unknown[]).includes(raw.aiProvider)) s.aiProvider = raw.aiProvider as AiProviderId;
+    if (typeof raw.aiModels === 'object' && raw.aiModels !== null) {
+      const models: Partial<Record<AiProviderId, string>> = {};
+      for (const id of AI_PROVIDERS) {
+        const m = (raw.aiModels as Record<string, unknown>)[id];
+        if (typeof m === 'string' && /^[\w.:/@-]{1,120}$/.test(m)) models[id] = m;
+      }
+      s.aiModels = models;
+    }
+    if (typeof raw.aiChain === 'boolean') s.aiChain = raw.aiChain;
     return s;
   }
 }

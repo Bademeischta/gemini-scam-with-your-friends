@@ -20,6 +20,7 @@ import { ReviewScene } from './scenes/ReviewScene';
 import { StatsScene } from './scenes/StatsScene';
 import { TitleScene } from './scenes/TitleScene';
 import { DeviceTracker, detectFormFactor, detectInitialKind, readDeviceEnv } from './systems/input/device';
+import type { AiProviderId } from './data/aiProviders';
 import { AiBrain } from './systems/ai/brain';
 import { InputManager } from './systems/input/InputManager';
 import { enterFullscreen, fullscreenSupported, isStandalone } from './systems/platform/fullscreen';
@@ -56,8 +57,10 @@ function attachDomInput(win: Window, input: InputManager): void {
   win.addEventListener('blur', () => input.releaseAll());
 }
 
-/** Speicherort des API-Schlüssels der KI-Anrufer (nur in diesem Browser). */
-const AI_KEY = 'ai.key';
+/** Speicherort der API-Schlüssel der KI-Anrufer je Anbieter (nur in diesem Browser). */
+const aiKeySlot = (provider: AiProviderId): string => `ai.key.${provider}`;
+/** Früher gab es nur einen Schlüssel (Claude). */
+const OLD_AI_KEY = 'ai.key';
 
 function boot(): void {
   const win = window;
@@ -93,15 +96,25 @@ function boot(): void {
   const speech = new SpeechInput(win, 'de-DE');
   // Spielstände: IndexedDB (sonst localStorage); die Boot-Szene wartet, bis sie geladen sind.
   const saves = new SaveManager(new MemoryKv());
-  // KI-Anrufer: Der API-Schlüssel liegt nur in diesem Browser (localStorage), nie im Repo oder Build.
+  // KI-Anrufer: Die API-Schlüssel liegen nur in diesem Browser (localStorage), nie im Repo oder Build.
+  const oldKey = storage.read<string>(OLD_AI_KEY, '');
+  if (oldKey) {
+    storage.write(aiKeySlot('claude'), oldKey);
+    storage.remove(OLD_AI_KEY);
+    settings.update({ aiProvider: 'claude' });
+  }
   const ai = new AiBrain({
     keys: {
-      get: () => storage.read<string>(AI_KEY, ''),
-      set: (k) => storage.write(AI_KEY, k),
-      clear: () => storage.remove(AI_KEY),
+      get: (p) => storage.read<string>(aiKeySlot(p), ''),
+      set: (p, k) => storage.write(aiKeySlot(p), k),
+      clear: (p) => storage.remove(aiKeySlot(p)),
     },
     enabled: () => settings.get().aiCallers,
     online: () => navigator.onLine !== false,
+    config: () => {
+      const v = settings.get();
+      return { provider: v.aiProvider, models: v.aiModels, chain: v.aiChain };
+    },
     text: i18n,
   });
   setRunAi(ai);

@@ -3,7 +3,8 @@ import { SCHEMES } from '../../data/schemes';
 import type { Params } from '../../i18n/i18n';
 import type { CallerDef } from '../conversation/caller';
 import type { AiPlan, Conversation } from '../conversation/engine';
-import { ROLES } from '../conversation/types';
+import { MOODS, ROLES } from '../conversation/types';
+import type { AiMessage } from './transport';
 
 /** Woher die Texte kommen (i18n; in Tests austauschbar). */
 export interface PromptText {
@@ -51,13 +52,16 @@ export function buildPersona(caller: CallerDef, src: PromptText): string {
   if (skeptics.length > 0) out.push(k('ai.prompt.skeptics', { list: skeptics.join(', ') }));
   out.push(k('ai.prompt.threshold'));
 
+  // Wenige Beispielsätze genügen für den Ton (kurzer Prompt, weniger Tokens je Anfrage).
   const examples: string[] = [];
   for (const sit of STYLE_SITUATIONS) {
+    if (examples.length >= TUNING.ai.styleExamples) break;
     const line = src.list(`callers.${caller.id}.lines.${sit}`)[0];
     if (line) examples.push(`– ${line.replace(/\{\w+\}/g, '…')}`);
   }
   if (examples.length > 0) out.push(`${k('ai.prompt.style')}\n${examples.join('\n')}`);
   out.push(k('ai.prompt.rules'));
+  out.push(k('ai.prompt.format', { moods: MOODS.join(', ') }));
   return out.join('\n\n');
 }
 
@@ -69,6 +73,8 @@ export interface RegieInput {
   events: string[];
   /** Wirkt der Satz wie eine abgenutzte Floskel (Faktor < 1)? */
   floskel: number;
+  /** Zusammenfassung älterer Züge (leer = alles steht noch wörtlich im Verlauf). */
+  summary?: string;
 }
 
 /**
@@ -87,6 +93,14 @@ export function buildRegie(r: RegieInput, src: PromptText): string {
     if (c.affinity < 0) out.push(k('ai.regie.skeptic'));
     if (c.pitched) out.push(k('ai.regie.pitched'));
   } else out.push(k('ai.regie.noScheme'));
+  if (r.summary) out.push(r.summary);
+  // Was er bisher behauptet hat (das Gedächtnis bleibt, auch wenn der Verlauf gekürzt ist).
+  const mem = c.memory;
+  if (!p.role && !p.contradiction && (mem.name || mem.role)) {
+    const who = [mem.name ? k('ai.regie.knownName', { name: mem.name }) : '', mem.role ? k('ai.regie.knownRole', { role: roleFrom(mem.role, src) }) : ''].filter(Boolean).join(', ');
+    out.push(k('ai.regie.known', { who }));
+  }
+  if (c.loots.length > 0) out.push(k('ai.regie.given', { list: [...new Set(c.loots.map((l) => k(`calls.demands.${l.kind}`)))].join(', ') }));
   if (r.events.length > 0) out.push(k('ai.regie.events', { list: r.events.map((text) => k('ai.regie.said', { text })).join('; ') }));
   if (p.wakes) out.push(k('ai.regie.wake'));
   if (p.role) out.push(k('ai.regie.role', { role: roleFrom(p.role, src) }));
@@ -104,6 +118,23 @@ export function buildRegie(r: RegieInput, src: PromptText): string {
   if (p.farewell) out.push(k('ai.regie.farewell'));
   out.push(c.trust < TUNING.ai.hangupMaxTrust ? k('ai.regie.mayHangUp') : k('ai.regie.keepGoing'));
   return out.join('\n');
+}
+
+/**
+ * Ältere Züge lokal zusammenfassen (keine zusätzliche Anfrage): was der Spieler gesagt hat,
+ * gekürzt; bei langen Gesprächen der Anfang und die letzten Sätze vor dem wörtlichen Verlauf.
+ */
+export function summarizeHistory(older: readonly AiMessage[], src: PromptText): string {
+  const said = older.filter((m) => m.role === 'user').map((m) => shorten(m.content, TUNING.ai.summaryChars));
+  if (said.length === 0) return '';
+  const max = TUNING.ai.summaryItems;
+  const pick = said.length > max ? [...said.slice(0, 2), '…', ...said.slice(said.length - (max - 2))] : said;
+  return src.t('ai.regie.summary', { list: pick.map((text) => (text === '…' ? text : src.t('ai.regie.summarySaid', { text }))).join('; ') });
+}
+
+function shorten(text: string, max: number): string {
+  const s = text.replace(/\s+/g, ' ').trim();
+  return s.length <= max ? s : `${s.slice(0, max - 1).trimEnd()}…`;
 }
 
 function roleFrom(role: string, src: PromptText): string {
