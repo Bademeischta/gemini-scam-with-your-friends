@@ -1,0 +1,712 @@
+{
+  "app": {
+    "title": "Masche & Co.",
+    "logoMain": "MASCHE",
+    "logoSub": "& Co.",
+    "subtitle": "Das Callcenter-Chaos mit Freunden",
+    "disclaimer": "Alles fiktiv. Alles erfunden.",
+    "version": "Version {version}",
+    "noscript": "Masche & Co. braucht JavaScript."
+  },
+  "format": {
+    "money": "{amount} ₮"
+  },
+  "title": {
+    "pressStart": {
+      "touch": "Tippen zum Einstempeln",
+      "desktop": "Taste drücken zum Einstempeln",
+      "gamepad": "A-Taste drücken zum Einstempeln"
+    },
+    "notice": {
+      "corrupt": "Der Spielstand war beschädigt und wurde beiseitegelegt. Du startest mit einem neuen Run.",
+      "incompatible": "Der Spielstand stammt aus einer neueren Spielversion und wurde nicht geladen.",
+      "confirm": "Es gibt einen laufenden Run (Tag {day}). Eine neue Schicht überschreibt ihn."
+    }
+  },
+  "menu": {
+    "about": "Über das Spiel",
+    "fullscreenOn": "Vollbild: an",
+    "fullscreenOff": "Vollbild: aus",
+    "back": "Zurück",
+    "start": "Schicht beginnen",
+    "resume": "Weiter",
+    "mainMenu": "Hauptmenü",
+    "continue": "Weiter: Tag {day}",
+    "stats": "Bestenliste & Statistik",
+    "confirmNew": "Neu anfangen (Spielstand geht verloren)",
+    "cancel": "Abbrechen"
+  },
+  "device": {
+    "label": "Steuerung: {device}",
+    "touch": "Touch",
+    "desktop": "Maus & Tastatur",
+    "gamepad": "Gamepad"
+  },
+  "navHint": {
+    "touch": "Antippen zum Auswählen",
+    "desktop": "Pfeiltasten + Enter · Esc zurück",
+    "gamepad": "Steuerkreuz + A · B zurück"
+  },
+  "about": {
+    "heading": "Über das Spiel",
+    "homage": "Masche & Co. ist eine Hommage an das Koop-Spiel „Scam With Your Friends“ von JakeHub & Metater. Alle Figuren, Namen, Grafiken, Texte und Klänge sind eigene Versionen.",
+    "fiction": "Alle Anrufer, Firmen, Orte und Maschen sind frei erfunden. Niemand wird wirklich angerufen.",
+    "realWorld": "Echte-Welt-Tipp: Echte Banken und Ämter fragen am Telefon nie nach Passwörtern, Codes oder Gutscheinen. Im Zweifel auflegen und selbst zurückrufen.",
+    "madeWith": "Grafik, Musik und Klänge sind per Code erzeugt."
+  },
+  "orientation": {
+    "hint": "Dreh dein Handy quer – dann passt das ganze Büro auf den Bildschirm.",
+    "continue": "Trotzdem hochkant spielen"
+  },
+  "fullscreen": {
+    "toggle": "Vollbild umschalten"
+  },
+  "pause": {
+    "heading": "Pause",
+    "hint": "Die Schicht ruht. Der Chef merkt nichts. Hoffentlich.",
+    "saved": "Gespeichert wird zu Beginn jedes Arbeitstags."
+  },
+  "office": {
+    "prompt": {
+      "sit": "Hinsetzen",
+      "stand": "Aufstehen",
+      "clock": "Ausstempeln",
+      "clockLocked": "Stempeluhr (Quota fehlt)"
+    },
+    "keyHint": "{key}: {action}",
+    "touch": {
+      "pause": "Pause"
+    },
+    "boss": {
+      "catch": "Erwischt!"
+    }
+  },
+  "keys": {
+    "Tab": "Tab",
+    "Escape": "Esc",
+    "Space": "Leertaste",
+    "Enter": "Enter",
+    "Backspace": "Rücktaste",
+    "Delete": "Entf",
+    "ArrowUp": "Pfeil hoch",
+    "ArrowDown": "Pfeil runter",
+    "ArrowLeft": "Pfeil links",
+    "ArrowRight": "Pfeil rechts",
+    "PageUp": "Bild hoch",
+    "PageDown": "Bild runter",
+    "BracketLeft": "Ü",
+    "BracketRight": "+"
+  },
+  "padButtons": {
+    "0": "A",
+    "1": "B",
+    "2": "X",
+    "3": "Y",
+    "4": "LB",
+    "5": "RB",
+    "6": "LT",
+    "7": "RT",
+    "8": "Select",
+    "9": "Start",
+    "12": "Hoch",
+    "13": "Runter",
+    "14": "Links",
+    "15": "Rechts"
+  },
+  "os": {
+    "apps": {
+      "phone": {
+        "title": "Telefon",
+        "short": "Telefon"
+      },
+      "notes": {
+        "title": "Notizblock",
+        "short": "Notizen"
+      },
+      "files": {
+        "title": "Dateien",
+        "short": "Dateien"
+      },
+      "trash": {
+        "title": "Papierkorb",
+        "short": "Papierkorb"
+      },
+      "calc": {
+        "title": "Rechner",
+        "short": "Rechner"
+      },
+      "weather": {
+        "title": "Wetter",
+        "short": "Wetter"
+      },
+      "settings": {
+        "title": "Systemsteuerung",
+        "short": "System"
+      },
+      "viewer": {
+        "title": "Textansicht",
+        "short": "Text"
+      },
+      "schemes": {
+        "title": "Maschen",
+        "short": "Maschen"
+      },
+      "script": {
+        "title": "Skript",
+        "short": "Skript"
+      },
+      "identomat": {
+        "title": "Ident-o-Mat",
+        "short": "Ident-o-Mat"
+      },
+      "voucher": {
+        "title": "Gutschein-Kasse",
+        "short": "Gutscheine"
+      },
+      "ferngucker": {
+        "title": "FernGucker",
+        "short": "FernGucker"
+      },
+      "plauder": {
+        "title": "Plauderbude",
+        "short": "Plauderbude"
+      },
+      "kartei": {
+        "title": "Kundenkartei",
+        "short": "Kartei"
+      },
+      "mail": {
+        "title": "Postfach",
+        "short": "Post"
+      },
+      "clock": {
+        "title": "Stempeluhr",
+        "short": "Stempeluhr"
+      },
+      "calendar": {
+        "title": "Kalender & Uhr",
+        "short": "Kalender"
+      }
+    },
+    "start": {
+      "header": "MogelOS 3.11"
+    },
+    "taskbar": {
+      "start": "Start",
+      "leave": "Aufstehen",
+      "money": "Du: {amount}",
+      "team": "Team {team} / {quota}",
+      "teamShort": "{team} / {quota}",
+      "clockOut": "Ausstempeln"
+    },
+    "ctx": {
+      "open": "Öffnen",
+      "delete": "Löschen",
+      "nextWallpaper": "Nächster Hintergrund",
+      "nextTheme": "Nächstes Farbschema",
+      "settings": "Systemsteuerung"
+    },
+    "files": {
+      "folders": {
+        "docs": "Dokumente",
+        "downloads": "Downloads",
+        "pictures": "Bilder",
+        "recordings": "Aufnahmen"
+      },
+      "empty": "Hier ist nichts. Noch nicht.",
+      "open": "Öffnen",
+      "delete": "Löschen",
+      "count": {
+        "one": "{count} Datei",
+        "other": "{count} Dateien"
+      }
+    },
+    "doc": {
+      "leitfaden": {
+        "name": "Leitfaden_Telefon.txt",
+        "text": "LEITFADEN FÜR DAS TELEFON\n(streng vertraulich, bitte nicht im Bus liegen lassen)\n\n1. Immer freundlich bleiben. Auch wenn der Anrufer „Gurkensalat“ sagt.\n2. Niemals das Wort „Masche“ benutzen. Wir sagen „Kundenbindung“.\n3. Wer „Polizei“ hört, legt auf und gießt sofort die Büropflanze.\n4. Die Kaffeemaschine ist kein Zeuge.\n5. Lachen nur mit vorgehaltener Hand. Oder mit vorgehaltenem Hörer.\n6. Quota ist Quota. Ausreden sind Ausreden. Beides gehört nicht ins Telefon.\n\nGez. Direktor Brülling"
+      },
+      "handbuch": {
+        "name": "MogelOS_Handbuch.txt",
+        "text": "MOGELOS 3.11 – KURZHANDBUCH\n\nDoppelklick öffnet. Rechtsklick hilft. Langes Drücken auch.\nFenster lassen sich verschieben, minimieren und schließen.\nDer Papierkorb merkt sich alles, bis man ihn leert. Wie der Chef.\nDie Taskleiste zeigt dein Geld, das Geld des Teams, die Quota und wie lange es noch bis zur Bewertung dauert.\n\nBei Problemen: Rechner aus, Rechner an, Gesicht machen, als wäre nichts gewesen."
+      },
+      "kuendigung": {
+        "name": "Kündigung_Entwurf_17.txt",
+        "text": "Sehr geehrter Herr Direktor Brülling,\n\nhiermit kündige ich\n\n... nein.\n\nSehr geehrter Herr Direktor Brülling,\nhiermit möchte ich höflich anfragen, ob\n\n... auch nein.\n\n(Entwurf 17. Wird morgen fertig. Bestimmt.)"
+      },
+      "passwoerter": {
+        "name": "Passwörter.txt",
+        "text": "PASSWÖRTER (geheim!!)\n\nRechner: passwort\nPost: passwort123\nKaffeemaschine: bitte\nTresor: steht auf einem Zettel im Tresor\nFunknetz: schwindelheim-gast (frag nicht)"
+      },
+      "einkauf": {
+        "name": "Einkaufsliste.txt",
+        "text": "EINKAUFSLISTE\n\n– Kaffee (viel)\n– Kaffee (mehr)\n– Klebezettel\n– Neuer Tacker (der alte ist „unterwegs“)\n– Blumen für die Büropflanze, als Entschuldigung\n– Gewissen (falls im Angebot)"
+      },
+      "ram": {
+        "name": "mehr_RAM_herunterladen.txt",
+        "text": "MEHR RAM HERUNTERLADEN\n\nGlückwunsch! Sie haben 8 GB Arbeitsspeicher heruntergeladen.\nBitte legen Sie ihn jetzt vorsichtig in das Diskettenlaufwerk.\n\nHinweis: Dies ist eine Textdatei. Sie enthält keinen Arbeitsspeicher. Nur Hoffnung."
+      },
+      "rechnung": {
+        "name": "Rechnung_Ramschazon.txt",
+        "text": "RAMSCHAZON – RECHNUNG Nr. 0000000042\n\n1 × Bürostuhl „Ergo-Wackel“ ... 89 ₮\n1 × Ersatz-Tacker ... 12 ₮\n1 × Motivationsposter „Einfach machen“ ... 25 ₮\n\nSumme: 126 ₮\nBezahlt mit: Firmenkasse (ohne Wissen der Firma)"
+      },
+      "gewissen": {
+        "name": "Gewissen.txt",
+        "text": "Liebe Belegschaft,\n\nich bin dann mal weg.\nIhr wisst schon, warum.\n\nViele Grüße\nEuer Gewissen"
+      },
+      "urlaub": {
+        "name": "Urlaubsantrag.txt",
+        "text": "URLAUBSANTRAG\n\nZeitraum: irgendwann\nGrund: Erholung von der Arbeit\n\nEntscheidung des Vorgesetzten: ABGELEHNT\nBegründung: „Erholung ist auch Arbeit, nur ohne Geld.“"
+      },
+      "moral": {
+        "name": "Moralischer_Kompass.txt",
+        "text": "MORALISCHER KOMPASS – BEDIENUNGSANLEITUNG\n\nDie Nadel zeigt immer nach Norden.\nNorden ist da, wo das Geld ist.\n\nHinweis: Gerät defekt. Rückgabe ausgeschlossen."
+      },
+      "lebenslauf": {
+        "name": "Lebenslauf_ehrlich.txt",
+        "text": "LEBENSLAUF (ehrliche Fassung)\n\nBerufserfahrung: Telefon gehalten.\nStärken: Kann gut zuhören, wenn es um Geld geht.\nSchwächen: Kann nicht Nein sagen. Zu Kaffee.\nHobbys: Lesen (Zettel unter Tastaturen).\n\nNicht verschicken!!"
+      }
+    },
+    "trash": {
+      "restore": "Wiederherstellen",
+      "empty": "Der Papierkorb ist leer. Wie das Gewissen der Belegschaft.",
+      "emptyAction": "Papierkorb leeren",
+      "toastTitle": "Papierkorb geleert",
+      "toastBody": {
+        "one": "{count} Datei ist für immer weg. Hoffentlich nichts Wichtiges.",
+        "other": "{count} Dateien sind für immer weg. Hoffentlich nichts Wichtiges."
+      }
+    },
+    "calc": {
+      "error": "Nö.",
+      "decimal": ","
+    },
+    "weather": {
+      "heading": "Schwindelheim · Tag {day}",
+      "footer": "Angaben ohne Gewähr. Wie alles hier.",
+      "today": "Heute",
+      "tomorrow": "Morgen",
+      "dayAfter": "Übermorgen",
+      "temp": "{temp} °C",
+      "feels": {
+        "0": "gefühlt: Montag",
+        "1": "gefühlt: Überstunden",
+        "2": "gefühlt: drei Tassen Kaffee",
+        "3": "gefühlt: kurz vor Feierabend",
+        "4": "gefühlt: Quota verfehlt",
+        "5": "gefühlt: Freitag, 13 Uhr"
+      },
+      "forecast": {
+        "rockets": "{chance} % Raketenwahrscheinlichkeit. Ein Regenschirm hilft nicht.",
+        "rage": "Sonnig, mit vereinzelten Wutausbrüchen aus dem Chefbüro.",
+        "paper": "Papierschauer aus dem Drucker, Böen bis {chance} Seiten pro Minute.",
+        "coffee": "Dichter Kaffeedampf. Sichtweite unter einer Tasse.",
+        "quota": "Hoch „Quota“ zieht auf. Der Druck steigt um {chance} %.",
+        "police": "Örtlich Blaulicht. Bitte nicht aus dem Fenster winken.",
+        "pigeons": "Bewölkt. Vereinzelt Tauben mit Aktentaschen.",
+        "clear": "Klarer Himmel. Klares Gewissen nicht im Angebot.",
+        "staplers": "Tackerschauer zur Leistungsbewertung. Ducken empfohlen.",
+        "calm": "Ruhige Lage. Verdächtig ruhig."
+      }
+    },
+    "settings": {
+      "tabs": {
+        "look": "Aussehen",
+        "sound": "Ton",
+        "voice": "Sprache",
+        "info": "Info",
+        "ai": "KI"
+      },
+      "wallpaper": "Hintergrund",
+      "theme": "Farbschema",
+      "wallpapers": {
+        "mogel": "Hörer",
+        "karo": "Karo",
+        "nacht": "Nachtschicht",
+        "chef": "Chef"
+      },
+      "themes": {
+        "klassik": "Klassik",
+        "petrol": "Petrol",
+        "himbeere": "Himbeere"
+      },
+      "master": "Gesamtlautstärke",
+      "ui": "Effekte & Oberfläche",
+      "masterValue": "Gesamtlautstärke: {value} %",
+      "uiValue": "Effekte & Oberfläche: {value} %",
+      "vibration": "Vibration",
+      "infoText": "MogelOS 3.11 „Schummel-Edition“\nLizenz: gefunden\nArbeitsspeicher: 640 KB (reicht für jeden)\nFestplatte: 2 GB, davon 1,9 GB Ausreden\n\nSpielversion: {version}\n\nMogelOS wird Ihnen präsentiert von der Hausmeisterei der Masche & Co. Fragen bitte schriftlich, Antworten nie.",
+      "voiceMode": "Anruferstimmen",
+      "voiceModes": {
+        "tts": "Sprechen",
+        "babble": "Brabbeln",
+        "off": "Stumm"
+      },
+      "voiceName": "Stimme: {name}",
+      "voiceAuto": "automatisch",
+      "voiceNone": "Keine deutsche Systemstimme gefunden – Anrufer brabbeln stattdessen.",
+      "voiceValue": "Stimmen: {value} %",
+      "voiceTest": "Stimme testen",
+      "voiceSample": "Hallo? Hier spricht Hildegard Sonnenschein. Mausi lässt grüßen!",
+      "speechInput": "Spracheingabe (Mikrofon)",
+      "micMode": "Mikrofon",
+      "micModes": {
+        "ptt": "Gedrückt halten",
+        "auto": "Antippen"
+      },
+      "micTest": "Mikrofon testen",
+      "micTestListening": "Sprich jetzt …",
+      "micTestResult": "Erkannt: „{text}“",
+      "micTestNothing": "Nichts gehört. Mikrofon erlaubt?",
+      "micFallbackHint": "Im Telefon öffnet „Sprechen“ dann das Textfeld – dort mit dem Mikrofon der Tastatur diktieren.",
+      "ai": {
+        "toggle": "KI-Anrufer",
+        "placeholder": "API-Schlüssel einfügen …",
+        "save": "Speichern",
+        "test": "Verbindung testen",
+        "clear": "Schlüssel löschen",
+        "saved": "Schlüssel gespeichert.",
+        "cleared": "Schlüssel gelöscht.",
+        "testing": "Teste die Verbindung …",
+        "ok": "Verbindung klappt. Die Anrufer antworten jetzt mit KI.",
+        "keySet": "Schlüssel für {provider}: {key}",
+        "keyNone": "Kein Schlüssel für {provider} hinterlegt.",
+        "status": {
+          "ready": "Status: KI-Anrufer aktiv.",
+          "off": "Status: aus – lokale Engine.",
+          "noKey": "Status: kein Schlüssel – lokale Engine.",
+          "offline": "Status: offline – lokale Engine."
+        },
+        "usage": "{provider}: {input} Tokens rein, {output} raus, {requests} Anfragen",
+        "privacy": "Schlüssel bleiben nur in diesem Browser und gehen direkt an den gewählten Anbieter – nie ins Spiel, Repo oder an andere Server. Fallback-Kette: Ist ein Anbieter am Limit, springt der nächste mit Schlüssel ein.",
+        "chain": "Fallback-Kette",
+        "providers": {
+          "groq": "Groq",
+          "gemini": "Gemini",
+          "openrouter": "OpenRouter",
+          "claude": "Claude"
+        },
+        "model": "Modell: {model}",
+        "modelOwn": "Modell (eigenes): {model}",
+        "modelCustom": "Modell: eigenes eintragen …",
+        "modelPlaceholder": "Modellname eintragen, Enter",
+        "modelSaved": "Modell gespeichert.",
+        "modelInvalid": "Ungültiger Modellname (nur Buchstaben, Ziffern, . : / @ _ -).",
+        "usageRate": ", {count}× am Limit",
+        "usageCooling": ", Pause noch {seconds} s",
+        "usageNone": "Noch kein Verbrauch seit Spielstart.",
+        "networkHint": "Vielleicht blockiert der Browser den direkten Aufruf (CORS) – dann einen anderen Anbieter nehmen.",
+        "free": "Mit kostenloser Stufe (Limits je Minute und Tag).",
+        "paid": "Kostenpflichtig: Die Kosten trägt dein Konto."
+      }
+    },
+    "toast": {
+      "bossMail": {
+        "title": "Chef-Mail: Direktor Brülling",
+        "body": "Tag {day}: Quota {quota}. Details im Postfach."
+      },
+      "quota": {
+        "title": "Quota erreicht!",
+        "body": "Jetzt ausstempeln – oder weiter Taler scheffeln."
+      },
+      "patrol": {
+        "title": "Brülling ist unterwegs!",
+        "body": "Kontrollgang durchs Büro. Wer am Platz sitzt, ist sicher."
+      },
+      "catch": {
+        "title": "Erwischt!",
+        "body": "Strafgeld: {fine}."
+      },
+      "yell": {
+        "title": "Brüllanfall!",
+        "body": "{line}"
+      },
+      "clockIn": {
+        "title": "Eingestempelt",
+        "body": "Tag {day} läuft. Quota: {quota}."
+      },
+      "timeUp": {
+        "title": "Feierabend!",
+        "body": "Alle zur Leistungsbewertung."
+      }
+    },
+    "notes": {
+      "placeholder": "Notiz schreiben …",
+      "delete": "Löschen",
+      "empty": "Nichts ausgewählt. Beute aus Gesprächen landet hier von selbst.",
+      "captured": "{demand}: {value}",
+      "toastTitle": "Notiert!"
+    },
+    "schemes": {
+      "intro": "Masche fürs Telefon wählen. Passt sie zum Anrufer, glaubt er dir eher.",
+      "range": "{min} – {max}",
+      "chosen": "gewählt",
+      "use": "Diese Masche nehmen",
+      "unchoose": "Masche abwählen",
+      "forCall": "Gilt für den laufenden Anruf.",
+      "forNext": "Gilt ab dem nächsten Anruf.",
+      "demands": "Forderung: {list}",
+      "payout": "Auszahlung: {amount}",
+      "target": "Beute in {app} eingeben.",
+      "targetAuto": "Das Ja-Wort wird mitgeschnitten und von selbst verbucht.",
+      "open": "{app} öffnen",
+      "guide": "Leitfaden",
+      "tips": "Tipps",
+      "current": "Jetzt – {phase}: {text}",
+      "step": "{phase}: {text}",
+      "placeholder": "Zahlungs-Code …",
+      "submit": "Verbuchen",
+      "times": "{count} × {demand}",
+      "join": " + ",
+      "locked": "ab Tag {day}"
+    },
+    "loot": {
+      "ok": "Treffer! {amount} verbucht.",
+      "okFern": "Verbunden mit dem PC von {name}.",
+      "unknown": {
+        "one": "Passt zu nichts. Noch {count} Versuch.",
+        "other": "Passt zu nichts. Noch {count} Versuche."
+      },
+      "unknownNone": "Passt zu nichts – hier wartet gerade keine Beute.",
+      "locked": "Zu oft vertippt – gesperrt! Die Beute von {name} ist futsch.",
+      "bait": "Fälschung! {name} hat dir einen Köder vorgelesen.",
+      "empty": "Erst etwas eingeben.",
+      "waiting": "wartet",
+      "failed": "futsch",
+      "historyEmpty": "Noch nichts verbucht. Was Anrufer verraten, steht im Notizblock.",
+      "toastTitle": "Ausgezahlt: {amount}",
+      "toastBody": "{scheme} – danke, {name}!",
+      "captured": "{demand}: {value} · für {app}"
+    },
+    "identomat": {
+      "intro": "Bürgernummer eintragen, Rente umleiten. Groß/klein, Leerzeichen und Striche sind egal.",
+      "placeholder": "Bürgernummer …",
+      "submit": "Prüfen"
+    },
+    "voucher": {
+      "intro": "Gutscheincodes einlösen – der Betrag steht auf dem Gutschein.",
+      "placeholder": "Gutscheincode …",
+      "submit": "Einlösen"
+    },
+    "fern": {
+      "intro": "Guck-Code eingeben, schon sitzt du am PC des Anrufers. Klappt nur, solange er am Telefon ist.",
+      "placeholder": "Guck-Code …",
+      "submit": "Verbinden",
+      "noCall": "Keine Verbindung: {name} ist nicht mehr am Telefon. Die Beute ist futsch.",
+      "title": "PC von {name}",
+      "disconnect": "Trennen",
+      "ended": "Verbindung getrennt – {name} hat aufgelegt.",
+      "bank": "Spargroschen Online",
+      "bankShort": "Spargroschen",
+      "myPc": "Arbeitsplatz",
+      "recycle": "Papierkorb",
+      "opened": "{file} geöffnet.",
+      "balance": "Kontostand: {amount}",
+      "recipient": "Empfänger: {name}",
+      "nextRecipient": "Anderer Empfänger",
+      "amount": "Betrag: {amount}",
+      "less": "–50",
+      "more": "+50",
+      "transfer": "Überweisen",
+      "back": "Zurück",
+      "recipients": {
+        "masche": "Masche & Co. Treuhand",
+        "erna": "Tante Erna",
+        "verein": "Kaninchenzüchterverein"
+      },
+      "sent": "{amount} an {recipient} überwiesen!",
+      "lost": "Falscher Empfänger! {amount} sind bei {recipient} gelandet.",
+      "greedy": "Tipp: Nicht zu gierig – sonst wird {name} misstrauisch.",
+      "says": "{name}: {text}"
+    },
+    "plauder": {
+      "chats": "Chats",
+      "login": "Anmelden",
+      "you": "Du",
+      "empty": "Keine Nachrichten.",
+      "onPhone": "{handle} · am Telefon",
+      "gift": "Turbo-Geschenk senden",
+      "giftSent": "Turbo-Geschenk an {handle} geschickt.",
+      "giftMsg": "[Turbo-Geschenk: 1 Monat Turbo-Status. Zum Annehmen bitte Login-Code nennen.]",
+      "giftAgain": "Das Geschenk ist schon unterwegs.",
+      "loginIntro": "Login-Code des Anrufers eingeben, Turbo-Status übernehmen und weiterverkaufen.",
+      "placeholder": "Login-Code …",
+      "submit": "Einloggen",
+      "newMessage": "Neue Nachricht von {name}",
+      "mute": "Stumm",
+      "message": "{name}:\n{text}"
+    },
+    "kartei": {
+      "empty": "Noch keine Kundschaft. Wer anruft, landet hier.",
+      "calls": {
+        "one": "{count} Anruf",
+        "other": "{count} Anrufe"
+      },
+      "wins": {
+        "one": "{count} Erfolg",
+        "other": "{count} Erfolge"
+      },
+      "best": "Bestes Vertrauen: {n} %",
+      "likes": "Mag: {list}",
+      "dislikes": "Mag nicht: {list}",
+      "fans": "Glaubt an: {list}",
+      "skeptics": "Glaubt nicht an: {list}",
+      "unknown": "noch nichts herausgefunden",
+      "hint": "Aktenhinweis: Hat ein Herz für {topic}.",
+      "list": "{name} · {calls}",
+      "stats": "{calls} · {wins} · {best}"
+    },
+    "locked": {
+      "day": "ab Tag {day}",
+      "title": "Noch gesperrt",
+      "body": "{app} gibt es ab Tag {day}.",
+      "entry": "{app} (ab Tag {day})"
+    },
+    "mail": {
+      "empty": "Keine Mails. Verdächtig ruhig.",
+      "from": {
+        "boss": "Direktor Brülling",
+        "system": "MogelOS",
+        "spam": "Unbekannt"
+      },
+      "delete": "Löschen",
+      "unread": "{count} ungelesen"
+    },
+    "clock": {
+      "goal": "Tagesziel: {quota}",
+      "team": "Team: {team} ({percent} %)",
+      "colleagues": "Kollegen",
+      "working": "arbeitet",
+      "clockedOut": "ausgestempelt",
+      "button": "Ausstempeln",
+      "locked": "Ausstempeln geht erst, wenn die Quota erreicht ist.",
+      "ready": "Quota erreicht! Ausstempeln beendet den Tag – alle gehen zur Bewertung.",
+      "rage": "Brüllings Laune: {level}",
+      "rageLevels": {
+        "calm": "entspannt",
+        "grumpy": "grummelig",
+        "angry": "geladen",
+        "furious": "explosiv"
+      },
+      "member": "{name} – {status}"
+    },
+    "calendar": {
+      "day": "Arbeitstag {day}",
+      "time": "{time} Uhr",
+      "left": "Noch {left} bis zur Bewertung",
+      "unlocks": "Freischaltungen",
+      "unlockDay": "Tag {day}: {list}",
+      "today": "heute",
+      "allDone": "Alles freigeschaltet. Ab jetzt zählt nur noch die Quota."
+    }
+  },
+  "calls": {
+    "popup": {
+      "title": "Eingehender Anruf",
+      "answer": "Annehmen",
+      "decline": "Ablehnen",
+      "hint": {
+        "desktop": "E: annehmen · Entf: ablehnen",
+        "gamepad": "A: annehmen · LT: ablehnen",
+        "touch": "Hochwischen: annehmen"
+      }
+    },
+    "phone": {
+      "reroll": "Andere Karten",
+      "mic": "Sprechen",
+      "hold": "Halten",
+      "speaker": "Lautspr.",
+      "keyboard": "Tippen",
+      "hangup": "Auflegen",
+      "done": "Fertig",
+      "placeholder": "Tippen … (1–4: Karte)",
+      "status": "{mood} · {trust} %",
+      "phase": "Phase: {phase} · {time}",
+      "onHold": "In der Warteschleife …",
+      "noCalls": "Noch keine Anrufe. Warte, bis es klingelt – oder geh an ein klingelndes Telefon.",
+      "listening": "Ich höre zu …",
+      "hearing": "Ich höre: {text}",
+      "micDeniedTitle": "Kein Mikrofon",
+      "summary": "Dauer {time} · Vertrauen am Ende {trust} %",
+      "phaseScheme": "{phase} · {scheme} · {time}",
+      "scheme": "Masche",
+      "processing": "Verstehe …",
+      "micState": {
+        "idle": "Sprechen",
+        "listening": "Hört zu",
+        "processing": "Verarbeitet",
+        "error": "Mikro: Fehler"
+      },
+      "micIssue": {
+        "off": "Spracheingabe ist in der Systemsteuerung aus.",
+        "unsupported": "Dieser Browser hat keine Spracherkennung.",
+        "insecure": "Mikrofon nur über eine sichere Verbindung (https).",
+        "denied": "Mikrofon nicht erlaubt (Browser- oder Systemeinstellung).",
+        "service": "Spracherkennung gesperrt. iPhone: „Siri & Diktat“ einschalten; als Home-Bildschirm-App oft gesperrt – dann im Browser spielen.",
+        "noMic": "Kein Mikrofon gefunden oder es ist gerade belegt.",
+        "network": "Spracherkennung braucht Internet.",
+        "language": "Spracherkennung kann kein Deutsch.",
+        "failed": "Spracherkennung ließ sich nicht starten."
+      },
+      "micFallback": "Tippe ins Feld und nutze das Mikrofon der Tastatur zum Diktieren.",
+      "micFallbackTap": "Nochmal auf „Sprechen“ tippen öffnet das Textfeld zum Diktieren.",
+      "thinking": "{name} überlegt …",
+      "ai": {
+        "tag": "KI",
+        "tagProvider": "KI: {provider}",
+        "fallbackTitle": "KI-Anrufer pausiert",
+        "noKey": "Lokale Engine: kein KI-Schlüssel (Systemsteuerung, Reiter KI).",
+        "offline": "Lokale Engine: offline.",
+        "auth": "KI-Schlüssel ungültig – lokale Engine übernimmt.",
+        "permission": "KI-Schlüssel ohne Berechtigung – lokale Engine übernimmt.",
+        "rate": "KI am Limit (zu viele Anfragen) – dieser Satz lokal.",
+        "overloaded": "KI-Dienst überlastet – dieser Satz lokal.",
+        "network": "Keine Verbindung zur KI – dieser Satz lokal.",
+        "timeout": "KI antwortet zu langsam – dieser Satz lokal.",
+        "refusal": "Die KI wollte hier nicht antworten – lokale Engine übernimmt.",
+        "badRequest": "KI-Anfrage abgelehnt – dieser Satz lokal.",
+        "aborted": "KI-Anfrage abgebrochen.",
+        "other": "KI-Antwort unbrauchbar – dieser Satz lokal.",
+        "retry": "{provider} am Limit – neuer Versuch in {seconds} s …",
+        "switch": "{from} am Limit – weiter mit {to}.",
+        "switchError": "{from} hakt – weiter mit {to}."
+      }
+    },
+    "phase": {
+      "einstieg": "Einstieg",
+      "vertrauen": "Vertrauen",
+      "forderung": "Forderung",
+      "ende": "Abschluss",
+      "pitch": "Pitch",
+      "beute": "Beute"
+    },
+    "outcome": {
+      "success": "Geschafft! Die Beute ist notiert.",
+      "successLoot": "Geschafft! {demand}: {value} – steht im Notizblock.",
+      "bait": "Reingelegt! Das war ein Köder. Die Daten taugen nichts.",
+      "hangup": "Aufgelegt.",
+      "farewell": "Freundlich verabschiedet.",
+      "playerHangup": "Du hast aufgelegt.",
+      "missed": "Verpasst."
+    },
+    "outcomeShort": {
+      "success": "Beute",
+      "bait": "Köder",
+      "hangup": "Aufgelegt",
+      "farewell": "Tschüss",
+      "playerHangup": "Aufgelegt",
+      "missed": "Verpasst"
+    },
+    "reason": {
+      "trust": "Aufgelegt: kein Vertrauen mehr.",
+      "angry": "Wütend aufgelegt.",
+      "patience": "Aufgelegt: zu lange geschwiegen.",
+      "hold": "Aufgelegt: zu lange in der Warteschleife.",
+      "contradiction": "Aufgelegt: zu viele Widersprüche."
+    },
+    "voice": {
+      "currency": "Taler",
+      "percent": "Prozent"
+    }
+  }
+}

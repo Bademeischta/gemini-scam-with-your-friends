@@ -1,0 +1,351 @@
+{
+  "cards": {
+    "greet": {
+      "0": "Hallo, schön, dass Sie rangehen – ich hatte schon fast die Hoffnung verloren!",
+      "1": "Guten Tag! Ich hoffe, ich störe nicht gerade beim Mittagsschläfchen.",
+      "2": "Guten Morgen! Herrlicher Tag zum Telefonieren, finden Sie nicht?",
+      "3": "Guten Abend! Ich hoffe, Sie sitzen gemütlich, mit Pantoffeln und allem.",
+      "4": "Moin! Na, alles frisch bei Ihnen da am anderen Ende der Leitung?",
+      "5": "Grüß Gott und servus – ich grüße lieber doppelt, sicher ist sicher!"
+    },
+    "introduce": {
+      "bank": {
+        "0": "Mein Name ist Bertram Batzen von der Schwindelheimer Spargroschen-Bank.",
+        "1": "Hier spricht Frau Pfennigfuchs aus der Filiale Mumpitzhausen, Abteilung Sparschweine.",
+        "2": "Mein Name ist Kuno Kröte, ich betreue Ihr Konto bei der Bank zu Kleinkrakeelen."
+      },
+      "amt": {
+        "0": "Hier spricht Amtsrat Stempelmann vom Amt für Formulare und Durchschläge.",
+        "1": "Mein Name ist Frieda Formblatt vom Bürgeramt Schwindelheim, Zimmer 404.",
+        "2": "Mein Name ist Gisela Gründlich vom Rentenamt, Abteilung Lose Blätter."
+      },
+      "technik": {
+        "0": "Hier spricht Torsten Tüftel vom Technik-Support, Ihr Computer hat geniest.",
+        "1": "Mein Name ist Kai Kabelsalat, ich bin Techniker beim Schwindelheimer Störungsdienst.",
+        "2": "Hier spricht der MogelOS-Support, Ihr Bildschirm hat uns um Hilfe gebeten."
+      },
+      "familie": {
+        "0": "Ich bin's, dein Enkel – der mit der schiefen Blockflöte von Weihnachten!",
+        "1": "Rate mal, wer dran ist – ich bin deine Nichte aus Mumpitzhausen!",
+        "2": "Ich bin Ihr Neffe dritten Grades, glaube ich – der Stammbaum ist etwas verknotet."
+      },
+      "gewinn": {
+        "0": "Hier spricht Gabi Gaudi vom großen Gewinnspiel „Rate den Rettich“!",
+        "1": "Mein Name ist Lotte Losfee, und Sie wurden bei unserer Verlosung gezogen!",
+        "2": "Hier spricht die Gewinnzentrale Schwindelheim: Sie sind unser Hauptgewinn-Kandidat!"
+      },
+      "polizei": {
+        "0": "Hier spricht Wachtmeister Wuselig, ich ermittle im Fall der verschwundenen Fernbedienung.",
+        "1": "Mein Name ist Kommissarin Knöterich von der Polizei Kleinkrakeelen, Abteilung Krümel."
+      },
+      "arzt": {
+        "0": "Hier spricht Doktor Pflasterle aus der Praxis Am Rande des Wahnsinns.",
+        "1": "Mein Name ist Schwester Salbei aus der Arztpraxis Dr. Schnupf, wegen Ihres Schluckaufs."
+      },
+      "lieferung": {
+        "0": "Hier spricht Kurt Karton vom Paketdienst Eilige Schnecke, ich stehe vor der falschen Tür.",
+        "1": "Mein Name ist Lisa Luftpost, ich habe hier eine Lieferung mit sehr viel Polsterfolie."
+      },
+      "krypto": {
+        "0": "Hier spricht Bruno Blockmann, Ihr persönlicher Krypto-Berater aus Mumpitzhausen.",
+        "1": "Mein Name ist Chip Chainberg von der Blockchain-Firma Wolkenkuckucksheim."
+      },
+      "raumfahrt": {
+        "0": "Hier spricht die Bodenstation Schwindelheim, Mission Käsemond, bitte kommen!",
+        "1": "Mein Name ist Fluglotsin Funkel vom Kontrollzentrum, wir haben Sie auf dem Radar."
+      },
+      "kirche": {
+        "0": "Hier spricht Bruder Balduin von der Kirchengemeinde Sankt Mumpitz.",
+        "1": "Mein Name ist Gerlinde Glöckner, ich zähle gerade die Kollekte unserer Gemeinde."
+      },
+      "presse": {
+        "0": "Hier spricht Rasender Reporter Rudi vom Schwindelheimer Tageblatt.",
+        "1": "Mein Name ist Paula Punkt von der Zeitung „Der Plapperbote“, Redaktion Vermischtes."
+      }
+    },
+    "smalltalk": {
+      "0": "Wie geht es Ihnen heute, so ganz ehrlich und ohne Formular?",
+      "1": "Was für ein Wetter heute, da weiß ja nicht mal der Regenschirm, was er will!",
+      "2": "Haben Sie am Wochenende etwas Schönes vor, oder einfach Füße hoch?",
+      "3": "Ich trinke gerade meinen dritten Kaffee – und es ist noch nicht mal Mittag.",
+      "4": "Wie sieht es in Ihrem Garten aus – blüht da noch was, oder ist schon Winterpause?",
+      "5": "Bald ist Feierabend, und dann gibt es bei mir Kuchen – das ist mein ganzer Plan.",
+      "6": "Waren Sie dieses Jahr schon im Urlaub, oder war Balkonien wieder überfüllt?",
+      "7": "Ich hab ein neues Hobby: Ich sortiere Büroklammern nach Laune."
+    },
+    "ask": {
+      "0": "Haben Sie Haustiere, oder wohnt bei Ihnen nur der Staubsauger?",
+      "1": "Was ist Ihr Lieblingsessen – süß, salzig oder beides gleichzeitig?",
+      "2": "Was machen Sie gern, wenn die Welt mal kurz Pause macht?",
+      "3": "Haben Sie ein Hobby, über das Sie stundenlang reden könnten?",
+      "4": "Welches ist Ihr Lieblingslied zum Mitsummen beim Abwasch?",
+      "5": "Was machen Sie so an einem ganz normalen Dienstag?",
+      "6": "Haben Sie ein Haustier mit einem ausgefallenen Namen?",
+      "7": "Was ist Ihre Lieblingsjahreszeit – und warum ist es der Herbst?"
+    },
+    "compliment": {
+      "0": "Sie haben eine wirklich schöne Stimme – wie aus dem Sonntagsradio.",
+      "1": "Was für eine angenehme Stimme, da möchte man glatt den ganzen Tag zuhören.",
+      "2": "Sie sind mir sympathisch – großartig, dass ich ausgerechnet Sie erwischt habe!",
+      "3": "Wie nett und freundlich Sie sind, das ist am Telefon heutzutage selten.",
+      "4": "Sie klingen jung – ich hätte Sie auf höchstens Mitte zwanzig geschätzt.",
+      "5": "Sie sind ganz schön klug – mit Ihnen würde ich gern mal Kreuzworträtsel lösen.",
+      "6": "Sie sind ja charmant, da werde ich hier im Großraumbüro ganz rot.",
+      "7": "Beeindruckend, wie gelassen Sie bleiben – ein echter Fels in der Brandung!"
+    },
+    "empathy": {
+      "0": "Ich verstehe Sie gut, so ein Tag kann einem ganz schön auf den Keks gehen.",
+      "1": "Das kann ich gut nachvollziehen, mir geht es mit Montagen ganz ähnlich.",
+      "2": "Das ist schwer, da hätte ich auch erst mal einen Tee gebraucht.",
+      "3": "Erzählen Sie ruhig weiter, ich höre zu und habe alle Zeit der Welt.",
+      "4": "Ich bin für Sie da, auch wenn ich nur eine Stimme aus dem Hörer bin.",
+      "5": "Das klingt anstrengend, ich verstehe Sie voll und ganz."
+    },
+    "calm": {
+      "0": "Keine Sorge, es ist alles in Ordnung – das ist ein ganz gemütlicher Anruf.",
+      "1": "Keine Angst, ich beiße nicht – ich hab heute schon gefrühstückt.",
+      "2": "Alles gut, atmen Sie einmal tief durch, ich warte so lange.",
+      "3": "Nur die Ruhe, wir machen das ganz gemütlich, Schritt für Schritt.",
+      "4": "Ich helfe Ihnen gern, dafür sitze ich ja hier auf meinem quietschenden Bürostuhl.",
+      "5": "Das kriegen wir hin, so wahr ich hier mit Kopfhörer und Keksdose sitze."
+    },
+    "explain": {
+      "0": "Ich erkläre es kurz: Es geht um die große Schwindelheimer Formularwoche.",
+      "1": "Ich rufe an, weil Ihr Briefkasten bei der Briefkastenzählung übersehen wurde.",
+      "2": "Das bedeutet nur, dass Ihr Formular einmal kurz abgestempelt werden muss.",
+      "3": "Das ist eine Vorschrift aus dem Jahr 1873, die hat leider nie jemand abgeschafft.",
+      "4": "Der Ablauf ist ganz einfach: erst Formular A, dann Formular B, dann Mittagspause.",
+      "5": "Deshalb melde ich mich: Ihr Name stand ganz oben auf meinem Zettel, mit Herzchen."
+    },
+    "urgency": {
+      "0": "Es ist dringend, mein Tee wird kalt und mein Chef guckt schon so komisch!",
+      "1": "Wir müssen das sofort klären, bevor die Mittagspause anfängt!",
+      "2": "Schnell, bitte, das Angebot gilt nur noch heute bis zum Gong der Büro-Uhr!",
+      "3": "Das ist Ihre letzte Chance, bevor der Hahn auf dem Dach dreimal kräht!"
+    },
+    "threat": {
+      "0": "Machen Sie bitte mit, sonst wird Ihr Fußabtreter gesperrt!",
+      "1": "Das hat Konsequenzen: drei Wochen lang nur lauwarmer Kakao für Sie!",
+      "2": "Sonst gibt es Ärger, und zwar eine Strafe von zwölf Gummibärchen!"
+    },
+    "apology": {
+      "0": "Entschuldigung, das war ungeschickt von mir – ich übe noch mit dem Hörer.",
+      "1": "Verzeihung, da ist mir die Zunge über den Schreibtisch gestolpert.",
+      "2": "Entschuldigen Sie bitte, das kam völlig falsch rüber.",
+      "3": "Mein Fehler, ich hab meinen Spickzettel verkehrt herum gehalten.",
+      "4": "Oh, tut mir leid, ich war wohl etwas zu forsch – kommt nicht wieder vor."
+    },
+    "laugh": {
+      "0": "Haha, der war gut, den schreib ich mir auf!",
+      "1": "Sie sind ja witzig, ich muss gleich mein Taschentuch holen.",
+      "2": "Das ist ja lustig, das hat meine Tante auch immer gesagt!",
+      "3": "Kleiner Scherz am Rande: Ich telefoniere eigentlich aus einer Besenkammer."
+    },
+    "thanks": {
+      "0": "Danke, dass Sie so geduldig mit mir sind.",
+      "1": "Vielen Dank für Ihre Zeit, das ist hier nicht selbstverständlich.",
+      "2": "Dankeschön, Sie haben mir gerade den ganzen Tag gerettet!",
+      "3": "Herzlichen Dank, ich würde Ihnen glatt einen Blumenstrauß durchs Telefon reichen."
+    },
+    "promise": {
+      "0": "Versprochen, das dauert nicht länger als ein Frühstücksei.",
+      "1": "Ehrenwort, ich halte mich kurz – so kurz wie ein Mäuseschwanz.",
+      "2": "Das ist garantiert ganz harmlos, so wahr ich hier sitze.",
+      "3": "Das Ganze ist völlig kostenlos, nicht mal eine Briefmarke müssen Sie kleben."
+    },
+    "confirm": {
+      "0": "Genau, Sie haben es auf den Punkt gebracht!",
+      "1": "Richtig, das sehe ich ganz genauso.",
+      "2": "Stimmt, einverstanden – so machen wir das!"
+    },
+    "farewell": {
+      "0": "Tschüss, und bleiben Sie, wie Sie sind!",
+      "1": "Auf Wiederhören, und grüßen Sie mir Ihre Topfpflanzen!",
+      "2": "Bis bald, ich melde mich gern mal wieder – nur zum Plaudern!",
+      "3": "Schönen Tag noch, und denken Sie an Ihre Mittagspause!"
+    },
+    "insult": {
+      "0": "Sie sind ja eine echte Nervensäge, wissen Sie das?",
+      "1": "Ganz ehrlich, Sie klingen ein bisschen doof, wie ein Toaster ohne Brot."
+    },
+    "demand": {
+      "nummer": {
+        "0": "Nennen Sie mir doch bitte Ihre Bürgernummer, nur fürs Poesiealbum.",
+        "1": "Sagen Sie mir bitte Ihre Bürgernummer, ganz langsam, ich schreibe mit Wachsmalstift.",
+        "2": "Bitte lesen Sie vor, was auf Ihrem Bürgernummer-Kärtchen steht."
+      },
+      "code": {
+        "0": "Nennen Sie mir bitte Ihren Guck-Code, der steht hinten auf dem Fernseher.",
+        "1": "Sagen Sie mir kurz den Guck-Code, dann kann ich hier mein Häkchen setzen.",
+        "2": "Nennen Sie mir Ihren Zugangscode – nur die Ziffern, die Schnörkel brauche ich nicht."
+      },
+      "gutschein": {
+        "0": "Rubbeln Sie den Gutschein frei und verraten Sie mir, was drunter steht.",
+        "1": "Könnten Sie mir den Gutscheincode einmal vorlesen, mit Betonung bitte?",
+        "2": "Rubbeln Sie mal vorsichtig – und dann den Gutschein bitte laut vorlesen."
+      },
+      "geld": {
+        "0": "Es fällt nur eine winzige Gebühr von 3 Talern an – ein Klacks!",
+        "1": "Überweisen Sie einfach 20 Taler, dann bekommt Ihr Briefkasten wieder Post."
+      },
+      "daten": {
+        "0": "Sagen Sie mir bitte Ihre Adresse, damit die Blaskapelle weiß, wo sie klingeln soll.",
+        "1": "Sagen Sie mir Ihren Geburtstag, dann singt Ihnen das ganze Büro ein Ständchen."
+      },
+      "klick": {
+        "0": "Klicken Sie bitte einmal auf den lila Knopf an Ihrem Ferngucker.",
+        "1": "Ich schicke Ihnen einen Link mit tanzenden Teekannen – bitte einmal draufklicken!"
+      },
+      "jawort": {
+        "0": "Sagen Sie einfach ja, dann ist der Papierkram in drei Sekunden erledigt.",
+        "1": "Ich brauche nur ein Ja von Ihnen, ein ganz kleines, leises reicht schon."
+      }
+    },
+    "topic": {
+      "katzen": {
+        "0": "Meine Katze schläft gerade auf meiner Tastatur – haben Sie auch eine Katze?",
+        "1": "Katzen sind doch die heimlichen Herrscher jedes Wohnzimmers, finden Sie nicht?"
+      },
+      "hunde": {
+        "0": "Ich liebe Hunde – besonders Dackel, die sich für riesige Wachhunde halten.",
+        "1": "Haben Sie einen Hund, der Sie morgens pünktlich zum Spazierengehen weckt?"
+      },
+      "garten": {
+        "0": "Ich bewundere jeden, der einen Garten hat – bei mir überlebt nicht mal ein Kaktus.",
+        "1": "Rosen schneiden, Unkraut zupfen – gibt es was Schöneres als Gartenarbeit?"
+      },
+      "familie": {
+        "0": "Familie ist doch das Wichtigste, oder sehen Sie das anders?",
+        "1": "Haben Sie Kinder, die Ihnen immer noch die Wäsche vorbeibringen?"
+      },
+      "sterne": {
+        "0": "Ich tippe bei Ihnen auf Sternzeichen Löwe, mit Aszendent Streuselkeks.",
+        "1": "Laut meinem Horoskop treffe ich heute einen ganz besonderen Menschen – vielleicht Sie?"
+      },
+      "omen": {
+        "0": "Mir ist heute eine Gabel runtergefallen – ist das ein gutes Omen?",
+        "1": "Ein bisschen Aberglaube schadet nie, ich klopfe vorsichtshalber dreimal auf Holz."
+      },
+      "raumfahrt": {
+        "0": "Wollten Sie als Kind auch mal mit einer Rakete zum Mond fliegen?",
+        "1": "Ich finde Astronauten unglaublich mutig – schweben und dabei noch Zähne putzen!"
+      },
+      "protokoll": {
+        "0": "Ich arbeite gern streng nach Protokoll, Punkt für Punkt, mit Lineal und Stempel.",
+        "1": "Ohne Checkliste gehe ich nicht mal zum Bäcker, ehrlich gesagt."
+      },
+      "krypto": {
+        "0": "Was halten Sie eigentlich von Krypto – Zukunft oder digitale Luftschlösser?",
+        "1": "Mein Schwager hat seine Sockensammlung gegen einen Coin mit Hamster-Logo getauscht."
+      },
+      "geld": {
+        "0": "Sparen Sie auch fleißig im Sparschwein, oder ist das inzwischen altmodisch?",
+        "1": "Über Geld spricht man ja nicht, aber über Zinsen kann man herrlich jammern."
+      },
+      "mode": {
+        "0": "Ich interessiere mich sehr für Mode – was trägt man diese Saison in Schwindelheim?",
+        "1": "Ich hab mir eine Handtasche gekauft, die zu meinen Socken passt – mutig, oder?"
+      },
+      "socialmedia": {
+        "0": "Mein erstes Video hat drei Likes, und eins davon ist von meiner Mutter.",
+        "1": "Wie viele Follower braucht man eigentlich, um berühmt zu sein – mehr als zwölf?"
+      },
+      "fitness": {
+        "0": "Ich hatte heute schon Training: dreimal die Treppe hoch zum Kopierer.",
+        "1": "Fitness ist mir wichtig, ich trainiere jeden Tag meine Lachmuskeln."
+      },
+      "essen": {
+        "0": "Heute Abend gibt es bei mir Schnitzel, und zwar so groß wie ein Wagenrad.",
+        "1": "Kochen ist meine Leidenschaft, auch wenn der Rauchmelder das anders sieht."
+      },
+      "kuehe": {
+        "0": "Ich wollte schon immer mal auf einem Bauernhof leben, mit einer Kuh namens Berta.",
+        "1": "Kühe haben so etwas Beruhigendes, finden Sie nicht – wie ein Sofa mit Glocke."
+      },
+      "technik": {
+        "0": "Mein Handy ist schlauer als ich, es weiß immer vor mir, dass es gleich regnet.",
+        "1": "Kommen Sie gut mit Ihrem Handy zurecht, oder klingelt es immer zur falschen Zeit?"
+      },
+      "spiele": {
+        "0": "Spielen Sie gern Brettspiele, oder werfen Sie dabei auch immer das Brett um?",
+        "1": "Mein Nachbarsjunge will ständig zocken und redet nur noch von Skins."
+      },
+      "kirche": {
+        "0": "Gehen Sie sonntags in die Kirche, oder ist das bei Ihnen eher Frühstückstag?",
+        "1": "Ein bisschen Segen kann man immer gebrauchen, gerade montags."
+      },
+      "reisen": {
+        "0": "Ich träume von einer Kreuzfahrt mit Buffet rund um die Uhr – Sie auch?",
+        "1": "Wohin ging Ihre schönste Reise – an den Strand oder in die Berge?"
+      },
+      "luxus": {
+        "0": "Ein bisschen Luxus muss sein, finde ich – etwa Champagner zum Frühstück.",
+        "1": "Ich mag es exklusiv: goldene Büroklammern und ein Kissen aus Seide."
+      },
+      "verschwoerung": {
+        "0": "Ich glaube ja, die da oben klauen heimlich die Socken aus der Waschmaschine.",
+        "1": "Ist das eine Verschwörung, oder warum ist mein Joghurt immer ausverkauft?"
+      },
+      "erfindungen": {
+        "0": "Wenn ich eine Zeitmaschine hätte, würde ich als Erstes den Montag abschaffen.",
+        "1": "Die beste Erfindung aller Zeiten ist für mich der Schneebesen, ganz klar."
+      },
+      "wissenschaft": {
+        "0": "Laut einer Studie telefonieren Menschen länger, wenn es draußen regnet.",
+        "1": "Die Forschung weiß bis heute nicht, warum Toast immer auf die Butterseite fällt."
+      },
+      "grammatik": {
+        "0": "Ich hab großen Respekt vor guter Grammatik, der Dativ ist mein bester Freund.",
+        "1": "Rechtschreibung war schon in der Schule meine heimliche Leidenschaft."
+      },
+      "klatsch": {
+        "0": "Haben Sie schon das neueste Gerücht über den Bäcker von Kleinkrakeelen gehört?",
+        "1": "Ein bisschen Klatsch und Tratsch im Treppenhaus gehört doch dazu, oder?"
+      },
+      "schlaf": {
+        "0": "Ich bin heute so müde, ich könnte glatt im Stehen ein Nickerchen machen.",
+        "1": "Guter Schlaf ist Gold wert, ich schwöre auf mein Nackenkissen mit Entenmuster."
+      },
+      "beschwerde": {
+        "0": "Ich hab neulich eine Beschwerde geschrieben – über zu lange Beschwerdeformulare.",
+        "1": "Eine gute Reklamation ist eine Kunst, finden Sie nicht?"
+      },
+      "musik": {
+        "0": "Hören Sie gern Musik, oder summen Sie lieber selbst?",
+        "1": "Bei einem guten Schlager muss ich einfach mitsingen, ob ich will oder nicht."
+      },
+      "wetter": {
+        "0": "Bei diesem Wetter weiß man ja nicht, ob man Sonnencreme oder Gummistiefel braucht.",
+        "1": "Haben Sie bei sich auch so viel Regen, oder scheint da die Sonne?"
+      },
+      "kaffee": {
+        "0": "Ohne meinen Kaffee am Morgen bin ich nur ein halber Mensch.",
+        "1": "Trinken Sie lieber Espresso oder gemütlichen Filterkaffee aus der großen Kanne?"
+      },
+      "kuchen": {
+        "0": "Gibt es bei Ihnen sonntags auch immer Kuchen, oder ist das nur bei uns so?",
+        "1": "Ich hab versucht, eine Torte zu backen, jetzt hat die Küche ein neues Muster."
+      },
+      "polizei": {
+        "0": "Mein Onkel ist Anwalt und legt sogar beim Abendbrot Widerspruch ein.",
+        "1": "Ich wollte als Kind Anwalt werden – nur um einmal laut „Einspruch!“ zu rufen."
+      },
+      "magie": {
+        "0": "Glauben Sie an Magie, so ein kleines bisschen, ganz heimlich?",
+        "1": "Wenn ich einen Zaubertrank hätte, würde ich damit die Bügelwäsche wegzaubern."
+      },
+      "autos": {
+        "0": "Was für ein Auto fahren Sie – Rennsemmel oder gemütliche Schaukel?",
+        "1": "Ein gut geölter Motor klingt für mich wie ein Wiegenlied."
+      },
+      "fussball": {
+        "0": "Schauen Sie gern Fußball, oder ist Ihnen das zu viel Gerenne?",
+        "1": "Ich war neulich im Stadion und habe mehr Bratwurst als Tore gesehen."
+      },
+      "buecher": {
+        "0": "Lesen Sie gern Bücher, oder eher die Zettel am Schwarzen Brett?",
+        "1": "Ich lese gerade einen Roman über einen Briefträger, der sich in eine Ente verliebt."
+      }
+    }
+  }
+}

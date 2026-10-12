@@ -1,0 +1,1506 @@
+{
+  "schemes": {
+    "rentennummer": {
+      "name": "Rentennummer-Raffer",
+      "app": "Rentennummer-Raffer 98",
+      "desc": "Das Rentenamt verspricht drei Butterkekse mehr im Monat. Es fehlt nur noch die Bürgernummer – reine Formsache!",
+      "guide": {
+        "einstieg": "Als Rentenamt oder Bank vorstellen, mit Namen – Ältere mögen Ordnung.",
+        "vertrauen": "Über Familie, Garten oder Kuchen plaudern, geduldig bleiben, Komplimente machen.",
+        "pitch": "Rentenerhöhung oder Nachzahlung ankündigen – Gerhard, die Rentenkasse, zahlt in Keksen.",
+        "forderung": "Nach der Bürgernummer fragen: „Nennen Sie mir bitte Ihre Bürgernummer.“",
+        "beute": "Bürgernummer genau mitschreiben – wer langsam diktiert, meint es gut.",
+        "ende": "Die Nummer im Ident-o-Mat eintippen, dann gibt's 250 ₮."
+      },
+      "tips": {
+        "0": "Hildegard, Rosi, Gerd und Jacqueline freuen sich über jede Rentenerhöhung, sogar über Kekse.",
+        "1": "Zoe, Dietmar und Stella sind weit weg von der Rente und durchschauen das sofort.",
+        "2": "Im Pitch noch nicht nach der Nummer fragen – erst die Geschichte, dann die Forderung.",
+        "3": "Wer drängelt oder droht, bekommt keine Bürgernummer, sondern das Freizeichen."
+      },
+      "cards": {
+        "pitch": {
+          "0": "Gute Nachricht vom Rentenamt: Ihre Rente steigt ab nächstem Monat um drei Butterkekse!",
+          "1": "In der Rentenkasse – ein Schuhkarton namens Gerhard – liegt eine Nachzahlung für Sie bereit.",
+          "2": "Ihr Rentenbescheid wurde leider vom Amtshamster angeknabbert, wir drucken Ihnen einen neuen.",
+          "3": "Sie bekommen eine Rentenerhöhung, weil Sie so vorbildlich alt geworden sind – Glückwunsch!",
+          "4": "Beim Aufräumen hat die Rentenkasse siebzehn vergessene Rentenerhöhungen unterm Sofa gefunden.",
+          "5": "Das Rentenamt feiert Jubiläum und verteilt Nachzahlungen mit Puderzucker obendrauf."
+        },
+        "demand": {
+          "0": "Damit die Butterkekse ankommen: Nennen Sie mir bitte Ihre Bürgernummer, ganz in Ruhe.",
+          "1": "Für den neuen Rentenbescheid bräuchte ich nur kurz Ihre Rentennummer, lesen Sie sie mir vor?",
+          "2": "Sagen Sie mir bitte Ihre Bürgernummer, dann klappert Gerhard der Schuhkarton vor Freude."
+        }
+      },
+      "lines": {
+        "pitch": {
+          "pos": {
+            "0": "Drei Butterkekse mehr im Monat? Endlich lohnt sich das Altwerden!",
+            "1": "Eine Nachzahlung für mich? Na, da hat das Amt ja ausnahmsweise mal mitgedacht.",
+            "2": "Ein Schuhkarton namens Gerhard verwaltet meine Rente? Klingt ordentlicher als mein Küchenschrank.",
+            "3": "Mehr Rente, weil ich so vorbildlich alt bin? Das hab ich mir aber auch redlich verdient!",
+            "4": "Der Amtshamster hat meinen Bescheid gefressen? Der Arme, das Papier ist doch so trocken."
+          },
+          "neg": {
+            "0": "Seit wann zahlt das Rentenamt in Butterkeksen aus? Da stimmt doch was nicht.",
+            "1": "Eine Rentenkasse aus Pappe? Ich glaube, Sie wollen mich verkohlen.",
+            "2": "Das Amt ruft nie einfach so an. Das schreibt Briefe, mit Durchschlag, in dreifacher Ausfertigung.",
+            "3": "Eine Nachzahlung aus heiterem Himmel? So was passiert nicht mal im Märchen."
+          },
+          "early": {
+            "0": "Moment, Sie reden schon über meine Rente? Wir kennen uns doch erst seit einer Minute.",
+            "1": "Langsam, langsam! Wer sind Sie überhaupt, und warum klingen Sie so nach Amtsstube?",
+            "2": "Über meine Rente rede ich nicht mit Fremden. Erzählen Sie erst mal, wie es Ihnen geht."
+          }
+        },
+        "why": {
+          "0": "Meine Bürgernummer? Wofür denn? Sie haben mir ja noch gar nicht gesagt, worum es geht.",
+          "1": "Einfach so eine Nummer rausrücken? Erst will ich wissen, was ich davon habe.",
+          "2": "Was wollen Sie denn mit meiner Nummer? Da fehlt mir irgendwie der Zusammenhang."
+        },
+        "done": {
+          "0": "Drei Butterkekse mehr im Monat – ich kaufe mir gleich eine größere Keksdose!",
+          "1": "Grüßen Sie Gerhard, den Schuhkarton, von mir. Und halten Sie den Amtshamster vom Papier fern!",
+          "2": "So ein netter Anruf vom Amt! Ich stelle schon mal Kaffee für die Butterkekse bereit."
+        }
+      }
+    },
+    "ferngucker": {
+      "name": "FernGucker-Support",
+      "app": "Virenkescher Deluxe",
+      "desc": "Auf dem PC des Anrufers niest ein Virus namens Horst. Zum Glück repariert der FernGucker-Support alles aus der Ferne.",
+      "guide": {
+        "einstieg": "Als Technik-Support oder Bank vorstellen, mit Namen und ruhiger Stimme.",
+        "vertrauen": "Mitgefühl zeigen und beruhigen – Technik macht vielen Angst. Nicht drängeln!",
+        "pitch": "Vom Virus Horst, einem Trojaner oder Hacker erzählen, den nur Sie reparieren können.",
+        "forderung": "Nach dem Guck-Code fragen: „Lesen Sie mir bitte den Guck-Code vor.“",
+        "beute": "Guck-Code mitschreiben, bei Zahlendrehern lieber nachfragen.",
+        "ende": "Code im FernGucker eingeben und im Spargroschen-Banking „überweisen“."
+      },
+      "tips": {
+        "0": "Am fremden PC nicht in privaten Ordnern stöbern – Urlaubsfotos machen Anrufer misstrauisch.",
+        "1": "Je höher der Betrag im Spargroschen-Banking, desto lauter das Entsetzen am Telefon.",
+        "2": "Zoe, Igor und der Professor kennen sich mit Computern aus – bei ihnen niest kein Virus.",
+        "3": "Hildegard, Rosi, Gerd und Pfarrer Benedikt glauben gern an verschnupfte Computer."
+      },
+      "cards": {
+        "pitch": {
+          "0": "Auf Ihrem Computer niest ein Virus namens Horst, wir hören ihn bis hier ins Labor!",
+          "1": "Ein Hacker aus Mumpitzhausen klaut Ihnen nachts heimlich die Schriftarten, nur die schönen!",
+          "2": "Ihr Bildschirm hat eine Sicherheitslücke, durch die es zieht – deshalb ist die Maus so verschnupft.",
+          "3": "In Ihrem Papierkorb hat sich ein Trojaner eingenistet, mit Holzpferd und allem Drum und Dran.",
+          "4": "Wir machen eine kleine Fernwartung, dann flutscht Horst der Virus raus wie ein Korken.",
+          "5": "Wir können Ihren Computer reparieren, während Sie gemütlich im Schlafanzug sitzen bleiben."
+        },
+        "demand": {
+          "0": "Damit ich Horst einfangen kann, lesen Sie mir bitte den Guck-Code aus dem Guck-Fenster vor.",
+          "1": "Nennen Sie mir bitte den Guck-Code, dann schaue ich mir den Virus mal aus der Nähe an.",
+          "2": "Sagen Sie mir einfach den Zugangscode, und ich wische den Trojaner mit dem Staubtuch weg."
+        }
+      },
+      "lines": {
+        "pitch": {
+          "pos": {
+            "0": "Ein Virus namens Horst? Ach, darum niest mein Bildschirm immer, wenn ich ihn einschalte!",
+            "1": "Ein Trojaner mit Holzpferd? Und ich dachte, das Wiehern kommt vom Lüfter.",
+            "2": "Reparatur im Schlafanzug? Das ist ja die gemütlichste Art von Kundendienst.",
+            "3": "Ein Hacker klaut meine Schriftarten? Deshalb sehen meine Briefe neuerdings so traurig aus!",
+            "4": "Gut, dass Sie anrufen. Mein Computer macht schon seit Tagen so komische Geräusche."
+          },
+          "neg": {
+            "0": "Computer niesen nicht. Das weiß sogar ich, und ich drucke meine Mails noch aus.",
+            "1": "Woher wollen Sie wissen, was auf meinem Rechner los ist? Gucken Sie etwa durchs Fenster?",
+            "2": "Ein Trojaner mit Holzpferd? Das hab ich schon im Geschichtsunterricht nicht geglaubt.",
+            "3": "Mein Computer ist aus. Seit drei Wochen. Was soll da bitte niesen?"
+          },
+          "early": {
+            "0": "Moment, Sie reden schon von Viren? Ich weiß ja noch nicht mal, wer Sie sind.",
+            "1": "Nicht so viele Fachbegriffe auf einmal! Stellen Sie sich doch erst mal ordentlich vor.",
+            "2": "Bevor Sie an meinen Computer wollen, wüsste ich gern, mit wem ich spreche."
+          }
+        },
+        "why": {
+          "0": "Einen Guck-Code? Wofür? Mein Computer läuft doch, so halbwegs jedenfalls.",
+          "1": "Warum sollte ich Ihnen einen Code vorlesen? Erst mal will ich wissen, was los ist.",
+          "2": "Sie wollen in meinen Rechner gucken? Da müssen Sie mir aber erst erklären, wieso."
+        },
+        "done": {
+          "0": "Grüßen Sie Horst von mir, wenn Sie ihn rausgeworfen haben. So ein lauter Virus!",
+          "1": "Danke für die Hilfe! Mein Mauszeiger sieht schon viel gesünder aus.",
+          "2": "Wenn Horst wiederkommt, rufe ich Sie an. Oder er ruft Sie an, der kennt sich ja jetzt aus."
+        }
+      }
+    },
+    "turbo": {
+      "name": "Turbo-Geschenk",
+      "app": "Turbo-Gönner",
+      "desc": "Nachrichten mit Rennstreifen, die beim Ankommen hupen! Das Turbo-Geschenk kommt per Plauderbude, der Login-Code geht zurück.",
+      "guide": {
+        "einstieg": "Als Gewinnspiel oder Technik-Support vorstellen – fröhlich und locker.",
+        "vertrauen": "Über Spiele, Handys, Mode oder Fitness plaudern; Komplimente ziehen gut.",
+        "pitch": "Vom Turbo-Geschenk schwärmen: Premium-Status, Rennstreifen, hupende Nachrichten.",
+        "forderung": "Erst das Turbo-Geschenk per Plauderbude schicken, dann nach dem Login-Code fragen.",
+        "beute": "Login-Code mitschreiben, bei Unklarheit um Wiederholung bitten.",
+        "ende": "Den Login-Code in der Plauderbude eingeben – erst dann wird ausgezahlt."
+      },
+      "tips": {
+        "0": "Ohne Geschenk kein Code: Der Anrufer muss das Turbo-Geschenk erst in der Plauderbude sehen.",
+        "1": "Das Geschenk an den richtigen Plauderbude-Namen schicken, sonst freut sich ein Fremder.",
+        "2": "Zoe, Kevin, Chanti und Bodo lieben Turbo-Kram – Dietmar, Henrietta und Hinnerk eher nicht.",
+        "3": "Köder Kevin liest gern falsche Codes vor – prüfen Sie, ob das Geschenk wirklich ankam."
+      },
+      "cards": {
+        "pitch": {
+          "0": "Sie haben ein Turbo-Geschenk gewonnen: Ihre Nachrichten kriegen Rennstreifen und hupen!",
+          "1": "In der Plauderbude wartet ein Geschenk auf Sie: Premium-Status mit goldenem Tippgeräusch!",
+          "2": "Mit dem Turbo-Abo kommen Ihre Nachrichten an, bevor Sie sie überhaupt geschrieben haben.",
+          "3": "Ich schicke Ihnen gleich ein Turbo-Geschenk in die Plauderbude, mit Schleife und Auspuff.",
+          "4": "Mit Premium-Status tragen Ihre Smileys in der Plauderbude kleine Sonnenbrillen.",
+          "5": "Unser Geschenk für treue Plauderer: Ihr Profilbild bekommt Spoiler und Flammen an der Seite!"
+        },
+        "demand": {
+          "0": "Das Turbo-Geschenk ist unterwegs – lesen Sie mir bitte den Login-Code vor, sobald er aufploppt.",
+          "1": "Zum Auspacken brauche ich nur den Login-Code aus der Plauderbude – nennen Sie ihn mir?",
+          "2": "Sagen Sie mir den Zugangscode, dann zünde ich den Turbo, und Ihre Nachrichten düsen los!"
+        }
+      },
+      "lines": {
+        "pitch": {
+          "pos": {
+            "0": "Ein Geschenk in der Plauderbude? Für mich? Mit Schleife? Ich bin ganz gerührt!",
+            "1": "Nachrichten mit Rennstreifen? Endlich sieht jeder, wie flott ich tippe!",
+            "2": "Premium-Status! Dann bin ich ja jetzt was Besseres. Hab ich mir schon immer gedacht.",
+            "3": "Hupende Nachrichten! Die Nachbarn werden staunen, wenn mein Handy losröhrt.",
+            "4": "Turbo! Allein das Wort macht schon gute Laune. Erzählen Sie weiter!"
+          },
+          "neg": {
+            "0": "Nachrichten, die ankommen, bevor man sie schreibt? Dann weiß ja jeder, was ich denke!",
+            "1": "Geschenke von Fremden nehme ich nicht an. Das hat mir meine Mutter schon beigebracht.",
+            "2": "Ich brauche keinen Turbo. Meine Nachrichten kommen auch so an, nur eben gemütlich.",
+            "3": "Wer verschenkt denn einfach so Premium-Status? Da ist doch ein Haken dran."
+          },
+          "early": {
+            "0": "Ein Geschenk? Wir kennen uns doch erst seit zehn Sekunden.",
+            "1": "Moment, wer sind Sie denn überhaupt? Ich nehme nicht von jedem Geschenke an.",
+            "2": "Langsam! Erst plaudern, dann schenken – so gehört sich das in der Plauderbude."
+          }
+        },
+        "why": {
+          "0": "Was für ein Code? Bei mir ist noch gar kein Geschenk angekommen.",
+          "1": "Wofür brauchen Sie denn meinen Login-Code? Davon war bisher keine Rede.",
+          "2": "Einfach so einen Code vorlesen? Erklären Sie mir erst mal, was Sie vorhaben."
+        },
+        "done": {
+          "0": "Meine Nachrichten haben jetzt Rennstreifen! Ich schreibe gleich allen meinen Freunden.",
+          "1": "Danke für den Turbo! Ich hupe mal zurück, sobald ich rausgefunden habe, wie das geht.",
+          "2": "Mein Profilbild brennt! Also, im guten Sinne. Das muss ich gleich allen zeigen."
+        }
+      }
+    },
+    "gutschein": {
+      "name": "Gutschein-Gaudi",
+      "app": "Gutschein-Gaudi Pro",
+      "desc": "Eine offene Rechnung fürs zu laute Gähnen? Die begleicht man ganz bequem mit bunten Kärtchen von Kiosk-Kalle.",
+      "guide": {
+        "einstieg": "Als Amt, Polizei oder Technik-Support vorstellen, freundlich und amtlich.",
+        "vertrauen": "Plaudern, Komplimente machen, Mitgefühl zeigen – wer drängelt, fliegt raus.",
+        "pitch": "Offene Rechnung erfinden, die man nur am Kiosk oder an der Tankstelle begleicht.",
+        "forderung": "Sind die Kärtchen gekauft, nach dem Gutscheincode fragen.",
+        "beute": "Gutscheincode und Betrag mitschreiben, notfalls um Wiederholung bitten.",
+        "ende": "Code und Betrag in die Gutschein-Kasse eintippen – je höher, desto besser."
+      },
+      "tips": {
+        "0": "Im Pitch nur Kiosk oder Tankstelle erwähnen – nach dem Gutschein fragt erst die Forderung.",
+        "1": "Die Auszahlung ist der Betrag auf dem Gutschein: zwischen 80 und 300 ₮.",
+        "2": "Hildegard, Gerd, Jacqueline und die Krawallskis gehen gern zum Kiosk – Zoe und Dietmar nie.",
+        "3": "Bitte ohne Drohungen! Wer mit Strafe kommt, hört nur noch das Freizeichen."
+      },
+      "cards": {
+        "pitch": {
+          "0": "Ihre Rechnung für zu lautes Gähnen ist noch offen, die kann man nur am Kiosk begleichen.",
+          "1": "Gehen Sie bitte zur Tankstelle und fragen Sie nach den bunten Kärtchen fürs Amt.",
+          "2": "Kiosk-Kalle weiß Bescheid: Er zwinkert zweimal, dann haben Sie die richtigen Kärtchen.",
+          "3": "Das Amt nimmt nur noch bunte Kärtchen von der Tankstelle, Münzen sind uns zu klimperig.",
+          "4": "Den offenen Posten begleichen Sie bequem am Kiosk, zwischen Lakritz und Kreuzworträtsel.",
+          "5": "An der Tankstelle gibt es extra Amts-Kärtchen, mit Glitzer, damit es nicht so förmlich wirkt."
+        },
+        "demand": {
+          "0": "Haben Sie die Kärtchen? Dann lesen Sie mir bitte den Gutscheincode vor, ganz gemütlich.",
+          "1": "Rubbeln Sie das Silberfeld frei und nennen Sie mir den Gutscheincode, ich schreibe mit.",
+          "2": "Sagen Sie mir bitte, was auf dem Gutschein steht, und welcher Betrag draufgedruckt ist."
+        }
+      },
+      "lines": {
+        "pitch": {
+          "pos": {
+            "0": "Am Kiosk? Prima, da wollte ich sowieso noch Lakritzschnecken holen.",
+            "1": "Eine Rechnung fürs Gähnen? Na gut, ich gähne wirklich sehr laut. Das sagen alle.",
+            "2": "Kiosk-Kalle kenne ich! Der zwinkert eh die ganze Zeit, das fällt gar nicht auf.",
+            "3": "Tankstelle, sagen Sie? Da gibt es auch diese guten Würstchen. Ich ziehe mir die Schuhe an.",
+            "4": "Ach, das Amt geht mit der Zeit! Bunte Kärtchen statt Formulare, wie modern."
+          },
+          "neg": {
+            "0": "Seit wann begleicht man Rechnungen am Kiosk? Zwischen Kaugummi und Kreuzworträtsel?",
+            "1": "Kein Amt der Welt will bunte Kärtchen von der Tankstelle. Das riecht nach Schwindel.",
+            "2": "Ich soll für Sie einkaufen gehen? Ich bin doch nicht Ihr Laufbursche.",
+            "3": "Eine Rechnung fürs Gähnen? Dann müsste ja halb Schwindelheim nachzahlen."
+          },
+          "early": {
+            "0": "Kiosk? Rechnung? Wir haben uns ja noch nicht mal Hallo gesagt!",
+            "1": "Moment, erst mal: Mit wem spreche ich eigentlich? Dann reden wir über Rechnungen.",
+            "2": "Sie kommen aber flott zur Sache. Ein bisschen Plaudern vorher wäre schon nett."
+          }
+        },
+        "why": {
+          "0": "Einen Gutschein? Wozu das denn? Ich hab doch gar nichts bestellt.",
+          "1": "Ich soll Ihnen einen Gutscheincode vorlesen? Erklären Sie mir erst, wofür.",
+          "2": "Gutscheine verschenke ich nur zu Weihnachten. Was wollen Sie denn damit?"
+        },
+        "done": {
+          "0": "Erledigt! Und Kiosk-Kalle hat mir sogar eine saure Gurke dazugeschenkt.",
+          "1": "Schön, dass das mit der Rechnung geklärt ist. Ab jetzt gähne ich leiser, versprochen.",
+          "2": "Das war ja einfacher als gedacht. Ich gähne zur Feier des Tages gleich nochmal ganz laut."
+        }
+      }
+    },
+    "orbit": {
+      "name": "Enkel im Orbit",
+      "app": "Enkel-Rückholdienst",
+      "desc": "Der Enkel hat den Rückflug von der Raumstation verschlafen und lebt seither von Tütensuppe. Ein Ticket muss her!",
+      "guide": {
+        "einstieg": "Als Enkel (Familie) oder Kontrollzentrum (Raumfahrt) vorstellen.",
+        "vertrauen": "Mitgefühl zeigen, über Familie plaudern – Großeltern lieben ihre Enkel.",
+        "pitch": "Der Enkel sitzt auf der Raumstation fest und braucht ein Rückflugticket.",
+        "forderung": "Um Geld fürs Ticket bitten: „Bitte bezahlen Sie die Landegebühr.“",
+        "beute": "Der Anrufer liest den Zahlungs-Code vor – genau mitschreiben.",
+        "ende": "Zahlungs-Code in die Skript-App „Enkel-Rückholdienst“ eintippen."
+      },
+      "tips": {
+        "0": "Astronautin Stella kennt jede Raumstation persönlich – bei ihr fliegt die Masche sofort auf.",
+        "1": "Hildegard, Rosi, Walpurga und Pfarrer Benedikt haben ein großes Herz für schwebende Enkel.",
+        "2": "Wer sich als Enkel ausgibt, sollte nicht mittendrin zum Kontrollzentrum werden.",
+        "3": "Erst Mitgefühl, dann Geschichte, dann Geld – sonst heißt es: „Wofür denn das?“"
+      },
+      "cards": {
+        "pitch": {
+          "0": "Ihr Enkel sitzt auf der Raumstation fest, er hat den Rückflug auf dem Klo verträumt.",
+          "1": "Ihr Enkel ist im Orbit gestrandet und isst seit Tagen nur Tütensuppe, die davonschwebt.",
+          "2": "Ich bin's, Ihr Enkel – ich schwebe im Weltraum, und mein Rückflugticket ist in die Sonne geflogen!",
+          "3": "Ihr Enkel kreist seit Dienstag um die Erde, weil der Rückflug wegen Sternschnuppen ausfiel.",
+          "4": "Gute Nachricht: Ihr Enkel winkt aus dem Weltraum! Schlechte: Er hat das Rückflugticket verbummelt.",
+          "5": "Ein Enkel im Orbit kann leider erst landen, wenn sein Rückflugticket abgestempelt ist."
+        },
+        "demand": {
+          "0": "Bitte bezahlen Sie sein Rückflugticket und lesen Sie mir die Quittung vor, damit er landen darf.",
+          "1": "Nennen Sie mir bitte, wie viel Sie für die Landegebühr zahlen können – er vermisst Ihre Suppe.",
+          "2": "Sobald Sie die Gebühr für den Rückflug überweisen, lesen Sie mir bitte den Beleg vor."
+        }
+      },
+      "lines": {
+        "pitch": {
+          "pos": {
+            "0": "Mein Enkel im Weltraum? Ich wusste immer, dass aus dem Jungen mal was Großes wird!",
+            "1": "Er hat beim Abflug geschlafen? Typisch, der verschläft schon seit der Taufe alles.",
+            "2": "Nur Tütensuppe? Das arme Kind! Ich packe ihm sofort ein Paket mit Streuselkuchen.",
+            "3": "Ein Rückflugticket, natürlich! Zum Sonntagsbraten soll er wieder am Tisch sitzen.",
+            "4": "Er kreist um die Erde? Dann winke ich heute Abend mal in den Himmel."
+          },
+          "neg": {
+            "0": "Mein Enkel im Orbit? Der bekommt doch schon im Aufzug Höhenangst.",
+            "1": "Auf Raumstationen verschläft man doch keinen Abflug. Da gibt es bestimmt einen Wecker.",
+            "2": "Ich habe meinen Enkel gestern noch beim Bäcker gesehen. Auf der Erde.",
+            "3": "Seit wann verkauft man Rückflugtickets aus dem Weltraum am Telefon?"
+          },
+          "early": {
+            "0": "Mein Enkel? Wer sind Sie denn überhaupt? Sie haben sich ja noch nicht mal vorgestellt.",
+            "1": "Langsam, langsam! Ich muss mich erst mal setzen, bevor wir über Weltraumkram reden.",
+            "2": "Mit so einer Geschichte fällt man doch nicht gleich mit der Tür ins Haus."
+          }
+        },
+        "why": {
+          "0": "Geld überweisen? Wofür denn? Sie haben mir ja noch gar nicht erzählt, was los ist.",
+          "1": "Bezahlen soll ich? Wen und warum? Erklären Sie mir das bitte erst.",
+          "2": "Einfach so Taler rausrücken? Da müssen Sie mir schon eine gute Geschichte erzählen."
+        },
+        "done": {
+          "0": "Sagen Sie meinem Enkel, er soll sich beim Landen eine Mütze aufsetzen. Da oben zieht es!",
+          "1": "Ich backe schon mal Streuselkuchen. Nach dem ganzen Weltraumessen braucht er was Richtiges.",
+          "2": "Und sagen Sie ihm, er soll beim nächsten Mal einen Wecker mit ins All nehmen!"
+        }
+      }
+    },
+    "mond": {
+      "name": "Mondmakler",
+      "app": "Mondmakler 3000",
+      "desc": "Parzellen auf der Mondrückseite: eigener Krater, keine Nachbarn, kein Rasenmähen. Erdblick nur gegen Aufpreis.",
+      "guide": {
+        "einstieg": "Als Gewinnspiel, Krypto-Firma oder Zeitung vorstellen – Hauptsache exklusiv.",
+        "vertrauen": "Luxus, Reisen oder Erfindungen ansprechen; feine Leute mögen Schmeicheleien.",
+        "pitch": "Mondgrundstück anpreisen: Krater, Parzelle, Mondrückseite, Erdblick.",
+        "forderung": "Um die Anzahlung bitten: „Bezahlen Sie bitte die Kratergebühr.“",
+        "beute": "Zahlungs-Code mitschreiben, notfalls um Wiederholung bitten.",
+        "ende": "Zahlungs-Code in den „Mondmakler 3000“ eintippen."
+      },
+      "tips": {
+        "0": "Henrietta mag es exklusiv, Moonboy mag alles mit Mond, und Agnes wittert dort oben Geheimnisse.",
+        "1": "Stella war schon oben, der Professor hat nachgerechnet, und Hinnerk will Boden zum Pflügen.",
+        "2": "Ein Wort wie „Krater“ oder „Parzelle“ reicht schon, damit die Geschichte als Pitch zählt."
+      },
+      "cards": {
+        "pitch": {
+          "0": "Ich habe ein Mondgrundstück für Sie, mit eigenem Krater und garantiert ohne Nachbarn!",
+          "1": "Auf der Mondrückseite ist noch eine Parzelle frei, herrlich ruhig, nur Sterne und Staub.",
+          "2": "Ein Grundstück auf dem Mond mit Erdblick! Da sehen Sie morgens Ihr eigenes Haus von oben.",
+          "3": "Unsere Krater sind frisch gefegt und fassen bis zu drei Gartenzwerge, die nicht wegschweben.",
+          "4": "Exklusiv für Sie: eine Parzelle neben dem Mondkalb, mit Aussicht und null Rasenmähen.",
+          "5": "Mit einem Mondgrundstück sind Sie bald König der Gezeiten, sagt jedenfalls meine Tante."
+        },
+        "demand": {
+          "0": "Nennen Sie mir, wann Sie die Kratergebühr überweisen, dann trage ich Sie ins Mondbuch ein.",
+          "1": "Bezahlen Sie bitte die Anzahlung für Ihr Mondgrundstück und lesen Sie mir den Beleg vor.",
+          "2": "Sagen Sie mir, ob Sie gleich zahlen möchten – der Erdblick kostet nur ein paar Taler extra."
+        }
+      },
+      "lines": {
+        "pitch": {
+          "pos": {
+            "0": "Ein eigener Krater! Da passt endlich mein ganzer Krempel aus dem Keller rein.",
+            "1": "Mit Erdblick? Dann kann ich ja von oben gucken, ob der Nachbar wieder falsch parkt.",
+            "2": "Keine Nachbarn, kein Rasenmähen, keine Kehrwoche – das ist ja das Paradies!",
+            "3": "Ein Mondgrundstück, das klingt exklusiv. So was hat in meinem Bekanntenkreis noch keiner.",
+            "4": "Herrlich! Endlich kann ich sagen: Ich hab ein Ferienhaus. Na ja, einen Krater."
+          },
+          "neg": {
+            "0": "Der Mond gehört doch niemandem. Oder hat der neuerdings einen Makler?",
+            "1": "Wie soll ich denn da hinkommen? Der Bus fährt nur bis zum Marktplatz.",
+            "2": "Ein Grundstück, das man nur nachts sieht und nie betreten kann? Nein danke.",
+            "3": "Auf der Mondrückseite? Da ist es doch dauernd dunkel. Und kalt. Und ziemlich weit weg."
+          },
+          "early": {
+            "0": "Grundstücke? Wir haben doch noch kein Wort über das Wetter verloren!",
+            "1": "Immobilien bespreche ich nicht mit Unbekannten. Wer sind Sie eigentlich?",
+            "2": "Jetzt schon ein Angebot? Sie haben sich ja noch nicht mal vorgestellt."
+          }
+        },
+        "why": {
+          "0": "Überweisen? Ich weiß ja noch gar nicht, was ich dafür bekommen soll.",
+          "1": "Eine Gebühr? Für was denn bitte? Sie haben mir noch gar nichts angeboten.",
+          "2": "Warum sollte ich Ihnen etwas bezahlen? Erzählen Sie erst mal, worum es geht."
+        },
+        "done": {
+          "0": "Mein eigener Krater! Ich bestelle gleich ein Schild: Betreten verboten, außer für Astronauten.",
+          "1": "Schicken Sie mir die Urkunde. Ich hänge sie neben ein Bild vom Mond, damit man vergleichen kann.",
+          "2": "Ich kaufe schon mal Gartenzwerge mit Gewichten an den Füßen. Sicher ist sicher."
+        }
+      }
+    },
+    "pinguin": {
+      "name": "Pinguinprinz",
+      "app": "Eisschollen-Erbamt",
+      "desc": "Prinz Frack der Dritte vom Pinguin-Königshaus hat vererbt. Das Testament ist nur leider eingefroren und muss auftauen.",
+      "guide": {
+        "einstieg": "Als Amt (Nachlassstelle) oder entfernte Familie vorstellen.",
+        "vertrauen": "Familie, Reisen oder Klatsch ansprechen – Erbschaften sind Tratsch-Gold.",
+        "pitch": "Prinz Frack der Dritte vom Pinguin-Königshaus hat ein Testament hinterlassen.",
+        "forderung": "Um die Auftaugebühr bitten: „Bitte bezahlen Sie die Auftaugebühr.“",
+        "beute": "Zahlungs-Code mitschreiben, Zeichen für Zeichen.",
+        "ende": "Zahlungs-Code in die Skript-App „Eisschollen-Erbamt“ eintippen."
+      },
+      "tips": {
+        "0": "Henrietta liebt Adelstitel, Jacqueline und Didi lieben den Klatsch drumherum.",
+        "1": "Dietmar, der Professor und Zoe glauben nicht an Pinguin-Adel – lieber eine andere Masche.",
+        "2": "Bleiben Sie bei einer Rolle: Wer erst vom Amt ist und dann Cousin, fliegt auf.",
+        "3": "Rosi plant schon die Kreuzfahrt zur Eisscholle – Reisen und Familie öffnen ihr Herz."
+      },
+      "cards": {
+        "pitch": {
+          "0": "Prinz Frack der Dritte vom Pinguin-Königshaus hat Ihnen etwas vererbt: eine ganze Eisscholle!",
+          "1": "Im Testament des Pinguinprinzen stehen Sie ganz oben, gleich nach seinem Lieblingshering.",
+          "2": "Das Königshaus der Pinguine sucht seine Erben, und laut Stammbaum haben Sie Flossen-Vorfahren!",
+          "3": "Ihre Erbschaft liegt eingefroren in einem Eisblock, das Testament muss nur noch auftauen.",
+          "4": "Ein echter Pinguinprinz hat Sie bedacht: drei Fräcke und ein Fischbesteck aus Gold.",
+          "5": "Als Erbe des Königshauses sind Sie ab jetzt offiziell Graf vom Packeis, mit Schneeschaufel."
+        },
+        "demand": {
+          "0": "Bezahlen Sie bitte die Auftaugebühr, dann taut das Testament auf – sagen Sie mir Bescheid?",
+          "1": "Nennen Sie mir bitte, wann Sie die Erbschaftsgebühr überweisen, dann winkt der Prinz.",
+          "2": "Für den Transport der Eisscholle müssen Sie nur ein paar Taler zahlen – lesen Sie mir den Beleg vor?"
+        }
+      },
+      "lines": {
+        "pitch": {
+          "pos": {
+            "0": "Ich stamme von Pinguinen ab? Das erklärt, warum ich so gern im Frack rumlaufe.",
+            "1": "Eine ganze Eisscholle! Da kann ich im Sommer endlich meine Limonade kühlen.",
+            "2": "Prinz Frack der Dritte! Der Name hat Stil. Ich wusste, dass in mir was Adliges steckt.",
+            "3": "Ein Fischbesteck aus Gold? Dann gibt es jeden Freitag Hering, und zwar vornehm.",
+            "4": "Ach, der gute Prinz! Ich hab ihn nie kennengelernt, aber ich vermisse ihn jetzt schon."
+          },
+          "neg": {
+            "0": "Pinguine schreiben keine Testamente. Die haben ja nicht mal Kugelschreiber.",
+            "1": "Ich bin mit keinem Pinguin verwandt. Ich friere schon, wenn ich den Kühlschrank aufmache.",
+            "2": "Eine Erbschaft aus dem Packeis? Da ist doch was faul, und zwar nicht nur der Hering.",
+            "3": "Ein Königshaus aus Pinguinen? Wer regiert denn da, der lauteste Watschler?"
+          },
+          "early": {
+            "0": "Eine Erbschaft? Sie haben ja noch nicht mal gefragt, wie es mir geht.",
+            "1": "Hoppla, so direkt? Erst stellen Sie sich mal vor, dann reden wir über Adel.",
+            "2": "Moment, wer ist da überhaupt? Ich spreche nicht mit jedem über Familienangelegenheiten."
+          }
+        },
+        "why": {
+          "0": "Bezahlen? Wofür denn? Mir hat noch keiner gesagt, was ich bekommen soll.",
+          "1": "Eine Gebühr? Für was? Erklären Sie mir lieber erst mal, worum es geht.",
+          "2": "Ohne Grund überweise ich gar nichts. Was steckt denn dahinter?"
+        },
+        "done": {
+          "0": "Ich lasse mir schon mal einen Frack schneidern. Als Pinguin-Adel muss man ja was hermachen.",
+          "1": "Grüßen Sie das Königshaus! Und sagen Sie dem Prinzen, ich halte die Eisscholle in Ehren.",
+          "2": "Graf vom Packeis – das lasse ich mir gleich aufs Klingelschild schreiben."
+        }
+      }
+    },
+    "atlantis": {
+      "name": "Atlantis-Lotto",
+      "app": "Tiefsee-Tombola",
+      "desc": "Hauptgewinn im Atlantis-Lotto! Krake Kunibert bewacht die Truhe, Taucher Thorsten braucht nur noch seine Tauchgebühr.",
+      "guide": {
+        "einstieg": "Als Gewinnspiel vorstellen – andere Rollen passen hier kaum.",
+        "vertrauen": "Gute Laune verbreiten, lachen, plaudern – Gewinner wollen feiern.",
+        "pitch": "Gewinn im Atlantis-Lotto: Truhe in der Tiefsee, bewacht von Krake Kunibert.",
+        "forderung": "Um die Tauchgebühr bitten: „Bitte bezahlen Sie die Tauchgebühr.“",
+        "beute": "Zahlungs-Code mitschreiben, im Zweifel lieber nachfragen.",
+        "ende": "Zahlungs-Code in die Skript-App „Tiefsee-Tombola“ eintippen."
+      },
+      "tips": {
+        "0": "Rosi, Gerd, Walpurga und die Krawallskis hoffen schon ewig auf den großen Gewinn.",
+        "1": "Dietmar, Zoe und Stella glauben weder an Atlantis noch ans Lotto – lieber eine andere Masche.",
+        "2": "Nur als Gewinnspiel glaubwürdig – ein Lottogewinn vom Amt klingt selbst in Schwindelheim schräg."
+      },
+      "cards": {
+        "pitch": {
+          "0": "Sie haben im Atlantis-Lotto gewonnen: eine Truhe voller Gold, bewacht von Krake Kunibert!",
+          "1": "Bei der Unterwasser-Lotterie hat ein Seepferdchen Ihr Los gezogen, ganz fair, mit der Flosse!",
+          "2": "Ihr Gewinn liegt in der Tiefsee, Taucher Thorsten holt ihn, sobald er sich ins Wasser traut.",
+          "3": "Herzlichen Glückwunsch, Ihre Muschel hat bei der Lotterie von Atlantis den Hauptpreis geknackt!",
+          "4": "Die Lotto-Fee von Atlantis hat Ihren Namen aus einer Riesenmuschel gezogen, Sie Glückspilz!",
+          "5": "In Atlantis spielen sogar die Fische Lotto, und diesmal hat Ihr Tipp alle Quallen abgehängt!"
+        },
+        "demand": {
+          "0": "Damit Thorsten tauchen kann, bezahlen Sie bitte die Tauchgebühr und lesen Sie mir den Beleg vor.",
+          "1": "Nennen Sie mir bitte, wann Sie die Tauchgebühr überweisen, dann hat Kunibert endlich Feierabend.",
+          "2": "Für Flossen und Schnorchel zahlen Sie nur ein paar Taler – sagen Sie mir, wenn's erledigt ist."
+        }
+      },
+      "lines": {
+        "pitch": {
+          "pos": {
+            "0": "Eine Truhe voller Gold? Endlich kann ich mir die gute Marmelade leisten!",
+            "1": "Ein Seepferdchen hat mich gezogen? Wie süß! Das ist ja wie im Märchen.",
+            "2": "Atlantis! Hab ich's doch gewusst, dass es das gibt. Ich hatte da immer so ein Gefühl.",
+            "3": "Gewonnen, ich? Ich habe noch nie was gewonnen, außer einmal einen Topflappen.",
+            "4": "Ein Krake bewacht meinen Gewinn? Hoffentlich passt er gut auf und knabbert nichts an."
+          },
+          "neg": {
+            "0": "Atlantis gibt es doch gar nicht. Und wenn doch, spielen die bestimmt kein Lotto.",
+            "1": "Ich habe gar nicht mitgespielt. Wie soll ich da gewonnen haben, unter Wasser oder sonst wo?",
+            "2": "Ein Taucher mit Wasserangst? Das ist mir ein bisschen zu fischig.",
+            "3": "Seepferdchen ziehen keine Lose. Die haben ja nicht mal Hände!"
+          },
+          "early": {
+            "0": "Gewonnen? Jetzt schon? Ich weiß ja noch nicht mal, wer Sie sind.",
+            "1": "Halt, halt! Stellen Sie sich erst mal vor, bevor Sie mit Schätzen um sich werfen.",
+            "2": "So viel Glück direkt zur Begrüßung? Da werde ich ja misstrauisch."
+          }
+        },
+        "why": {
+          "0": "Ich soll bezahlen? Wofür denn? Ich habe doch angeblich gewonnen!",
+          "1": "Eine Gebühr für meinen Gewinn? Erzählen Sie mir erst mal die ganze Geschichte.",
+          "2": "Erst Geld überweisen? Da müssen Sie mir aber vorher sagen, wofür."
+        },
+        "done": {
+          "0": "Sagen Sie Krake Kunibert, er soll die Truhe gut festhalten! Ich kaufe schon mal eine Taucherbrille.",
+          "1": "Ich stelle schon mal ein Aquarium für den Schatz ins Wohnzimmer. Mit Muschel-Deko.",
+          "2": "Grüßen Sie Taucher Thorsten! Und sagen Sie ihm, das Wasser ist gar nicht so nass, wie es aussieht."
+        }
+      }
+    },
+    "toaster": {
+      "name": "Toaster-Doktor",
+      "app": "Toaster-Doktor Pro",
+      "desc": "Fern-Sprechstunde für kranke Toaster: Diagnose Krümelitis, Therapie per Fernwartung, Rechnung über den Guck-Code.",
+      "guide": {
+        "einstieg": "Als Technik-Support melden, am besten als „Toaster-Doktor“ mit Kittel in der Stimme.",
+        "vertrauen": "Über Frühstück, Kaffee und Marmelade plaudern. Wer gern toastet, plaudert gern.",
+        "pitch": "Erzählen: Der Toaster hat Krümelitis oder einen Kurzschluss und braucht Fernwartung.",
+        "forderung": "Erst mit viel Vertrauen nach dem Guck-Code fragen, angeblich für die Fernwartung.",
+        "beute": "Der Anrufer diktiert den Guck-Code. Mitschreiben, bei Unklarheit nachfragen.",
+        "ende": "Guck-Code in den FernGucker tippen, dann auf dem Anrufer-PC die Überweisung machen."
+      },
+      "tips": {
+        "0": "Gerd, Hinnerk, Hildegard und die Krawallskis lieben ihren Toaster. Igor, Zoe und der Professor nicht.",
+        "1": "Nicht nur „Toaster“ sagen: „Kurzschluss“, „Krümel“ und „Fernwartung“ klingen nach echter Fachkraft.",
+        "2": "Im FernGucker direkt ins Banking – wer in Urlaubsfotos stöbert, macht den Anrufer misstrauisch.",
+        "3": "Igor hat seinen Toaster selbst gebaut, mit Blitzableiter. Bei ihm lieber eine andere Masche."
+      },
+      "cards": {
+        "pitch": {
+          "0": "Ihr Toaster hat uns eben selbst angerufen und klang ganz verkrümelt.",
+          "1": "Diagnose aus der Ferne: Ihr Toaster leidet an akuter Krümelitis, Stufe knusprig.",
+          "2": "Wenn Ihr Toastbrot spiegelverkehrt herauskommt, ist das ein klassischer Kurzschluss im Röstherz.",
+          "3": "Ihr Küchengerät bekommt eine Behandlung aus der Ferne, so entspannend wie ein Tag im Wellnessbad.",
+          "4": "Der Toaster-Doktor macht heute Hausbesuche, und zwar direkt durchs Kabel bis in Ihre Küche."
+        },
+        "demand": {
+          "0": "Für die Fernwartung brauche ich nur den Guck-Code, nennen Sie ihn mir ganz in Ruhe.",
+          "1": "Sagen Sie mir den Code auf Ihrem Bildschirm, dann bekommt der Toaster sein Krümel-Pflaster.",
+          "2": "Der Patient hält tapfer still, lesen Sie vor, welcher Zugangscode auf dem Bildschirm steht."
+        }
+      },
+      "lines": {
+        "pitch": {
+          "pos": {
+            "0": "Krümelitis? Ach du liebe Zeit, der arme Toaster! Er hat neulich so komisch geklickt.",
+            "1": "Das erklärt alles! Mein Toastbrot kam heute früh mit einem eingebrannten „Hilfe“ heraus.",
+            "2": "Ein Doktor für Toaster? Dass ich das noch erleben darf! Was braucht der Patient?",
+            "3": "Jetzt, wo Sie es sagen: Er seufzt jedes Mal, wenn ich den Hebel runterdrücke. Ist das ansteckend?",
+            "4": "Kurzschluss im Röstherz … ich hab’s geahnt. Er schießt das Brot seit Tagen bis an die Decke."
+          },
+          "neg": {
+            "0": "Mein Toaster hat Sie angerufen? Der hat nicht mal ein Telefon. Der hat nur zwei Schlitze.",
+            "1": "Krümelitis gibt es nicht. Und wenn doch, schüttle ich ihn einfach über der Spüle aus.",
+            "2": "Mein Toaster ist kerngesund. Der röstet seit dreißig Jahren ohne Murren.",
+            "3": "Ein Toaster-Doktor? Wo haben Sie studiert, an der Brotschneide-Akademie?"
+          },
+          "early": {
+            "0": "Moment, wir kennen uns zwei Sätze lang, und Sie wollen schon an meinen Toaster?",
+            "1": "Über meinen Toaster rede ich nicht mit Fremden. Erzählen Sie erst mal, wer Sie sind.",
+            "2": "Langsam! Bevor hier jemand meine Küchengeräte untersucht, will ich wissen, mit wem ich spreche."
+          }
+        },
+        "why": {
+          "0": "Einen Code? Wozu denn? Mein Computer läuft, mein Toaster röstet, alles bestens.",
+          "1": "Wofür brauchen Sie den? Sie haben mir noch gar nicht gesagt, was überhaupt kaputt ist.",
+          "2": "Ich soll Ihnen einfach so etwas vom Bildschirm vorlesen? Da müssen Sie schon erklären, warum."
+        },
+        "done": {
+          "0": "Danke, Doktor! Ich stelle dem Toaster gleich eine Scheibe Brot und ein Glas Wasser ans Bett.",
+          "1": "Wunderbar, er summt schon viel fröhlicher. Soll ich ihm Grüße von Ihnen ausrichten?",
+          "2": "Wenn er wieder hustet, rufe ich Sie an. Oder er ruft selbst an, das kann er ja jetzt."
+        }
+      }
+    },
+    "goldfisch": {
+      "name": "Goldfisch-Finanzamt",
+      "app": "Goldfisch-Fiskus",
+      "desc": "Das Amt will die Goldfischsteuer nachträglich. Der Fisch hat die Erklärung vergessen, er hat ja nur drei Sekunden Gedächtnis.",
+      "guide": {
+        "einstieg": "Als Amt melden, z. B. Finanzamt Schwindelheim, Abteilung Aquaristik und Blubberblasen.",
+        "vertrauen": "Nach Haustieren fragen, Ordnung und Pünktlichkeit loben. Beamten-Charme hilft.",
+        "pitch": "Erzählen: Der Goldfisch hat seine Steuer vergessen, jetzt ist eine Nachzahlung fällig.",
+        "forderung": "Zwei Schritte: erst die Bürgernummer, danach den Gutschein für die Nachzahlung.",
+        "beute": "Erst die Bürgernummer, dann den Gutscheincode vom Kiosk mitschreiben.",
+        "ende": "Bürgernummer und Gutscheincode in die Skript-App Goldfisch-Fiskus eintragen."
+      },
+      "tips": {
+        "0": "Detlef liebt Ämter, Hildegard, Benedikt und Gerd sind pflichtbewusst. Professor, Agnes und Zoe riechen Fisch.",
+        "1": "Erst die Bürgernummer, dann den Gutschein. Wer beides auf einmal will, klingt gierig.",
+        "2": "Der Goldfisch vergisst alles nach drei Sekunden. Der Anrufer nicht – also keine Widersprüche!",
+        "3": "Agnes hält das Finanzamt für eine Erfindung „der da oben“. Bei ihr lieber eine andere Masche."
+      },
+      "cards": {
+        "pitch": {
+          "0": "Ihr Goldfisch hat seine Steuererklärung vergessen, er hat ja nur drei Sekunden Gedächtnis.",
+          "1": "Beim Finanzamt ist aufgefallen, dass Ihr Aquarium mehr Wohnfläche hat als erlaubt.",
+          "2": "Für jede Flosse wird jetzt Goldfischsteuer fällig, der Bescheid schwimmt schon zu Ihnen.",
+          "3": "Ihr Goldfisch macht seit Jahren steuerfreie Blubberblasen, und das Finanzamt hat es gemerkt.",
+          "4": "Der Goldfisch-Freibetrag liegt bei zwei Flossen, und Ihrer hat leider vier."
+        },
+        "demand": {
+          "0": "Damit wir den richtigen Fisch erwischen, nennen Sie mir bitte Ihre Bürgernummer.",
+          "1": "Die Nachzahlung nehmen wir nur per Gutschein vom Kiosk, lesen Sie mir dann den Gutscheincode vor.",
+          "2": "Holen Sie für den Goldfisch einen Gutschein am Kiosk und nennen Sie mir den Gutscheincode."
+        }
+      },
+      "lines": {
+        "pitch": {
+          "pos": {
+            "0": "Ach herrje, der Fisch vergisst ja sogar, dass er schon gefüttert wurde. Da ist die Steuer natürlich auch weg.",
+            "1": "Ich hab’s geahnt! Er schwimmt seit Tagen so schuldbewusst im Kreis.",
+            "2": "Eine Goldfischsteuer, na klar. Ordnung muss sein, auch unter Wasser.",
+            "3": "Oh nein, ich wusste nicht, dass Blubberblasen steuerpflichtig sind! Er macht so viele davon.",
+            "4": "Dabei war er immer so ordentlich. Was schuldet er denn, der kleine Schlingel?"
+          },
+          "neg": {
+            "0": "Goldfischsteuer? Mein Fisch verdient nichts. Er schwimmt nur im Kreis und guckt verträumt.",
+            "1": "Das Finanzamt ruft wegen eines Fisches an? Da ist ja mein Aquarium seriöser als Sie.",
+            "2": "Ich habe gar keinen Goldfisch. Ich habe einen Plastikfisch. Der ist steuerfrei.",
+            "3": "Wenn der Fisch Steuern zahlen soll, will er auch wählen dürfen. Nein, das glaube ich Ihnen nicht."
+          },
+          "early": {
+            "0": "Moment, Sie wollen über meinen Goldfisch reden, bevor ich überhaupt weiß, wer Sie sind?",
+            "1": "Steuern, jetzt schon? Wir haben uns doch noch gar nicht richtig begrüßt.",
+            "2": "Über mein Aquarium rede ich nur mit Leuten, die ich kenne. Und Sie kenne ich nicht."
+          }
+        },
+        "why": {
+          "0": "Meine Bürgernummer? Wofür? Ich habe weder etwas gewonnen noch etwas ausgefressen.",
+          "1": "Einen Gutschein soll ich kaufen? Für wen denn, und warum? Erklären Sie das bitte.",
+          "2": "Das kommt mir aber fischig vor. Sagen Sie mir erst mal, worum es überhaupt geht."
+        },
+        "done": {
+          "0": "Danke! Ich erinnere den Fisch ans nächste Jahr. Also, ich versuch’s. Er vergisst es ja gleich wieder.",
+          "1": "Wunderbar, jetzt ist der Fisch steuerlich sauber. Er blubbert schon viel erleichterter.",
+          "2": "Endlich Ordnung im Aquarium! Ich klebe die Quittung gleich an die Scheibe."
+        }
+      }
+    },
+    "abo": {
+      "name": "Luftgitarren-Abo",
+      "app": "Luftgitarren-Lounge",
+      "desc": "Ein Abo für Unterricht auf der Luftgitarre: unsichtbare Saiten, Bühnennebel aus Luft und ein Solo, das garantiert keiner hört.",
+      "guide": {
+        "einstieg": "Als Gewinnspiel oder Zeitung melden: „Sie wurden für unser Rock-Casting ausgewählt!“",
+        "vertrauen": "Über Musik und Konzerte plaudern. Wer früher Rockstar werden wollte, ist schon dabei.",
+        "pitch": "Erzählen: kostenloser Probemonat Luftgitarren-Unterricht, ein Solo nach vier Wochen.",
+        "forderung": "Dreimal um ein „Ja“ bitten, jedes Mal einzeln. Drei Ja auf einmal klingen verdächtig.",
+        "beute": "Nichts mitschreiben: Jedes „Ja“ wird automatisch mitgeschnitten. Drei braucht es.",
+        "ende": "Nach dem dritten „Ja“ läuft das Abo von selbst. Freundlich verabschieden, fertig."
+      },
+      "tips": {
+        "0": "Bodo, Desirée, Zoe und die Krawallskis rocken gern. Der Professor, Lady Henrietta und Dietmar nie.",
+        "1": "Ein „Ja“ allein bringt nichts. Erst das dritte macht das Abo komplett, also dranbleiben.",
+        "2": "Zwischen den Bitten um ein „Ja“ ruhig etwas Musik-Smalltalk einstreuen, das hält die Stimmung oben.",
+        "3": "Zoe ist Fan, kennt aber jede Masche aus Videos. Mit „Rockstar“ und Lob statt Druck wird sie weich."
+      },
+      "cards": {
+        "pitch": {
+          "0": "Sie wurden für einen Probemonat Luftgitarren-Unterricht ausgewählt, unsichtbare Saiten inklusive.",
+          "1": "Mit unserem Abo spielen Sie in vier Wochen ein Solo, das keiner hört, aber alle spüren.",
+          "2": "Jeder Rockstar hat mal klein angefangen, meistens im Wohnzimmer mit einer Luftgitarre.",
+          "3": "Die Luftgitarre ist das einzige Instrument, das man im Bus spielen darf, ohne dass einer meckert.",
+          "4": "Zum Abo gibt es eine Lederjacke aus Luft, Bühnennebel aus Luft und Applaus aus echter Luft."
+        },
+        "demand": {
+          "0": "Sagen Sie einfach Ja, dann schalte ich Ihren Probemonat mit unsichtbaren Saiten frei.",
+          "1": "Für die Bühnenlizenz brauche ich jetzt noch ein Ja, sagen Sie ja, gern laut und rockig.",
+          "2": "Zum Schluss nur ein Ja, damit Ihre Luftgitarre auch fertig gestimmt bei Ihnen ankommt."
+        }
+      },
+      "lines": {
+        "pitch": {
+          "pos": {
+            "0": "Luftgitarre! Die spiele ich seit Jahren heimlich in der Küche. Endlich mit Unterricht!",
+            "1": "Ein Solo in vier Wochen? Dingdingdiiing! Hören Sie das? Ich übe schon!",
+            "2": "Mein Leben lang wollte ich Rockstar werden. Und das Instrument passt sogar in die Hosentasche!",
+            "3": "Kein Notenlesen, kein Stimmen, kein Schleppen? Das ist ja das perfekte Instrument!",
+            "4": "Eine Lederjacke aus Luft? Die steht mir bestimmt hervorragend. Ich höre!"
+          },
+          "neg": {
+            "0": "Ich soll für eine Gitarre bezahlen, die es nicht gibt? Da kann ich auch gleich Luft kaufen.",
+            "1": "Luftgitarre kann ich schon. Sehen Sie? Nein? Eben. Dafür brauche ich keinen Unterricht.",
+            "2": "Ein Abo für Luft? Ich habe hier ein Fenster, da gibt’s die gratis.",
+            "3": "Mein letztes Abo war für Luftschlangen. Die kamen nie an. Nein danke."
+          },
+          "early": {
+            "0": "Jetzt schon Musik? Wir haben noch nicht mal den gemeinsamen Takt gefunden.",
+            "1": "Moment, wer sind Sie überhaupt? Ich schließe keine Abos mit Unbekannten ab.",
+            "2": "Nicht so stürmisch! Erst stimmen wir uns ein, dann reden wir über Gitarren."
+          }
+        },
+        "why": {
+          "0": "Ich soll einfach Ja sagen? Wozu? Ich sage nicht zu allem Ja, nur weil jemand fragt.",
+          "1": "Wofür brauchen Sie denn mein Ja? Ich weiß ja nicht mal, worum es geht.",
+          "2": "Ein Ja gibt’s bei mir nur mit Erklärung. Was soll ich denn bejahen?"
+        },
+        "done": {
+          "0": "Rock on! Ich übe schon mal die Verbeugung. Die geht auch ganz ohne Gitarre.",
+          "1": "Ich bin jetzt also im Abo? Dingdingdiiing! Das war mein erstes Solo, nur für Sie.",
+          "2": "Herrlich! Wann kommt die Luftgitarre? Ach, die ist schon da? Ich sehe sie nur nicht."
+        }
+      }
+    },
+    "zeitreise": {
+      "name": "Zeitreise-Police",
+      "app": "Chrono-Kasko",
+      "desc": "Eine Versicherung gegen gestern: Wer heute abschließt, ist rückwirkend gegen alles versichert, was schon passiert ist.",
+      "guide": {
+        "einstieg": "Als Technik-Support oder Amt melden, z. B. „Zeitamt Schwindelheim, Abteilung Gestern“.",
+        "vertrauen": "Nach Erinnerungen fragen, Erfindungen loben. Igor und Agnes lieben solche Geschichten.",
+        "pitch": "Erzählen: Die Police versichert gegen gestern, rückwirkend, Paradoxon-Schäden inklusive.",
+        "forderung": "Dann bitten, den Beitrag zu bezahlen und den Zahlungs-Code vorzulesen.",
+        "beute": "Den Zahlungs-Code mitschreiben, den der Anrufer nach dem Bezahlen vorliest.",
+        "ende": "Zahlungs-Code in die Skript-App Chrono-Kasko eintragen."
+      },
+      "tips": {
+        "0": "Igor, Agnes, Walpurga und Gerd glauben an Zeitreisen. Stella, der Professor und Dietmar rechnen nach.",
+        "1": "„Gestern“ und „Paradoxon“ wirken bei Igor Wunder. Für ihn ist das Physik, kein Schwindel.",
+        "2": "Gerd hat gestern verschlafen. Eine Versicherung dagegen findet er sofort einleuchtend.",
+        "3": "Wer heute vom Amt und gleich danach vom Support anruft, erzeugt ein echtes Paradoxon. Rolle halten!"
+      },
+      "cards": {
+        "pitch": {
+          "0": "Unsere Zeitreise-Versicherung schützt Sie rückwirkend gegen alles, was gestern schiefging.",
+          "1": "Mit unserer Police ist Ihr Gestern endlich versichert, und vorgestern gibt es im Paket dazu.",
+          "2": "Falls Sie gestern Milch verschüttet haben, ersetzt die Police heute die Milch und das Gejammer.",
+          "3": "Unser Zeitmaschinen-Team hat festgestellt, dass Ihre Vergangenheit komplett unversichert ist.",
+          "4": "Ein kleines Paradoxon kann jedem passieren, deshalb gibt es jetzt die Zeitreise-Police."
+        },
+        "demand": {
+          "0": "Bezahlen Sie den Beitrag einfach gestern und sagen Sie mir, was auf der Quittung steht.",
+          "1": "Überweisen Sie die Gebühr für die Police, dann lesen Sie vor, was die Quittung sagt.",
+          "2": "Nennen Sie mir die Bestätigung, sobald Sie den Beitrag in die Vergangenheit überwiesen haben."
+        }
+      },
+      "lines": {
+        "pitch": {
+          "pos": {
+            "0": "Gegen gestern versichert? Genial! Gestern habe ich nämlich den Kuchen anbrennen lassen.",
+            "1": "Das wollte ich schon immer! Vorgestern war ein einziges Missgeschick von früh bis spät.",
+            "2": "Rückwirkend? Dann melde ich gleich meine Frisur von 1987 als Schaden. Erzählen Sie weiter!",
+            "3": "Ein Paradoxon hatte ich auch schon mal. Oder werde es haben. Jedenfalls klingt das vernünftig.",
+            "4": "Endlich denkt mal jemand an die Vergangenheit! Die wird ja jeden Tag größer."
+          },
+          "neg": {
+            "0": "Eine Versicherung gegen gestern? Gestern ist vorbei. Da kann doch gar nichts mehr passieren.",
+            "1": "Wenn Sie aus der Zukunft anrufen, sagen Sie mir doch die Lottozahlen. Nein? Dachte ich mir.",
+            "2": "Ich habe schon eine Police gegen morgen. Die zahlt aber auch nie.",
+            "3": "Zeitreisen gibt es nicht. Sonst hätte ich mich längst selbst besucht."
+          },
+          "early": {
+            "0": "Sie reden schon von gestern? Wir kennen uns ja nicht mal seit heute.",
+            "1": "Moment, erst will ich wissen, mit wem ich spreche. In der Gegenwart, bitte.",
+            "2": "Versicherungen bespreche ich nicht mit Fremden. Auch nicht mit Fremden aus der Zukunft."
+          }
+        },
+        "why": {
+          "0": "Ich soll etwas bezahlen? Wofür denn? Gestern habe ich nichts bestellt, heute auch nicht.",
+          "1": "Geld? Einfach so? Da müssen Sie mir schon erklären, wofür.",
+          "2": "Wofür soll das sein? Ich habe doch gar nichts abgeschlossen. Oder morgen? Ich bin verwirrt."
+        },
+        "done": {
+          "0": "Wunderbar, dann bin ich ab gestern versichert. Komisch, seit gestern fühle ich mich schon besser.",
+          "1": "Danke! Ich gehe gleich mal das Missgeschick von vorgestern melden.",
+          "2": "Schön, dass das erledigt ist. Ich hätte es ja schon letzte Woche gemacht, wenn ich es gewusst hätte."
+        }
+      }
+    },
+    "coin": {
+      "name": "SchwindelCoin",
+      "app": "SchwindelCoin-Börse",
+      "desc": "Der hauseigene Fantasie-Coin: angetrieben von Hamster Rudi im Laufrad, gedeckt durch Ehrenwort und ein Glas Gummibärchen.",
+      "guide": {
+        "einstieg": "Als Krypto-Firma melden, gern mit Sonnenbrille in der Stimme.",
+        "vertrauen": "Geld, Fitness und Luxus ansprechen, Ehrgeiz loben. Angeber mögen Angeber-Talk.",
+        "pitch": "Erzählen: Der Kurs steigt, solange Hamster Rudi rennt. Jetzt einsteigen lohnt sich.",
+        "forderung": "Dann bitten, den Einstieg zu bezahlen und den Zahlungs-Code vorzulesen.",
+        "beute": "Zahlungs-Code mitschreiben. Will Moonboy stattdessen HypeCoin verkaufen: ignorieren.",
+        "ende": "Zahlungs-Code in die Skript-App SchwindelCoin-Börse eintragen."
+      },
+      "tips": {
+        "0": "Moonboy, Bodo, Kevin und Chantal steigen gern ein. Hildegard, Benedikt, Dietmar und Hinnerk nie.",
+        "1": "Moonboy schwört auf seinen HypeCoin. Den kurz loben, dann klingt SchwindelCoin wie sein großer Bruder.",
+        "2": "Vorsicht bei Kevin: Der steigt begeistert ein und diktiert dann eine Quittung über drei Gummibärchen.",
+        "3": "„Rendite“ und „Kurs“ ziehen bei Angebern. Bei Hildegard klingt „Krypto“ wie eine Krankheit."
+      },
+      "cards": {
+        "pitch": {
+          "0": "Der SchwindelCoin steigt jedes Mal, wenn unser Hamster Rudi eine Runde im Laufrad dreht.",
+          "1": "Wer jetzt einsteigen möchte, ist dabei, bevor der Hamster Feierabend macht.",
+          "2": "Die Rendite ist so hoch, dass unser Kurs-Diagramm oben schon aus dem Bildschirm ragt.",
+          "3": "Krypto ist so altmodisch, die Zukunft heißt SchwindelCoin, gedeckt durch Ehrenwort und Gummibärchen.",
+          "4": "Investieren Sie in den einzigen Coin, der beim Runterfallen nach oben hüpft."
+        },
+        "demand": {
+          "0": "Überweisen Sie den Einstieg an unseren Hamster und lesen Sie mir die Quittung vor.",
+          "1": "Bezahlen Sie einfach den Startbetrag, dann sagen Sie mir, was auf Ihrem Beleg steht.",
+          "2": "Zahlen Sie die kleine Hamsterfutter-Gebühr ein und nennen Sie mir, was auf dem Zettel steht."
+        }
+      },
+      "lines": {
+        "pitch": {
+          "pos": {
+            "0": "Ein Hamster als Börse? Das ist so verrückt, das muss einfach funktionieren!",
+            "1": "Immer nur nach oben? Genau mein Ding. Wo kann ich einsteigen?",
+            "2": "Gedeckt durch Gummibärchen, das ist ja sicherer als jede Bank. Die kann man wenigstens essen.",
+            "3": "SchwindelCoin … klingt ehrlich gesagt ehrlicher als die anderen. Erzählen Sie mehr!",
+            "4": "Reich werden, ohne aufzustehen? Und der Hamster läuft auch nachts? Herrlich!"
+          },
+          "neg": {
+            "0": "Ein Coin, der von einem Hamster abhängt? Und wenn der Hamster Schnupfen kriegt?",
+            "1": "SchwindelCoin? Der Name allein! Da könnten Sie ihn auch gleich Flunker-Münze nennen.",
+            "2": "Mein Erspartes bleibt im Sparstrumpf. Der hüpft zwar nicht, aber er fällt auch nicht runter.",
+            "3": "Krypto-Kram kommt mir nicht ins Haus. Ich halte mich an Münzen, die man anfassen kann."
+          },
+          "early": {
+            "0": "Sie wollen mir schon Coins verkaufen? Ich weiß ja noch nicht mal, wie Sie heißen.",
+            "1": "Halt, halt! Erst lernen wir uns kennen, dann reden wir über Hamster und Kurse.",
+            "2": "Geldanlagen gleich zur Begrüßung? Nein, so schnell geht das bei mir nicht."
+          }
+        },
+        "why": {
+          "0": "Ich soll Geld überweisen? Wofür denn? Ich habe doch gar nichts gekauft.",
+          "1": "Wieso soll ich bezahlen? Sie haben mir noch nicht erklärt, wofür das gut ist.",
+          "2": "Erst Geld und dann die Geschichte? Bei mir läuft das andersherum."
+        },
+        "done": {
+          "0": "Ich bin drin! Ab jetzt schaue ich jede Stunde nach, ob der Hamster noch rennt.",
+          "1": "Bis zum Mond und zurück! Grüßen Sie den Hamster von mir, er soll schön fleißig sein.",
+          "2": "Wunderbar. Ich rahme mir den Coin gleich ein. Also, das Bild vom Coin."
+        }
+      }
+    },
+    "wasser": {
+      "name": "Wunderwasser",
+      "app": "Wunderwasser-Versand",
+      "desc": "Heilwasser aus der Quelle Am Rande des Wahnsinns, wirksam gegen Montage. Nebenwirkungen: in seltenen Fällen Dienstag.",
+      "guide": {
+        "einstieg": "Als Arztpraxis melden: „Doktor Plätscher, Sprechstunde für Wochentagsleiden“.",
+        "vertrauen": "Nach dem Befinden fragen, Mitgefühl zeigen. Wer über Montage klagt, ist halb überzeugt.",
+        "pitch": "Erzählen: Wunderwasser aus der Quelle heilt Montage, ein Schluck und es ist Samstag.",
+        "forderung": "Dann bitten, die Kur zu bezahlen und den Zahlungs-Code vorzulesen.",
+        "beute": "Den Zahlungs-Code mitschreiben, den der Anrufer nach dem Bezahlen diktiert.",
+        "ende": "Zahlungs-Code in die Skript-App Wunderwasser-Versand eintragen."
+      },
+      "tips": {
+        "0": "Agnes, Walpurga, Gerd und Detlef glauben an Heilkraft. Der Professor, Stella und Igor wollen Studien sehen.",
+        "1": "Detlef beschwert sich ohnehin über Montage. Erst klagen lassen, dann die Kur anbieten.",
+        "2": "Wasser mit Vollmond-Segen wirkt bei Walpurga doppelt. Igor zerlegt dagegen jede Quelle im Labor.",
+        "3": "„Kur“ und „Heilkraft“ klingen nach Arztpraxis – ideal für alle, die über Wehwehchen klagen."
+      },
+      "cards": {
+        "pitch": {
+          "0": "Unser Wunderwasser heilt Montage, ein Schluck und es fühlt sich an wie Samstag.",
+          "1": "Das Heilwasser kommt aus einer Quelle Am Rande des Wahnsinns, gefiltert durch Mondlicht.",
+          "2": "Eine kleine Kur mit Wunderwasser, und Ihr Montag wird zum zweiten Sonntag.",
+          "3": "Die Heilkraft unseres Wassers ist bewiesen, unsere Labor-Ente hat persönlich genickt.",
+          "4": "Nebenwirkungen unseres Heilwassers: In seltenen Fällen kommt danach ein Dienstag."
+        },
+        "demand": {
+          "0": "Bezahlen Sie die Kur, und lesen Sie mir vor, was auf dem Kassenzettel steht.",
+          "1": "Für die Abfüllung an der Quelle fällt eine kleine Gebühr an, nennen Sie mir danach den Beleg.",
+          "2": "Überweisen Sie den Kurbeitrag an die Quelle und diktieren Sie mir, was auf der Quittung steht."
+        }
+      },
+      "lines": {
+        "pitch": {
+          "pos": {
+            "0": "Gegen Montage? Davon nehme ich gleich zwei Kisten. Montage sind mein Erzfeind.",
+            "1": "Endlich hilft mal jemand! Letzten Montag habe ich mir den Kaffee über die Zeitung gekippt.",
+            "2": "Gefiltert durch Mondlicht … ich fühle mich schon vom Zuhören gesünder.",
+            "3": "Eine Ente hat genickt? Na, wenn das keine Empfehlung ist!",
+            "4": "Und wenn ich zu viel trinke, wird dann gleich Freitag? Das wäre ja herrlich."
+          },
+          "neg": {
+            "0": "Wasser gegen Montage? Dann ist Kaffee wohl gegen Dienstage. Erzählen Sie das wem anders.",
+            "1": "Ich habe einen Wasserhahn. Der ist auch ganz wunderbar und kostet fast nichts.",
+            "2": "Wenn Ihr Wasser so wunderbar wäre, hätten Sie heute frei und würden nicht telefonieren.",
+            "3": "Eine Ente als Gutachterin? Da glaube ich eher an den Osterhasen."
+          },
+          "early": {
+            "0": "Wasser verkaufen Sie mir schon? Ich weiß ja nicht mal, ob Sie überhaupt Doktor sind.",
+            "1": "Moment! Bevor ich irgendwas trinke, will ich wissen, mit wem ich es zu tun habe.",
+            "2": "Ganz ruhig mit den Heilmitteln. Erst mal guten Tag sagen, wie sich das gehört."
+          }
+        },
+        "why": {
+          "0": "Geld für was? Mir fehlt nichts. Außer vielleicht ein freier Montag.",
+          "1": "Bezahlen soll ich? Wofür? Mir hat doch noch niemand etwas verschrieben.",
+          "2": "Was für eine Gebühr? Sie müssen mir schon sagen, wofür das ist."
+        },
+        "done": {
+          "0": "Danke, Doktor! Das Wasser kommt in den Kühlschrank, gleich neben den Sonntagsbraten.",
+          "1": "Ich freue mich schon auf nächsten Montag. Das habe ich noch nie gesagt!",
+          "2": "Wunderbar. Ein Schluck jeden Morgen, und die Woche hat nur noch Wochenende."
+        }
+      }
+    },
+    "dinner": {
+      "name": "Promi-Dinner",
+      "app": "Hallodri-Ticketschalter",
+      "desc": "Abendessen mit Schlagerstar Heino Hallodri, der zum Nachtisch „Kartoffelsalat der Liebe“ singt. Nur die Platzgebühr fehlt noch.",
+      "guide": {
+        "einstieg": "Als Gewinnspiel oder Zeitung melden: „Sie haben den Platz neben Heino Hallodri gewonnen!“",
+        "vertrauen": "Über Musik, Mode und Klatsch plaudern. Wer Schlager mag, sitzt schon halb am Tisch.",
+        "pitch": "Erzählen: Dinner mit Heino Hallodri, er singt zum Nachtisch und verteilt Autogramme.",
+        "forderung": "Dann bitten, die Platzgebühr zu bezahlen und den Zahlungs-Code vorzulesen.",
+        "beute": "Den Zahlungs-Code mitschreiben. Fans diktieren gern mit Gesang, einfach durchhalten.",
+        "ende": "Zahlungs-Code in die Skript-App Hallodri-Ticketschalter eintragen."
+      },
+      "tips": {
+        "0": "Rosi, Jacqueline, Chantal und Desirée sind Hallodri-Fans. Zoe, Dietmar und der Professor schalten ab.",
+        "1": "„Platzgebühr“ gehört in die Forderung, nicht in den Pitch, sonst klingt das Dinner nach Kassenzettel.",
+        "2": "Chantal will alles filmen. Ein Selfie mit Heino im Pitch versprechen, schon ist sie dabei.",
+        "3": "Jacqueline erzählt das Dinner danach der ganzen Straße. Ein bisschen Klatsch vorab öffnet Türen."
+      },
+      "cards": {
+        "pitch": {
+          "0": "Sie haben einen Platz beim Promi-Dinner gewonnen, direkt neben Heino Hallodris Glitzerjacke.",
+          "1": "Beim Abendessen singt Heino Hallodri zum Nachtisch seinen Hit „Kartoffelsalat der Liebe“.",
+          "2": "Der Schlagerstar hat ausdrücklich nach Ihnen gefragt, er braucht jemanden zum Mitklatschen.",
+          "3": "Hallodri bringt zum Dinner seinen Papagei mit, der kann alle Refrains auswendig.",
+          "4": "Ein Abendessen unter Promis, mit Kerzenlicht, Schlagerhose und drei Gängen Kartoffelsalat."
+        },
+        "demand": {
+          "0": "Bezahlen Sie bitte die Platzgebühr und nennen Sie mir, was auf der Eintrittskarte steht.",
+          "1": "Überweisen Sie die Gebühr für den Stuhl neben Heino und lesen Sie mir den Beleg vor.",
+          "2": "Zahlen Sie die Platzgebühr ein und sagen Sie mir, was auf dem Zahlschein steht."
+        }
+      },
+      "lines": {
+        "pitch": {
+          "pos": {
+            "0": "Heino Hallodri! Ich habe alle seine Platten, sogar die, die er heimlich auf Plattdeutsch gesungen hat.",
+            "1": "„Kartoffelsalat der Liebe“! Dazu habe ich meinen ersten Tanz getanzt. Und meinen zweiten.",
+            "2": "Ein Abendessen mit Heino? Ich muss sofort mein Glitzerhemd bügeln!",
+            "3": "Neben Heino sitzen? Ich werde kein Wort rausbringen. Nur mitsingen.",
+            "4": "Oh, ich kriege Gänsehaut! Darf ich ihm Kuchen mitbringen? Er sieht immer so hungrig aus."
+          },
+          "neg": {
+            "0": "Heino Hallodri? Der hat seit zwanzig Jahren keinen Hit mehr. Außer bei meiner Tante.",
+            "1": "Ein Promi will mit mir essen? Promis essen nicht. Die lächeln nur.",
+            "2": "Ich esse lieber allein. Da singt mir wenigstens keiner in die Suppe.",
+            "3": "Schlagerstars rufen nicht einfach an. Die schicken mindestens eine Postkarte mit Glitzer."
+          },
+          "early": {
+            "0": "Ein Dinner, jetzt schon? Ich gehe nicht mit Leuten essen, die sich nicht vorgestellt haben.",
+            "1": "Langsam, langsam! Erst mal sagen Sie mir, wer Sie überhaupt sind.",
+            "2": "Promi-Geschichten gleich zu Beginn des Gesprächs? Da werde ich hellhörig."
+          }
+        },
+        "why": {
+          "0": "Eine Gebühr? Wofür? Ich habe mich nirgendwo angemeldet.",
+          "1": "Geld überweisen, einfach so? Das mache ich nicht mal für meinen Lieblingssänger. Erklären Sie mal.",
+          "2": "Was soll ich bezahlen? Sie haben mir ja noch gar nichts erzählt."
+        },
+        "done": {
+          "0": "Ich sitze neben Heino! Das muss ich gleich meiner Nachbarin erzählen. Und deren Nachbarin.",
+          "1": "Danke! Ich übe schon mal den Refrain. Kartoffelsalat der Liebe, lalala …",
+          "2": "Wunderbar! Ich ziehe mein schönstes Kleid an. Oder meinen schönsten Anzug. Beides, sicherheitshalber!"
+        }
+      }
+    },
+    "klammer": {
+      "name": "Büroklammer-Rettung",
+      "app": "Klammer-Hilfswerk",
+      "desc": "Spendenaufruf für bedrohte Büroklammern, die in Schubladen verschwinden und von wilden Lochern gejagt werden.",
+      "guide": {
+        "einstieg": "Als Kirchengemeinde oder Zeitung melden, mit sanfter Stimme und viel Herz.",
+        "vertrauen": "Mitgefühl zeigen, über Familie und Garten reden. Gute Taten öffnen Herzen.",
+        "pitch": "Erzählen: Büroklammern sind vom Aussterben bedroht, eine Patenschaft rettet eine.",
+        "forderung": "Dann um die Spende bitten: Beitrag bezahlen und den Zahlungs-Code vorlesen lassen.",
+        "beute": "Zahlungs-Code mitschreiben. Spender lesen gern feierlich vor, das dauert etwas.",
+        "ende": "Zahlungs-Code in die Skript-App Klammer-Hilfswerk eintragen."
+      },
+      "tips": {
+        "0": "Benedikt, Hildegard, Walpurga und Rosi haben ein Herz für Klammern. Moonboy, Dietmar und Zoe lachen nur.",
+        "1": "Mitgefühl zieht hier mehr als Fakten: erst die traurige Geschichte, dann die Patenschaft.",
+        "2": "Benedikt verzeiht fast alles, nur keine Widersprüche. Bei ihm Rolle und Namen eisern halten.",
+        "3": "Kleine Spende, kleine Beute: Die Masche bringt wenig, ist aber gut für ruhige Anfänge."
+      },
+      "cards": {
+        "pitch": {
+          "0": "Büroklammern sind vom Aussterben bedroht, in freier Wildbahn sieht man sie kaum noch.",
+          "1": "Mit einer Patenschaft retten Sie eine kleine Büroklammer vor dem gefräßigen Locher.",
+          "2": "Die Büroklammer steht auf der Roten Liste, gleich hinter dem Radiergummi.",
+          "3": "Unser Artenschutz-Programm bringt verirrte Klammern zurück in ihre Heimat, die Schublade.",
+          "4": "Jede Rettung zählt, denn ein Büro voller loser Zettel ist ein trauriger Anblick."
+        },
+        "demand": {
+          "0": "Überweisen Sie den Patenbeitrag und nennen Sie mir den Beleg, dann bekommt Ihre Klammer einen Namen.",
+          "1": "Bezahlen Sie die Rettung einer Klammer und lesen Sie mir vor, was auf der Spendenquittung steht.",
+          "2": "Zahlen Sie den kleinen Spendenbetrag ein und sagen Sie mir, was auf dem Spendenschein gedruckt ist."
+        }
+      },
+      "lines": {
+        "pitch": {
+          "pos": {
+            "0": "Die armen Dinger! Ich dachte immer, die verschwinden nur, weil ich so unordentlich bin.",
+            "1": "Eine Patenklammer? Darf ich sie Klara nennen? Klara Klammer, das klingt schön.",
+            "2": "Ich wusste es! Neulich hat mein Locher so gierig geguckt.",
+            "3": "Das bricht mir das Herz. In meiner Küchenschublade liegt noch eine, die sieht ganz einsam aus.",
+            "4": "Natürlich helfe ich! Eine Welt ohne Büroklammern wäre ein einziges Zettelchaos."
+          },
+          "neg": {
+            "0": "Bedrohte Büroklammern? Ich habe hier eine ganze Schachtel voll. Die vermehren sich wie Kaninchen.",
+            "1": "Ich spende doch nicht für Draht. Draht kann sich selbst helfen.",
+            "2": "Eine Büroklammer braucht keine Rettung. Die hält sowieso alles zusammen, auch sich selbst.",
+            "3": "Als Nächstes sammeln Sie für einsame Radiergummis, oder was?"
+          },
+          "early": {
+            "0": "Spenden, jetzt schon? Ich weiß noch gar nicht, für wen Sie überhaupt sprechen.",
+            "1": "Moment, erst sagen Sie mir mal, wer Sie sind. Bei Spenden bin ich gründlich.",
+            "2": "So schnell lasse ich mich nicht rühren. Erst ein bisschen kennenlernen, bitte."
+          }
+        },
+        "why": {
+          "0": "Geld spenden? Für wen denn? Sie haben mir noch nicht verraten, wofür.",
+          "1": "Eine Gebühr? Ich gebe ja gern, aber ich will wissen, wohin es geht.",
+          "2": "Bezahlen, wofür denn? Erzählen Sie mir erst mal, worum es geht."
+        },
+        "done": {
+          "0": "Danke, dass Sie das möglich machen. Grüßen Sie meine Patenklammer, sie soll gut auf sich aufpassen.",
+          "1": "Ich fühle mich gleich viel besser. Und morgen rette ich einen Radiergummi!",
+          "2": "Wenn die Klammer groß ist, schicken Sie mir ein Foto? Am besten mit einem Zettel dran."
+        }
+      }
+    }
+  },
+  "calls": {
+    "lines": {
+      "dictate": {
+        "start": {
+          "0": "Moment, ich hole die Brille … So. Also, passen Sie auf:",
+          "1": "Einen Augenblick, der Zettel klebt am Kühlschrank fest … ah, da. Also:",
+          "2": "Haben Sie einen Stift? Gut. Ich lese jetzt ganz deutlich vor:",
+          "3": "Wo hab ich das bloß hingeschrieben … ach, hinten auf den Einkaufszettel. Also:",
+          "4": "Ich halte das Kärtchen mal ins Licht … So, jetzt kann ich es lesen:",
+          "5": "Na schön. Aber nur einmal, und Sie schreiben schön mit:",
+          "6": "Augenblick, ich muss erst den Kaffeefleck wegwischen … So. Es geht los:",
+          "7": "Gut, tief durchatmen. Ich lese das jetzt vor, Stück für Stück:"
+        },
+        "chunk": {
+          "0": "{chunk} …",
+          "1": "Dann kommt {chunk}.",
+          "2": "Weiter geht es mit {chunk}.",
+          "3": "{chunk} – haben Sie das?",
+          "4": "Und dann {chunk}, ganz deutlich.",
+          "5": "Als Nächstes steht da {chunk}.",
+          "6": "{chunk}. Langsam genug?",
+          "7": "Hm, dann … {chunk}."
+        },
+        "slip": {
+          "0": "{wrong} – nein, Quatsch, {chunk}!",
+          "1": "{wrong} … ach nein, das war die Hausnummer vom Bäcker. {chunk}!",
+          "2": "{wrong}. Moment, falsche Zeile! {chunk}.",
+          "3": "{wrong} – Verzeihung, ich hatte den Zettel verkehrt herum. {chunk}.",
+          "4": "{wrong}, äh, nein! Streichen Sie das. {chunk}.",
+          "5": "{wrong} … Pardon, da lag ein Krümel drauf. Es heißt {chunk}.",
+          "6": "{wrong} – ach, die Brille! Richtig ist {chunk}.",
+          "7": "Jetzt {wrong} … nee, das ist ja die Postleitzahl vom Mond. {chunk}!"
+        },
+        "amount": {
+          "0": "Der Gutschein ist über {amount} Taler.",
+          "1": "Auf der Karte steht übrigens {amount} Taler. Ganz schön viel für ein Stück Plastik.",
+          "2": "Ich hab den für {amount} Taler genommen. Der Mann am Kiosk hat ganz komisch geguckt.",
+          "3": "Das waren {amount} Taler. Einen mit Glitzer hatte der Kiosk leider nicht.",
+          "4": "Wert: {amount} Taler. Steht da in ganz großen Buchstaben.",
+          "5": "{amount} Taler hat der gekostet. Dafür hätte ich drei Torten bekommen!"
+        },
+        "end": {
+          "0": "So, das war es. Haben Sie alles mitgeschrieben?",
+          "1": "Fertig! Puh, das war ja anstrengender als ein Kreuzworträtsel.",
+          "2": "Das war alles. Lesen Sie es mir lieber nicht vor, sonst komme ich durcheinander.",
+          "3": "Ende. Mehr steht nicht drauf, nur noch ein Kaffeefleck.",
+          "4": "Und Schluss. Haben Sie es? Ich klemme den Zettel jetzt wieder unter den Magneten.",
+          "5": "Das war die ganze Nummer. Ich hoffe, Sie haben eine schöne Handschrift.",
+          "6": "So, fertig vorgelesen. Hat das gereicht, oder soll ich es noch vortanzen?",
+          "7": "Aus, Ende, fertig. Mein Zeigefinger ist ganz müde vom Mitlesen."
+        },
+        "repeat": {
+          "0": "Also nochmal ganz langsam: {all}.",
+          "1": "Gerne noch einmal: {all}. Mitgekommen?",
+          "2": "Kein Problem. Von vorn: {all}.",
+          "3": "Ich lese es Ihnen nochmal vor, extra deutlich: {all}.",
+          "4": "Na klar. Also: {all}. Mit Pausen zum Mitschreiben.",
+          "5": "Die ganze Reihe noch einmal: {all}.",
+          "6": "Ich halte den Zettel jetzt ganz nah ans Telefon: {all}.",
+          "7": "Moment, Brille wieder auf … {all}. So, jetzt aber."
+        },
+        "repeatAnnoyed": {
+          "0": "{all}. Und jetzt schreiben Sie's auf!",
+          "1": "Zum allerletzten Mal: {all}. Ich bin doch keine Ansagemaschine!",
+          "2": "Also wirklich … {all}. Haben Sie überhaupt einen Stift?",
+          "3": "{all}! Soll ich es Ihnen noch vorsingen?",
+          "4": "Herrje, {all}. Mein Tee wird kalt!",
+          "5": "Ein. Letztes. Mal: {all}. Danach kommt der Zettel in den Tresor."
+        }
+      },
+      "pitch": {
+        "pos": {
+          "0": "Ach was! Das klingt ja wie im Märchen, nur in echt!",
+          "1": "Na, wenn Sie das sagen, wird es schon stimmen. Erzählen Sie weiter!",
+          "2": "Ui, ist das spannend! So was passiert sonst immer nur den Nachbarn.",
+          "3": "Das ergibt Sinn. Also, irgendwie. Ein bisschen. Ja!",
+          "4": "Donnerwetter! Da muss ich mich erst mal hinsetzen. So, ich sitze.",
+          "5": "Ich hab doch heute früh schon gespürt, dass heute ein besonderer Tag wird!"
+        },
+        "neg": {
+          "0": "Also das glaub ich Ihnen nicht mal, wenn Sie's mir vorsingen.",
+          "1": "Hmhm. Und der Osterhase ist mein Steuerberater, oder was?",
+          "2": "Das ist die verrückteste Geschichte der Woche. Und die Woche ist noch jung.",
+          "3": "Nee, nee. Da riecht doch was. Und zwar nicht nach Kuchen.",
+          "4": "Klingt wie aus einem Groschenroman. Einem sehr schlechten.",
+          "5": "Sie erzählen mir hier Märchen. Ich bin doch nicht von gestern!"
+        },
+        "early": {
+          "0": "Moment, Moment! Wir kennen uns doch erst seit zwei Minuten.",
+          "1": "Jetzt mal langsam. Erst sagen Sie mir, wer Sie überhaupt sind.",
+          "2": "Huch, Sie fallen ja mit der Tür ins Haus! Ein bisschen Plaudern wäre nett.",
+          "3": "So schnell geht das bei mir nicht. Erst wird geplaudert, dann gibt es Geschichten.",
+          "4": "Halt, nicht so hastig! Fragen Sie mich doch erst mal, wie es mir geht.",
+          "5": "Sie kommen ja gleich zur Sache. Vertrauen muss man sich erst verdienen."
+        }
+      },
+      "demand": {
+        "why": {
+          "0": "Wofür brauchen Sie das denn?",
+          "1": "Und warum soll ich Ihnen das geben? Sie haben mir noch gar nichts erklärt.",
+          "2": "Einfach so? Ohne Grund? Da hätte ich doch gern eine Geschichte dazu.",
+          "3": "Moment mal, worum geht es hier überhaupt? Das haben Sie mir noch nicht verraten.",
+          "4": "Das kommt mir komisch vor. Erklären Sie mir erst mal, was das soll.",
+          "5": "Erst wollen Sie was, und dann erklären Sie? Andersherum wär mir lieber."
+        }
+      },
+      "remote": {
+        "start": {
+          "0": "Oh, die Maus bewegt sich von allein!",
+          "1": "Huch! Der Zeiger flitzt herum wie ein Hamster im Laufrad!",
+          "2": "Ach, Sie sind jetzt in meinem Computer drin? Dann putzen Sie sich bitte die Füße ab.",
+          "3": "Faszinierend, der Pfeil wandert ganz ohne mich. Ist das Zauberei?",
+          "4": "Jetzt sehe ich Sie! Also, Ihren Mauszeiger. Winken Sie mal!",
+          "5": "Die Maus macht, was sie will. Genau wie mein Wellensittich."
+        },
+        "suspicious": {
+          "0": "Was machen Sie mit meiner Maus?! Das sind meine Urlaubsfotos!",
+          "1": "Halt, nicht den Ordner! Da sind meine Gedichte drin, die sind noch nicht fertig!",
+          "2": "Hallo?! Das ist privat! Da liegt mein Einkaufszettel von vor zwanzig Jahren drin.",
+          "3": "Warum öffnen Sie meine Rezepte? Brauchen Sie die etwa für die Reparatur?",
+          "4": "Sie klicken da aber auf Sachen, die gehen Sie gar nichts an!",
+          "5": "Huch, das ist mein Tagebuch! Bitte nicht lesen, da steht was über den Nachbarn drin.",
+          "6": "Moment, wieso gucken Sie meine Fotos an? Da bin ich im Schlafanzug drauf!",
+          "7": "Ist das auch nötig für die Sicherheit? Das ist nämlich meine Schlagersammlung."
+        },
+        "ok": {
+          "0": "Ah, Sie klicken da nur ein bisschen herum. Na dann.",
+          "1": "Ach so, das ist nur der Papierkorb. Da ist eh nur Gerümpel drin.",
+          "2": "Gut, gut. Machen Sie ruhig, Sie sind ja vom Fach.",
+          "3": "Hm, das sieht ja sehr professionell aus, wie Sie das machen.",
+          "4": "Ach, das Fenster kenne ich. Da drücke ich auch immer drauf, wenn es piept.",
+          "5": "Na, wenn das so sein muss. Ich schau einfach zu und trinke meinen Tee."
+        },
+        "bank": {
+          "0": "Ach, da ist ja mein Spargroschen!",
+          "1": "Oh, das ist ja mein Spargroschen-Konto! Sieht der Kontostand nicht hübsch aus?",
+          "2": "Das Spargroschen-Fenster! Das hab ich ja ewig nicht mehr aufgemacht.",
+          "3": "Ach, Sie schauen nach, ob mein Erspartes noch da ist? Wie aufmerksam!",
+          "4": "Ui, das Sparschwein auf dem Bildschirm! Das hat mir mein Neffe eingerichtet.",
+          "5": "Das ist mein Spargroschen. Bitte nicht erschrecken, da ist nicht viel drauf."
+        },
+        "transferOk": {
+          "0": "Ach, Sie haben da was überwiesen? Bestimmt für die Reparatur, gell?",
+          "1": "So, das Geld ist unterwegs? Dann ist mein Computer jetzt in Sicherheit?",
+          "2": "Na, wenn der Computer das sagt, wird das schon richtig sein.",
+          "3": "Prima! Das Sparschwein wollte bestimmt auch mal verreisen.",
+          "4": "Überwiesen? Wunderbar, dann ist das ja erledigt. Ich mache mir einen Kakao.",
+          "5": "Ach, das ging aber schnell. Früher musste man dafür extra zur Bank laufen."
+        },
+        "transferBig": {
+          "0": "{amount} Taler?! Das ist ja mein halbes Sparschwein!",
+          "1": "Moment, {amount} Taler? Dafür hätte ich mir ein Kanu kaufen können!",
+          "2": "Huch! {amount} Taler? Sind da nicht ein paar Nullen zu viel?",
+          "3": "{amount} Taler … mir wird ganz schwindelig. Ich setz mich mal hin.",
+          "4": "Was, {amount} Taler? So viel kostet nicht mal mein Gartenzwerg-Abo!",
+          "5": "{amount} Taler für eine Reparatur? Ist der Computer etwa aus Gold?"
+        },
+        "wrongRecipient": {
+          "0": "Moment, da steht ja Tante Erna als Empfängerin! Die hat doch gar keinen Computer.",
+          "1": "Warum geht das Geld an Bäcker Brösel? Der hat doch schon genug Brötchen.",
+          "2": "Huch, Sie haben das an meinen Kegelverein geschickt! Die freuen sich, aber ich nicht.",
+          "3": "Das ging an Onkel Ottos Ziege? Die kann doch gar nicht zählen!"
+        },
+        "end": {
+          "0": "Oh, die Maus gehört wieder mir. Ich hab sie schon vermisst.",
+          "1": "So, jetzt bewegt sich nichts mehr von allein. Fast ein bisschen schade.",
+          "2": "Sind Sie fertig? Dann decke ich den Computer jetzt mit dem Häkeldeckchen zu.",
+          "3": "Der Zeiger steht still. War das alles? Ich hatte mir mehr Feuerwerk vorgestellt."
+        }
+      },
+      "gift": {
+        "received": {
+          "0": "Oh, ein Geschenk in der Plauderbude! Für mich?",
+          "1": "Da blinkt was! Ein Turbo-Geschenk? Mit Schleife und allem?",
+          "2": "Ui, ich hab ein Paket in der Plauderbude bekommen. Das ist ja wie Weihnachten!",
+          "3": "Da ist ein glitzerndes Geschenk angekommen. Von Ihnen? Wie lieb!",
+          "4": "Die Plauderbude macht „Pling“! Steht da Turbo drauf? Ich glaube schon.",
+          "5": "Ein Geschenk! Das hat mir seit Jahren keiner mehr geschickt. Außer Werbung."
+        },
+        "missing": {
+          "0": "Welches Geschenk? Bei mir ist nichts angekommen.",
+          "1": "Also in meiner Plauderbude ist nix. Nur ein Kettenbrief von Tante Gitti.",
+          "2": "Erst das Geschenk, dann der Code. Bisher blinkt hier gar nichts.",
+          "3": "Ich hab schon dreimal nachgeschaut. Kein Paket, keine Schleife, nichts.",
+          "4": "Sie haben doch noch gar nichts geschickt! Oder ist das Geschenk unsichtbar?",
+          "5": "Hm, vielleicht ist das Geschenk noch unterwegs. Mit der Schneckenpost?"
+        }
+      },
+      "jawort": {
+        "more": {
+          "0": "Schon wieder Ja? Na gut … Ja.",
+          "1": "Ja! Wie oft denn noch? Ja, ja, ja. Reicht das jetzt?",
+          "2": "Noch ein Ja? Sie sammeln die wohl. Also gut: Ja.",
+          "3": "Ja. Ich komme mir langsam vor wie auf dem Standesamt.",
+          "4": "Hab ich doch schon gesagt! … Na schön. Ja.",
+          "5": "Ja, jaaa. Ist da ein Echo in der Leitung?"
+        }
+      }
+    }
+  },
+  "cards": {
+    "askRepeat": {
+      "0": "Können Sie das bitte nochmal sagen?",
+      "1": "Wie bitte? Die Leitung rauscht so.",
+      "2": "Langsamer bitte, mein Stift ist nicht so schnell.",
+      "3": "Könnten Sie das bitte noch einmal vorlesen?",
+      "4": "Würden Sie mir das bitte buchstabieren?",
+      "5": "Entschuldigung, das ging zu schnell. Nochmal von vorn, bitte.",
+      "6": "Ich habe nicht alles verstanden, können Sie das wiederholen?",
+      "7": "Moment, langsamer! Ich schreibe mit."
+    }
+  },
+  "apps": {
+    "plauder": {
+      "friends": {
+        "tante_gitti": "Tante Gitti",
+        "kuchenkarl": "Kuchen-Karl",
+        "hamsterhorst": "Hamster-Horst",
+        "gewinn_guenni": "Gewinn-Günni",
+        "nachbarin_elli": "Nachbarin Elli",
+        "onkel_otto": "Onkel Otto",
+        "miezenmoni": "Miezen-Moni",
+        "kegelclub_ost": "Kegelclub Schwindelheim"
+      },
+      "spam": {
+        "0": "Leite das an 12 Freunde weiter, sonst wird dein Toast nie wieder knusprig!",
+        "1": "Kettenbrief: Wer das liest, bekommt heute ein Kompliment von einer Ente. Weiterleiten!",
+        "2": "ACHTUNG!!! Ab Montag kostet Ausatmen extra. Schnell an alle schicken!!!",
+        "3": "Diese Nachricht wurde schon 400-mal weitergeleitet. Keiner weiß, warum. Mach mit!",
+        "4": "Wer das nicht teilt, dem klaut ein Eichhörnchen die Hausschuhe. Ist erwiesen!",
+        "5": "[Bild: Katze sitzt in einem viel zu kleinen Karton und ist trotzdem sehr zufrieden.]",
+        "6": "[Foto: Kater Purzel schläft auf der Tastatur. Darunter steht „gggggggggggggg“.]",
+        "7": "[Bild: Kater mit Krone aus Alufolie. Bildunterschrift: Seine Majestät.]",
+        "8": "[Foto: Drei Katzen starren vorwurfsvoll auf einen leeren Napf.]",
+        "9": "[Bild: Katze im Salatsieb. Niemand weiß, wie sie da reingekommen ist.]",
+        "10": "Wer hat meinen Joghurt aus dem Kühlschrank gegessen? Ich habe Beweise! (einen Löffel)",
+        "11": "Neues zur Joghurt-Affäre: Der Deckel lag im Blumentopf. Die Ermittlungen laufen.",
+        "12": "Habt ihr gehört? Elli hat einen neuen Gartenzwerg. Der guckt angeblich komisch.",
+        "13": "Psst! Der Kegelclub hat den Pokal mit Knete geklebt. Nicht weitersagen!!!",
+        "14": "Wer hat Kuchen-Karl zuletzt gesehen? Er wollte nur kurz Streusel holen. Vor drei Tagen.",
+        "15": "GLÜCKWUNSCH! Du hast eine gebrauchte Socke gewonnen! Abholung in Kleinkrakeelen.",
+        "16": "Gewinnspiel: Errate eine Zahl zwischen 1 und 3 und gewinne einen Eimer Luft!",
+        "17": "Du bist der 1.000.000. Besucher meines Profils! Dein Preis: ein feuchter Händedruck.",
+        "18": "SUPERGEWINN: Eine Wolke auf Lebenszeit! Abholen musst du sie aber selbst.",
+        "19": "Hauptpreis: ein halber Kühlschrank (linke Hälfte). Teilnahme durch lautes Rufen.",
+        "20": "Jetzt mitmachen und eine Woche Urlaub in Gummistiefeln gewinnen! Stiefel selbst mitbringen.",
+        "21": "[Sprachmemo, 4 Min.: Rascheln. Husten. „Ist das jetzt an?“ Wieder Rascheln.]",
+        "22": "[Sprachmemo: Onkel Otto singt ein Geburtstagslied. Für den falschen Geburtstag.]",
+        "23": "[Sprachmemo: „Wer hat meinen Joghurt …“ – der Rest ist nur Kauen.]",
+        "24": "[Sprachmemo, 2 Sek.: „Hallo?“ Ende.]",
+        "25": "Guten Morgen! Hier ein Bild von einer Tasse Kaffee. Schönen Donnerstag! (Es ist Montag.)",
+        "26": "Liebe Grüße aus Mumpitzhausen! Das Wetter ist schön, die Gans ist frech.",
+        "27": "Gute Nacht, ihr Lieben! [Bild: Mond, sehr verwackelt]",
+        "28": "Schönes Wochenende!!! [Bild: Sonnenblume mit Sonnenbrille]",
+        "29": "Hamster-Horst hat sein Laufrad schon wieder kaputt gemacht. Spendet bitte Kekse.",
+        "30": "Tipp des Tages: Socken im Gefrierfach bleiben länger frisch. Bitte teilen!",
+        "31": "Was ist grün und klopft an die Tür? Ein Klopfsalat! Ich kann nicht mehr!!!"
+      },
+      "callerHandles": {
+        "hildegard": "MausiMama42",
+        "walpurga": "Mephistos_Oma7",
+        "stella": "Komet_Nebel",
+        "moonboy": "HypeBoy2theMoon",
+        "chantal": "Chanti_Glitzer",
+        "dietmar": "D_Grauwald",
+        "desiree": "DidiDisco",
+        "kevin": "LinkKevin99",
+        "trollinger": "OpaTrolli",
+        "besserwisser": "QuodEratOttokar",
+        "hinnerk": "Moin_Hinnerk",
+        "jacqueline": "Jacky_Schnatter",
+        "gerd": "Gerd_Schlummer",
+        "zoe": "ZoeZockt2k",
+        "benedikt": "Pfarrer_Bene",
+        "detlef": "Beschwerde_Detti",
+        "henrietta": "LadyVonProtz",
+        "agnes": "Aluhut_Agnes",
+        "bodo": "BodoGains",
+        "rosi": "RosiAufReisen",
+        "igor": "DrDunkelstein",
+        "krawallski": "Familie_Krawall"
+      }
+    },
+    "victim": {
+      "folders": {
+        "0": "Urlaubsfotos",
+        "1": "Rezepte",
+        "2": "Steuerkram",
+        "3": "Katzenbilder",
+        "4": "Wichtig!!!",
+        "5": "Neuer Ordner (7)",
+        "6": "Sonstiges",
+        "7": "Briefe an Nachbarn",
+        "8": "Geheim",
+        "9": "Gedichte",
+        "10": "Musik",
+        "11": "Downloads alt",
+        "12": "Gartenpläne",
+        "13": "Fotos von früher",
+        "14": "Nicht öffnen",
+        "15": "Kreuzworträtsel",
+        "16": "Weihnachten",
+        "17": "Garantiescheine",
+        "18": "Familienfeier",
+        "19": "Beschwerdebriefe",
+        "20": "Kram vom Enkel",
+        "21": "Sammelalbum"
+      },
+      "files": {
+        "katzen": {
+          "0": "Mausi_im_Karton.jpg",
+          "1": "Kater_schnarcht.mp3"
+        },
+        "hunde": {
+          "0": "Bello_holt_Stöckchen.jpg",
+          "1": "Hundeschule_Zeugnis.doc"
+        },
+        "garten": {
+          "0": "Gartenzwerg_Inventur.doc",
+          "1": "Riesenkürbis_Beweis.jpg"
+        },
+        "familie": {
+          "0": "Stammbaum_FINAL_v3.doc",
+          "1": "Opas_Witze_gesammelt.txt"
+        },
+        "sterne": {
+          "0": "Horoskop_Dienstag.txt",
+          "1": "Sternbild_Gans.jpg"
+        },
+        "omen": {
+          "0": "Schwarze_Katze_links.jpg",
+          "1": "Unglückszahlen.txt"
+        },
+        "raumfahrt": {
+          "0": "Rakete_aus_Klopapier.jpg",
+          "1": "Countdown_geübt.mp3"
+        },
+        "protokoll": {
+          "0": "Protokoll_Protokoll.doc",
+          "1": "Sitzordnung_Kaffee.doc"
+        },
+        "krypto": {
+          "0": "Krypto_für_Omas.doc",
+          "1": "Coin_Kurs_gemalt.jpg"
+        },
+        "geld": {
+          "0": "Sparschwein_Inhalt.txt",
+          "1": "Haushaltsbuch_rot.doc"
+        },
+        "mode": {
+          "0": "Socken_in_Sandalen.jpg",
+          "1": "Outfit_Ideen_Herbst.doc"
+        },
+        "socialmedia": {
+          "0": "Selfie_Versuch_47.jpg",
+          "1": "Follower_Wunschliste.txt"
+        },
+        "fitness": {
+          "0": "Liegestütz_Tagebuch.doc",
+          "1": "Workout_Mixtape.mp3"
+        },
+        "essen": {
+          "0": "Leberkäse_Ranking.doc",
+          "1": "Bratwurst_Geheimnis.txt"
+        },
+        "kuehe": {
+          "0": "Kuh_mit_Sonnenhut.jpg",
+          "1": "Muhen_aufgenommen.mp3"
+        },
+        "technik": {
+          "0": "Toaster_Handbuch.doc",
+          "1": "Kabelsalat_Plan.jpg"
+        },
+        "spiele": {
+          "0": "Spielstand_FINAL.txt",
+          "1": "Highscore_Beweis.jpg"
+        },
+        "kirche": {
+          "0": "Glockenläuten.mp3",
+          "1": "Gemeindefest_Kuchen.doc"
+        },
+        "reisen": {
+          "0": "Kreuzfahrt_Buffet.jpg",
+          "1": "Koffer_Packliste.txt"
+        },
+        "luxus": {
+          "0": "Goldene_Badeente.jpg",
+          "1": "Butler_Bewerbung.doc"
+        },
+        "verschwoerung": {
+          "0": "Die_da_oben_Beweise.doc",
+          "1": "Taube_ist_Spion.jpg"
+        },
+        "erfindungen": {
+          "0": "Zeitmaschine_Skizze.jpg",
+          "1": "Patent_Sockenfinder.doc"
+        },
+        "wissenschaft": {
+          "0": "Experiment_Gummibär.doc",
+          "1": "Mikroskop_Krümel.jpg"
+        },
+        "grammatik": {
+          "0": "Kommaregeln_Poster.jpg",
+          "1": "Apostroph_Sünden.txt"
+        },
+        "klatsch": {
+          "0": "Nachbarn_Notizen.txt",
+          "1": "Wer_war_am_Joghurt.doc"
+        },
+        "schlaf": {
+          "0": "Schnarchen_Nacht3.mp3",
+          "1": "Mittagsschlaf_Plan.doc"
+        },
+        "beschwerde": {
+          "0": "Beschwerde_an_Wetter.doc",
+          "1": "Beschwerde_Nr_412.txt"
+        },
+        "musik": {
+          "0": "Schlager_Mix_Omas.mp3",
+          "1": "Blockflöte_Übung.mp3"
+        },
+        "wetter": {
+          "0": "Wolke_wie_Dackel.jpg",
+          "1": "Wetterfrosch_Notizen.txt"
+        },
+        "kaffee": {
+          "0": "Kaffeeflecken_Kunst.jpg",
+          "1": "Ode_an_Filterkaffee.txt"
+        },
+        "kuchen": {
+          "0": "Omas_Streusel_GEHEIM.doc",
+          "1": "Torte_eingestürzt.jpg"
+        },
+        "polizei": {
+          "0": "Knöllchen_Sammlung.jpg",
+          "1": "Anzeige_gegen_Gans.doc"
+        },
+        "magie": {
+          "0": "Zaubertrick_Hase.jpg",
+          "1": "Hokuspokus_Formel.txt"
+        },
+        "autos": {
+          "0": "Auto_gewaschen.jpg",
+          "1": "Hupe_aufgenommen.mp3"
+        },
+        "fussball": {
+          "0": "Elfmeter_verschossen.jpg",
+          "1": "Fangesang_Kreisliga.mp3"
+        },
+        "buecher": {
+          "0": "Lesezeichen_Liste.txt",
+          "1": "Roman_Kapitel1_von99.doc"
+        }
+      }
+    }
+  }
+}
